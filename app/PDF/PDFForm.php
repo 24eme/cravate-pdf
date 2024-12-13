@@ -5,40 +5,24 @@ namespace PDF;
 class PDFForm
 {
     protected $pdfFile = null;
-    protected $dataFields = [];
+    protected $fields = [];
 
     public function __construct($pdfFile)
     {
         $this->pdfFile = $pdfFile;
-        $this->parseForm();
+        $this->parseDataFields();
     }
 
-    protected function parseForm()
+    protected function parseDataFields()
     {
-        $i = -1;
-        foreach(explode("\n", PDFtk::dumpDataFields($this->pdfFile)) as $line) {
-            if($line === '---') {
-                $i++;
-                continue;
-            }
-            if(strpos($line, ': ') === false)  {
-                continue;
-            }
-            $key = explode(": ", $line)[0];
-            $value = explode(": ", $line)[1];
-
-            if(isset($this->dataFields[$i][$key]) && !is_array($this->dataFields[$i][$key])) {
-                $this->dataFields[$i][$key] = [$this->dataFields[$i][$key]];
-            }
-            if(isset($this->dataFields[$i][$key]) && is_array($this->dataFields[$i][$key])) {
-                $this->dataFields[$i][$key][] = $value;
-            } else {
-                $this->dataFields[$i][$key] = $value;
-            }
+        $dataFields = PDFtk::parseDataFieldsDump(PDFtk::dumpDataFields($this->pdfFile));
+        foreach($dataFields as $dataField) {
+            $field = new PDFFormField($dataField);
+            $this->fields[] = $field;
         }
     }
 
-    public function getDataFields() {
-        return $this->dataFields;
+    public function getFields() {
+        return $this->fields;
     }
 }

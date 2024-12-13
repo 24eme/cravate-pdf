@@ -23,4 +23,30 @@ class PDFtk
 
         return $output;
     }
+
+    public static function parseDataFieldsDump($dump) {
+        $dataFields = [];
+        $i = -1;
+        foreach(explode("\n", $dump) as $line) {
+            if($line === '---') {
+                $i++;
+                continue;
+            }
+            if(strpos($line, ': ') === false)  {
+                continue;
+            }
+            $key = explode(": ", $line)[0];
+            $value = explode(": ", $line)[1];
+
+            if(isset($dataFields[$i][$key]) && !is_array($dataFields[$i][$key])) {
+                $dataFields[$i][$key] = [$dataFields[$i][$key]];
+            }
+            if(isset($dataFields[$i][$key]) && is_array($dataFields[$i][$key])) {
+                $dataFields[$i][$key][] = $value;
+            } else {
+                $dataFields[$i][$key] = $value;
+            }
+        }
+        return $dataFields;
+    }
 }
