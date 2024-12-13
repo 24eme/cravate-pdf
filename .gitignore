@@ -1,0 +1,5 @@
+*~
+*.swp
+/tags
+/db/
+/config/config.php
