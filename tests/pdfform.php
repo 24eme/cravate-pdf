@@ -30,7 +30,7 @@ $test->expect($pdfForm->getFields()[0] instanceof PDFFormField, "Le 1er champs a
 $test->expect($pdfForm->getFields()[0]->getType() == PDFFormField::TYPE_TEXT, "Le 1er champs est de type `".PDFFormField::TYPE_TEXT."`");
 $test->expect($pdfForm->getFields()[0]->getLabel() == "text", "Le 1er champs a pour label `text`");
 $test->expect($pdfForm->getFields()[0]->getName() == "text", "Le 1er champs a pour name `text`");
-$test->expect($pdfForm->getFields()[0]->getId() == "text", "Le 1er champs a pour nid `text`");
+$test->expect($pdfForm->getFields()[0]->getId() == "text_text", "Le 1er champs a pour id `text_text`");
 
 // Affichage des résultats
 include __DIR__.'/_print.php';

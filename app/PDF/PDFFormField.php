@@ -39,8 +39,8 @@ class PDFFormField
             $this->label = $data['FieldName'];
         }
 
-        $this->name = Web::instance()->slug($this->label);
-        $this->id = Web::instance()->slug($this->label);
+        $this->name = Web::instance()->slug($data['FieldName']);
+        $this->id = strtolower(self::TYPE_TEXT).'_'.Web::instance()->slug($data['FieldName']);
 
         if(isset($data['FieldStateOption'])) {
             foreach($data['FieldStateOption'] as $value) {
