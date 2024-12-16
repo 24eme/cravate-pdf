@@ -7,7 +7,7 @@ class PDFtk
     const command = 'pdftk';
 
     public static function dumpDataFields($pdfFile) {
-        $proc = proc_open([self::command, $pdfFile, 'dump_data_fields'], [
+        $proc = proc_open([self::command, $pdfFile, 'dump_data_fields_utf8'], [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],
             2 => ['pipe', 'w']
