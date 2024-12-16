@@ -23,7 +23,13 @@ class Main
 
     public function form(Base $f3)
     {
-        $pdfForm = new pdfForm($f3->get('GET.pdf'));
+        $pdf = $f3->get('GET.pdf');
+
+        if (is_file($pdf) === false) {
+            return $f3->error(404, "Invalid file");
+        }
+
+        $pdfForm = new PDFForm($pdf);
 
         $f3->set('pdfForm', $pdfForm);
         $f3->set('content', 'main/form.html.php');
