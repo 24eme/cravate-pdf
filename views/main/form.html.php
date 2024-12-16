@@ -10,7 +10,7 @@
   <?php if ($field->getType() == \PDF\PDFFormField::TYPE_SELECT): ?>
     <div class="form-floating mb-3">
       <select class="form-select" id="floatingSelect" aria-label="<?php echo $field->getLabel() ?>" <?php if($field->isRequired()): ?>required="required"<?php endif; ?>>
-        <option selected>Séléctionner une appellation</option>
+        <option selected>Sélectionner une appellation</option>
         <?php foreach($field->getChoices() as $choice): ?>
         <option value="<?php echo $choice ?>"><?php echo $choice ?></option>
         <?php endforeach; ?>
