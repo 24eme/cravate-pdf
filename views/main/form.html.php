@@ -44,6 +44,13 @@
       <?php endforeach; ?>
     </div>
   <?php endif; ?>
+
+  <?php if ($DEBUG): ?>
+    <div class="mb-3 p-2 bg-body-tertiary border rounded-3 opacity-50">
+      <?php echo implode(' ⋅ ', ["Nom : ".$field->getName(), "Identifiant : ".$field->getId(), "Label : ".$field->getLabel()]); ?>
+    </div>
+  <?php endif ?>
+
   <?php endforeach; ?>
   </div>
 </div>
