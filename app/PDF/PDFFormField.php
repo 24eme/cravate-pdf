@@ -16,6 +16,7 @@ class PDFFormField
     protected $name;
     protected $id;
     protected $choices = [];
+    protected $required = false;
 
     public function __construct($data)
     {
@@ -23,14 +24,23 @@ class PDFFormField
     }
 
     protected function parseData($data) {
+        if(isset($data['FieldStateOption'])) {
+            foreach($data['FieldStateOption'] as $value) {
+                if($value == "Off") {
+                    continue;
+                }
+                $this->choices[$value] = $value;
+            }
+        }
+
         if($data['FieldType'] == 'Text') {
             $this->type = self::TYPE_TEXT;
         } elseif($data['FieldType'] == 'Choice') {
             $this->type = self::TYPE_SELECT;
-        } elseif($data['FieldType'] == 'Button' && $data['FieldFlags'] > 0 && isset($data['FieldStateOption'])) {
-            $this->type = self::TYPE_RADIO;
-        } elseif($data['FieldType'] == 'Button' && $data['FieldFlags'] == 0 && isset($data['FieldStateOption'])) {
+        } elseif($data['FieldType'] == 'Button' && count($this->choices) == 1) {
             $this->type = self::TYPE_CHECKBOX;
+        } elseif($data['FieldType'] == 'Button' && count($this->choices) > 1) {
+            $this->type = self::TYPE_RADIO;
         }
 
         if(isset($data['FieldNameAlt']) && $data['FieldNameAlt']) {
@@ -41,15 +51,7 @@ class PDFFormField
 
         $this->name = Web::instance()->slug($data['FieldName']);
         $this->id = strtolower(self::TYPE_TEXT).'_'.Web::instance()->slug($data['FieldName']);
-
-        if(isset($data['FieldStateOption'])) {
-            foreach($data['FieldStateOption'] as $value) {
-                if($value == "Off") {
-                    continue;
-                }
-                $this->choices[$value] = $value;
-            }
-        }
+        $this->required = ($data['FieldFlags'] == 2);
     }
 
     public function getType() {
@@ -70,6 +72,10 @@ class PDFFormField
 
     public function getChoices() {
         return $this->choices;
+    }
+
+    public function isRequired() {
+        return $this->required;
     }
 
 }

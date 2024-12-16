@@ -3,13 +3,13 @@
   <?php foreach($pdfForm->getFields() as $field): ?>
   <?php if ($field->getType() == \PDF\PDFFormField::TYPE_TEXT): ?>
     <div class="form-floating mb-3">
-      <input type="text" class="form-control" name="<?php echo $field->getName() ?>" id="<?php echo $field->getId() ?>">
+      <input type="text" class="form-control" name="<?php echo $field->getName() ?>" id="<?php echo $field->getId() ?>" <?php if($field->isRequired()): ?>required="required"<?php endif; ?>>
       <label for="<?php echo $field->getId() ?>"><?php echo $field->getLabel() ?></label>
     </div>
   <?php endif; ?>
   <?php if ($field->getType() == \PDF\PDFFormField::TYPE_SELECT): ?>
     <div class="form-floating mb-3">
-      <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+      <select class="form-select" id="floatingSelect" aria-label="<?php echo $field->getLabel() ?>" <?php if($field->isRequired()): ?>required="required"<?php endif; ?>>
         <option selected>Séléctionner une appellation</option>
         <?php foreach($field->getChoices() as $choice): ?>
         <option value="<?php echo $choice ?>"><?php echo $choice ?></option>
@@ -23,7 +23,7 @@
       <label class="form-label"><?php echo $field->getLabel() ?></label>
       <?php foreach($field->getChoices() as $choice): ?>
       <div class="form-check">
-        <input class="form-check-input" name="<?php echo $field->getName() ?>" id="option_<?php echo $choice ?>" type="radio">
+        <input class="form-check-input" name="<?php echo $field->getName() ?>" id="option_<?php echo $choice ?>" type="radio" <?php if($field->isRequired()): ?>required="required"<?php endif; ?>>
         <label class="form-check-label" for="option_<?php echo $choice ?>">
           <?php echo $choice ?>
         </label>
@@ -36,7 +36,7 @@
       <label class="form-label"><?php echo $field->getLabel() ?></label>
       <?php foreach($field->getChoices() as $choice): ?>
       <div class="form-check">
-        <input class="form-check-input" name="<?php echo $field->getName() ?>" id="option_<?php echo $choice ?>" type="checkbox">
+        <input class="form-check-input" name="<?php echo $field->getName() ?>" id="option_<?php echo $choice ?>" type="checkbox" <?php if($field->isRequired()): ?>required="required"<?php endif; ?>>
         <label class="form-check-label" for="option_<?php echo $choice ?>">
           <?php echo $choice ?>
         </label>
