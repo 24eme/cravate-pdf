@@ -23,7 +23,8 @@ class PDFFormField
         $this->parseData($data);
     }
 
-    protected function parseData($data) {
+    protected function parseData($data)
+    {
         if(isset($data['FieldStateOption'])) {
             foreach($data['FieldStateOption'] as $value) {
                 if($value == "Off") {
@@ -54,27 +55,33 @@ class PDFFormField
         $this->required = ($data['FieldFlags'] == 2);
     }
 
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
-    public function getLabel() {
+    public function getLabel()
+    {
         return $this->label;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getChoices() {
+    public function getChoices()
+    {
         return $this->choices;
     }
 
-    public function isRequired() {
+    public function isRequired()
+    {
         return $this->required;
     }
 

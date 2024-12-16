@@ -22,7 +22,8 @@ class PDFForm
         }
     }
 
-    public function getFields() {
+    public function getFields()
+    {
         return $this->fields;
     }
 }
