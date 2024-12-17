@@ -4,7 +4,9 @@ namespace Controllers;
 
 use Base;
 use View;
+use Web;
 use PDF\PDFForm;
+use PDF\PDFtk;
 
 class Main
 {
@@ -35,5 +37,23 @@ class Main
         $f3->set('content', 'main/form.html.php');
 
         echo View::instance()->render('layout.html.php');
+    }
+
+    public function fill(Base $f3)
+    {
+        $postData = $f3->get('POST');
+
+        if (isset($postData['file']) === false) {
+            $f3->error(403, 'Missing file parameter');
+        }
+
+        $pdffile = $postData['file'];
+        $pdfForm = new PDFForm($pdffile);
+
+        $cleanedData = PDFtk::cleanData($pdfForm->getFields(), $postData);
+        $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
+
+        Web::instance()->send($outputFile, 'application/pdf', null, true);
+        unlink($outputFile);
     }
 }

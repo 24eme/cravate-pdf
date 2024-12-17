@@ -50,7 +50,7 @@ class PDFFormField
             $this->label = $data['FieldName'];
         }
 
-        $this->name = Web::instance()->slug($data['FieldName']);
+        $this->name = $data['FieldName'];
         $this->id = strtolower(self::TYPE_TEXT).'_'.Web::instance()->slug($data['FieldName']);
         $this->required = ($data['FieldFlags'] == 2);
     }
