@@ -25,7 +25,7 @@ class Main
     {
         $pdf = $f3->get('GET.pdf');
 
-        if (is_file($pdf) === false) {
+        if (is_null($pdf) || is_file($pdf) === false) {
             return $f3->error(404, "Invalid file");
         }
 
