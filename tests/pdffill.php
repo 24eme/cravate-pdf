@@ -26,11 +26,24 @@ $test->expect($cleanedData['Options'] === 'Option 2', "La bonne option est séle
 $test->expect($cleanedData['Checkbox'] === 'checkbox', "L'entrée checkbox est bien transformée avec la valeur du pdf");
 $test->expect($cleanedData['select'] === null, "L'option du sélect était invalide, alors on le transforme en null");
 
-$xfdfFile = PDFtk::generateXFDF($pdfFile, $testData);
+$test->message("Vérification du fichier XFDF");
+$xfdfFile = PDFtk::generateXFDF($pdfFile, $cleanedData);
 $xml = XMLReader::XML($xfdfFile);
 $xml->setParserProperty(XMLReader::VALIDATE, true);
 
-$test->expect($xml->isValid(), "Le fichier généré est valide");
+libxml_use_internal_errors(true);
+$xml_error_msgs = [];
+
+while ($xml->read()) {
+    if ($xml->isValid() === false) {
+        $err = libxml_get_last_error();
+        if ($err && $err instanceof libXMLError) {
+            $xml_error_msgs[] = trim($err->message) . ' on line ' . $err->line;
+        }
+    }
+}
+
+$test->expect(count($xml_error_msgs) === 0, "Le fichier généré est un xml valide");
 
 // Affichage des résultats
 include __DIR__.'/_print.php';
