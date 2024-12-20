@@ -18,7 +18,7 @@ class PDFForm
         $dataFields = PDFtk::parseDataFieldsDump(PDFtk::dumpDataFields($this->pdfFile));
         foreach($dataFields as $dataField) {
             $field = new PDFFormField($dataField);
-            $this->fields[$field->getName()] = $field;
+            $this->fields[$field->getId()] = $field;
         }
     }
 

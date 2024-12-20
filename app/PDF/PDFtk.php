@@ -54,20 +54,20 @@ class PDFtk
     {
         $cleaned = [];
 
-        foreach ($sentData as $fieldName => $value) {
-            if (in_array($fieldName, array_keys($parsedData)) === false) {
+        foreach ($sentData as $fieldId => $value) {
+            if (in_array($fieldId, array_keys($parsedData)) === false) {
                 continue;
             }
 
-            if ($parsedData[$fieldName]->getType() === PDFFormField::TYPE_CHECKBOX) {
-                $value = $value ? current($parsedData[$fieldName]->getChoices()) : "Off";
-            } elseif ($parsedData[$fieldName]->getType() === PDFFormField::TYPE_RADIO) {
-                $value = in_array($value, $parsedData[$fieldName]->getChoices()) ? $value : "Off";
-            } elseif ($parsedData[$fieldName]->getType() === PDFFormField::TYPE_SELECT) {
-                $value = in_array($value, $parsedData[$fieldName]->getChoices()) ? $value : null;
+            if ($parsedData[$fieldId]->getType() === PDFFormField::TYPE_CHECKBOX) {
+                $value = $value ? current($parsedData[$fieldId]->getChoices()) : "Off";
+            } elseif ($parsedData[$fieldId]->getType() === PDFFormField::TYPE_RADIO) {
+                $value = in_array($value, $parsedData[$fieldId]->getChoices()) ? $value : "Off";
+            } elseif ($parsedData[$fieldId]->getType() === PDFFormField::TYPE_SELECT) {
+                $value = in_array($value, $parsedData[$fieldId]->getChoices()) ? $value : null;
             }
 
-            $cleaned[$fieldName] = $value;
+            $cleaned[$parsedData[$fieldId]->getName()] = $value;
         }
 
         return $cleaned;
