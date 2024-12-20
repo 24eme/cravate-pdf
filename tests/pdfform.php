@@ -26,13 +26,19 @@ $test->message('Mappage des données du formulaire dans une classe');
 
 $pdfForm = new PDFForm($pdfFile);
 $test->expect(count($pdfForm->getFields()) == 5, "5 champs ont été trouvés");
-$test->expect($pdfForm->getFields()[0] instanceof PDFFormField, "Le 1er champs a pour classe `PDFFormField`");
-$test->expect($pdfForm->getFields()[0]->getType() == PDFFormField::TYPE_TEXT, "Le 1er champs est de type `".PDFFormField::TYPE_TEXT."`");
-$test->expect($pdfForm->getFields()[0]->getLabel() == "text", "Le 1er champs a pour label `text`");
-$test->expect($pdfForm->getFields()[0]->getName() == "text", "Le 1er champs a pour name `text`");
-$test->expect($pdfForm->getFields()[0]->getId() == "text_text", "Le 1er champs a pour id `text_text`");
-$test->expect($pdfForm->getFields()[0]->isRequired(), "Le 1er champs est requis");
-$test->expect(! $pdfForm->getFields()[1]->isRequired(), "Le 2ème champs n'est pas requis");
+
+$fields = $pdfForm->getFields();
+
+$first = current($fields);
+$test->expect($first instanceof PDFFormField, "Le 1er champs a pour classe `PDFFormField`");
+$test->expect($first->getType() == PDFFormField::TYPE_TEXT, "Le 1er champs est de type `".PDFFormField::TYPE_TEXT."`");
+$test->expect($first->getLabel() == "text", "Le 1er champs a pour label `text`");
+$test->expect($first->getName() == "text", "Le 1er champs a pour name `text`");
+$test->expect($first->getId() == "text_text", "Le 1er champs a pour id `text_text`");
+$test->expect($first->isRequired(), "Le 1er champs est requis");
+
+$second = next($fields);
+$test->expect(! $second->isRequired(), "Le 2ème champs n'est pas requis");
 
 // Affichage des résultats
 include __DIR__.'/_print.php';
