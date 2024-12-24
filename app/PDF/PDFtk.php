@@ -105,13 +105,17 @@ class PDFtk
             throw new \Exception('Il faut spécifier un fichier PDF');
         }
 
-        $outputFile = $outputDir.basename($pdfPath, '.pdf').'_filled.pdf';
-
         $xfdfFilename = tempnam($outputDir, "XFDF");
+
+        $outputFile = [
+            'pdf' => $outputDir.basename($pdfPath, '.pdf').'_filled.pdf',
+            'xfdf' => $xfdfFilename
+        ];
+
         $xfdfFile = fopen($xfdfFilename, "w");
         fwrite($xfdfFile, self::generateXFDF($pdfPath, $data));
 
-        $proc = proc_open([self::command, $pdfPath, 'fill_form', $xfdfFilename, 'output', $outputFile, 'flatten'], [
+        $proc = proc_open([self::command, $pdfPath, 'fill_form', $xfdfFilename, 'output', $outputFile['pdf'], 'flatten'], [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],
             2 => ['pipe', 'w']
