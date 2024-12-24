@@ -7,6 +7,8 @@ use View;
 use Web;
 use PDF\PDFForm;
 use PDF\PDFtk;
+use Records\Record;
+use Records\Submission;
 
 class Main
 {
@@ -26,6 +28,16 @@ class Main
     public function form(Base $f3)
     {
         $pdf = $f3->get('GET.pdf');
+
+        if ($f3->get('GET.record')) {
+            try {
+                $record = new Record($f3->get('GET.record'));
+            } catch(\Exception $e) {
+                return $f3->error(404, $e->getMessage());
+            }
+            $f3->set('record', $record);
+            $pdf = $record->pdf;
+        }
 
         if (is_null($pdf) || is_file($pdf) === false) {
             return $f3->error(404, "Invalid file");
@@ -53,7 +65,22 @@ class Main
         $cleanedData = PDFtk::cleanData($pdfForm->getFields(), $postData);
         $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
 
-        Web::instance()->send($outputFile, 'application/pdf', null, true);
-        unlink($outputFile);
+        if ($f3->get('GET.record')) {
+            try {
+                $record = new Record($f3->get('GET.record'));
+                $submission = new Submission($record);
+                $submission->save($outputFile);
+                if ($submission->getAttachmentNeeded()) {
+                    return $f3->reroute('/record/'.$record->name.'/submission/'.$submission->name.'/attachment');
+                } else {
+                    return $f3->reroute('records');
+                }
+
+            } catch(\Exception $e) { }
+        }
+
+        Web::instance()->send($outputFile['pdf'], 'application/pdf', null, true);
+        unlink($outputFile['pdf']);
+        unlink($outputFile['xfdf']);
     }
 }
