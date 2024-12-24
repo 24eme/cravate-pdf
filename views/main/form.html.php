@@ -1,6 +1,6 @@
 <form method="POST" class="row" action="/fill">
 
-<input type="hidden" value="<?php echo Base::instance()->get('GET.pdf') ?>" name="file">
+<input type="hidden" value="<?php echo $pdfForm->pdfFile ?>" name="file">
 
 <div class="col-6 offset-3 mt-3 justify-content-center">
   <?php foreach($pdfForm->getFields() as $field): ?>

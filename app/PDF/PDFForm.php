@@ -4,7 +4,7 @@ namespace PDF;
 
 class PDFForm
 {
-    protected $pdfFile = null;
+    public $pdfFile = null;
     protected $fields = [];
 
     public function __construct($pdfFile)
