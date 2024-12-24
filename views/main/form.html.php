@@ -1,4 +1,4 @@
-<form method="POST" class="row" action="/fill">
+<form method="POST" class="row" action="/fill<?php echo (isset($record))? '?record='.$record->name : ''; ?>">
 
 <input type="hidden" value="<?php echo $pdfForm->pdfFile ?>" name="file">
 
