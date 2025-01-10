@@ -26,7 +26,7 @@ class Submission
         $this->name = $name;
         $this->path = $this->record->submissionsPath.$this->name.DIRECTORY_SEPARATOR;
         if (!file_exists($this->path)) {
-            throw new \Exception("The < $this->path > record folder doesn't exist");
+            throw new \Exception("The < $this->path > submissions folder doesn't exist");
         }
         $files = scandir($this->path);
         foreach ($files as $file) {
