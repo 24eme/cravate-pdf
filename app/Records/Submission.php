@@ -105,4 +105,24 @@ class Submission
         return $attachmentsPath;
     }
 
+    public function getAttachments()
+    {
+        $attachments = scandir($this->getAttachmentsPath());
+        if (!$attachments) {
+            return [];
+        }
+        $items = [];
+        foreach($attachments as $attachment) {
+            if (in_array($attachment, ['.', '..'])) {
+                continue;
+            }
+            try {
+                $items[] = $this->getAttachmentsPath().$attachment;
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+        return $items;
+    }
+
 }
