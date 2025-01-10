@@ -47,8 +47,7 @@ class Submission
         $this->name = date('YmdHis');
         if (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['format_dir'])) {
             $this->name = $this->record->config['SUBMISSION']['format_dir'];
-            $this->name = str_replace('%DATE%', date('Ymd'), $this->name);
-            $this->name = str_replace('%DATETIME%', date('YmdHis'), $this->name);
+            $this->name = str_replace(['%DATE%', '%DATETIME%'], [date('Ymd'), date('YmdHis')], $this->name);
             if ($xfdf) {
                 foreach ($xfdf->fields->field as $field) {
                     $this->name = str_replace('%'.((string)$field->attributes()['name']).'%', (string)$field->value, $this->name);
