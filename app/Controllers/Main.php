@@ -83,4 +83,25 @@ class Main
         unlink($outputFile['pdf']);
         unlink($outputFile['xfdf']);
     }
+
+    public function download(Base $f3)
+    {
+        $file = $f3->get('GET.file');
+        if (file_exists($file)) {
+            $mime = mime_content_type($file);
+            if (!$mime) {
+                return $f3->error(500, "Mime type undefined");
+            }
+            header('Content-Description: File Transfer');
+            header('Content-Type: '.$mime);
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: '.filesize($file));
+            return readfile($file);
+        } else {
+            return $f3->error(404, "File not found");
+        }
+    }
 }
