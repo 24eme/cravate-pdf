@@ -23,8 +23,14 @@ class Record
     public function submissions(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
+        $statusFilter = $f3->get('GET.status');
+        if ($statusFilter && !in_array($statusFilter, Submission::$allStatus)) {
+            return $f3->error(404, "Status not found");
+        }
         $f3->set('record', $record);
         $f3->set('content', 'record/submissions.html.php');
+        $f3->set('statusFilter', $statusFilter);
+        $f3->set('statusThemeColor', Submission::$statusThemeColor);
 
         echo View::instance()->render('layout.html.php');
     }
