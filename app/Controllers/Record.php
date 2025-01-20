@@ -10,6 +10,8 @@ use Records\Records;
 use Records\Submission;
 use Records\Record as Rec;
 
+use Steps\Steps;
+
 class Record
 {
     public function index(Base $f3)
@@ -47,6 +49,7 @@ class Record
         $f3->set('submission', $submission);
         $f3->set('content', 'record/attachmentForm.html.php');
 
+        $f3->get('steps')->activate(Steps::STEP_ANNEXES);
         echo View::instance()->render('layout.html.php');
     }
 }

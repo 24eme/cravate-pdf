@@ -1,3 +1,5 @@
+<?php echo View::instance()->render('global/etapes.html.php'); ?>
+
 <h1>Attachment</h1>
 
 <form method="POST" class="row" enctype="multipart/form-data" action="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/attachment">
