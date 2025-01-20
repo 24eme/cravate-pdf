@@ -73,7 +73,7 @@ class Main
                 $submission = new Submission($record);
                 $submission->save($outputFile);
                 if ($submission->getAttachmentNeeded()) {
-                    return $f3->reroute('/record/'.$record->name.'/submission/'.$submission->name.'/attachment');
+                    return $f3->reroute(['record_attachment', ['record' => $record->name, 'submission' => $submission->name]]);
                 } else {
                     return $f3->reroute('records');
                 }
