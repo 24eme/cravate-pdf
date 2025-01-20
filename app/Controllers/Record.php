@@ -49,4 +49,33 @@ class Record
 
         echo View::instance()->render('layout.html.php');
     }
+
+    public function getfile(Base $f3)
+    {
+        $record = new Rec($f3->get('PARAMS.record'));
+        $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        $file = $submission->path.$f3->get('GET.file');
+        $disposition = $f3->get('GET.disposition');
+
+        if (!in_array($disposition, ['attachment', 'inline'])) {
+            return $f3->error(404, "Disposition < $disposition > not allowed");
+        }
+
+        if (file_exists($file)) {
+            $mime = mime_content_type($file);
+            if (!$mime) {
+                return $f3->error(500, "Mime type undefined");
+            }
+            header('Content-Description: File Transfer');
+            header('Content-Type: '.$mime);
+            header('Content-Disposition: '.$disposition.'; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: '.filesize($file));
+            return readfile($file);
+        } else {
+            return $f3->error(404, "File not found");
+        }
+    }
 }
