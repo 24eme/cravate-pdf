@@ -52,6 +52,8 @@ class Record
                 }
             }
         }
+
+        $f3->set('record', $record);
         $f3->set('submission', $submission);
         $f3->set('content', 'record/attachmentForm.html.php');
 

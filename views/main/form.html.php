@@ -1,3 +1,5 @@
+<h1>Dossier <?php echo isset($record) ? $record->getConfigItem('title') : '' ?></h1>
+
 <?php echo View::instance()->render('global/etapes.html.php') ?>
 
 <form method="POST" class="row" action="/fill<?php echo (isset($record))? '?record='.$record->name : ''; ?>">

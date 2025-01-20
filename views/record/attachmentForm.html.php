@@ -1,6 +1,8 @@
+<h1>Dossier <?php echo isset($record) ? $record->getConfigItem('title') : '' ?></h1>
+
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
 
-<h1>Attachment</h1>
+<h3>Joindre une pièce complémentaire</h3>
 
 <form method="POST" class="row" enctype="multipart/form-data" action="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/attachment">
 <p class="text-center"><?php echo $this->raw($submission->getAttachmentNeeded()); ?></p>
