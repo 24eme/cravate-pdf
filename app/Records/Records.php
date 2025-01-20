@@ -16,11 +16,7 @@ class Records
             if (in_array($record, ['.', '..'])) {
                 continue;
             }
-            try {
-                $items[] = new Record($record);
-            } catch (\Exception $e) {
-                continue;
-            }
+            $items[] = new Record($record);
         }
         return $items;
     }
