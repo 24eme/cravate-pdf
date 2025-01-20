@@ -1,6 +1,4 @@
-<?php echo View::instance()->render('global/etapes.html.php', 'text/html', [
-  'steps' => ['Formulaire' => 0, 'Annexes' => 1, 'Validation' => 0]
-]) ?>
+<?php echo View::instance()->render('global/etapes.html.php') ?>
 
 <form method="POST" class="row" action="/fill<?php echo (isset($record))? '?record='.$record->name : ''; ?>">
 

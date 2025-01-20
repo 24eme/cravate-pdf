@@ -9,6 +9,7 @@ use PDF\PDFForm;
 use PDF\PDFtk;
 use Records\Record;
 use Records\Submission;
+use Steps\Steps;
 
 class Main
 {
@@ -48,6 +49,7 @@ class Main
         $f3->set('pdfForm', $pdfForm);
         $f3->set('content', 'main/form.html.php');
 
+        $f3->get('steps')->activate(Steps::STEP_FORM);
         echo View::instance()->render('layout.html.php');
     }
 
