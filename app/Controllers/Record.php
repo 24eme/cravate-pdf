@@ -64,6 +64,19 @@ class Record
         echo View::instance()->render('layout.html.php');
     }
 
+    public function validation(Base $f3)
+    {
+        $record = new Rec($f3->get('PARAMS.record'));
+        $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        $f3->set('record', $record);
+        $f3->set('submission', $submission);
+        $f3->set('content', 'record/validation.html.php');
+
+        $f3->set('readonly', true);
+
+        echo View::instance()->render('layout.html.php');
+    }
+
     public function submission(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
