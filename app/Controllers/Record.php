@@ -48,7 +48,10 @@ class Record
             $f3->set('uploadError', true);
             if ($attachment['error'] == UPLOAD_ERR_OK) {
                 if (move_uploaded_file($attachment['tmp_name'], $submission->getAttachmentsPath() . basename($attachment['name']))) {
-                    return $f3->reroute('records');
+                    return $f3->reroute(['record_validation', [
+                        'record' => $record->name,
+                        'submission' => $submission->name,
+                    ]]);
                 }
             }
         }
