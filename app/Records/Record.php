@@ -65,7 +65,7 @@ class Record
         }
     }
 
-    public function getSubmissions()
+    public function getSubmissions($statusFilter = null)
     {
         $submissions = scandir($this->submissionsPath);
         if (!$submissions) {
@@ -76,12 +76,13 @@ class Record
             if (in_array($submission, ['.', '..'])) {
                 continue;
             }
-            try {
-                $items[] = new Submission($this, $submission);
-            } catch (\Exception $e) {
+            $s = new Submission($this, $submission);
+            if ($statusFilter && $statusFilter != $s->status) {
                 continue;
             }
+            $items[$s->datetime->format('YmdHis')] = $s;
         }
+        krsort($items);
         return $items;
     }
 
