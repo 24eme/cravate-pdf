@@ -5,19 +5,16 @@
   <?php foreach($records as $i => $record): ?>
   <div class="col">
     <div class="card h-100">
-      <div class="card-header text-end">
-        <div class="dropdown">
-          <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-list"></i>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="/record/<?php echo $record->name ?>/submissions" class="dropdown-item"><i class="bi bi-journals"></i> Liste des dépôts</a></li>
-          </ul>
-        </div>
+      <div class="card-header">
+        <?php echo $record->getConfigItem('title') ?>
       </div>
-      <div class="card-body text-center">
-        <h5 class="card-title"><?php echo $record->getLibelle() ?></h5>
-        <a href="/form?record=<?php echo $record->name ?>" class="btn btn-primary mt-2">Saisir le dossier</a>
+      <div class="card-body">
+        <h5 class="card-title"><?php echo $record->getConfigItem('subtitle') ?></h5>
+        <p class="card-text"><?php echo $record->getConfigItem('text') ?></p>
+        <p class="text-center">
+          <a href="/form?record=<?php echo $record->name ?>" class="btn btn-primary mt-2 d-block"><i class="bi bi-file-earmark-plus"></i> Saisir le dossier</a>
+          <a href="/record/<?php echo $record->name ?>/submissions" class="mt-2 d-block">Liste des dépôts</a>
+        </p>
       </div>
     </div>
   </div>

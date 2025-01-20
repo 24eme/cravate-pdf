@@ -5,8 +5,19 @@ namespace Records;
 class Submission
 {
 
+    const STATUS_DRAFT = 'DRAFT';
+    const STATUS_SUBMITTED = 'SUBMITTED';
+    const STATUS_VALIDATED = 'VALIDATED';
+    const STATUS_UNCOMPLETED = 'UNCOMPLETED';
+    const STATUS_REJECTED = 'REJECTED';
+
+    public static $allStatus = [self::STATUS_DRAFT, self::STATUS_SUBMITTED, self::STATUS_VALIDATED, self::STATUS_UNCOMPLETED, self::STATUS_REJECTED];
+    public static $statusThemeColor = [self::STATUS_DRAFT => 'light', self::STATUS_SUBMITTED => 'secondary', self::STATUS_VALIDATED => 'success', self::STATUS_UNCOMPLETED => 'warning', self::STATUS_REJECTED => 'danger'];
+
     public $record;
     public $name;
+    public $datetime;
+    public $status;
     public $path;
     public $pdf;
     public $xfdf;
@@ -31,11 +42,27 @@ class Submission
         $files = scandir($this->path);
         foreach ($files as $file) {
             if (strpos($file, '.pdf') !== false) {
-                $this->pdf = $this->path.$file;
+                $this->pdf = $file;
             }
             if (strpos($file, '.xfdf') !== false) {
-                $this->xfdf = $this->path.$file;
+                $this->xfdf = $file;
             }
+        }
+        $pos = strpos($this->name, "_");
+        if ($pos === false) {
+            throw new \Exception("The name < $this->name > does not contain datetime");
+        }
+        $this->datetime = \DateTime::createFromFormat('YmdHis', substr($this->name, 0, $pos));
+        if (!$this->datetime) {
+            throw new \Exception("< ".substr($this->name, 0, $pos)." > is not a valid datetime");
+        }
+        $pos = strrpos($this->name, "_");
+        if ($pos === false) {
+            throw new \Exception("The name < $this->name > does not contain status");
+        }
+        $this->status = substr($this->name, $pos + 1);
+        if (!in_array($this->status, self::$allStatus)) {
+            throw new \Exception("< $this->status > is not a valid status");
         }
     }
 
@@ -46,15 +73,14 @@ class Submission
 
         $this->name = date('YmdHis');
         if (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['format_dir'])) {
-            $this->name = $this->record->config['SUBMISSION']['format_dir'];
-            $this->name = str_replace(['%DATE%', '%DATETIME%'], [date('Ymd'), date('YmdHis')], $this->name);
+            $this->name .= '_'.$this->record->config['SUBMISSION']['format_dir'];
             if ($xfdf) {
                 foreach ($xfdf->fields->field as $field) {
                     $this->name = str_replace('%'.((string)$field->attributes()['name']).'%', (string)$field->value, $this->name);
                 }
             }
         }
-
+        $this->name .= '_'.self::STATUS_DRAFT;
         $this->path = $this->record->submissionsPath.$this->name.DIRECTORY_SEPARATOR;
         if (!file_exists($this->path)) {
             mkdir($this->path);
@@ -81,7 +107,7 @@ class Submission
         if (!$this->xfdf) {
             throw new \Exception("xfdf file needed");
         }
-        $xfdf = simplexml_load_file($this->xfdf);
+        $xfdf = simplexml_load_file($this->path.$this->xfdf);
         $config = $this->record->config;
         if (!isset($config['ATTACHED_FILE'])) {
             return null;
@@ -117,12 +143,35 @@ class Submission
                 continue;
             }
             try {
-                $items[] = $this->getAttachmentsPath().$attachment;
+                $items[] = $attachment;
             } catch (\Exception $e) {
                 continue;
             }
         }
         return $items;
+    }
+
+    public function getStatusThemeColor()
+    {
+        return (isset(self::$statusThemeColor[$this->status]))? self::$statusThemeColor[$this->status] : '';
+    }
+
+    public function getLibelle()
+    {
+        return trim(str_replace([$this->datetime->format('YmdHis'), $this->status, '_'], ['', '', ' '], $this->name));
+    }
+
+    public function getDatas()
+    {
+        $xfdf = simplexml_load_file($this->path.$this->xfdf);
+        $datas = [];
+        if ($xfdf) {
+            foreach ($xfdf->fields->field as $field) {
+                $this->name = str_replace('%'.((string)$field->attributes()['name']).'%', (string)$field->value, $this->name);
+                $datas[((string)$field->attributes()['name'])] = (string)$field->value;
+            }
+        }
+        return $datas;
     }
 
 }

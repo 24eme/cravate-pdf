@@ -65,7 +65,7 @@ class Record
         }
     }
 
-    public function getSubmissions()
+    public function getSubmissions($statusFilter = null)
     {
         $submissions = scandir($this->submissionsPath);
         if (!$submissions) {
@@ -76,17 +76,31 @@ class Record
             if (in_array($submission, ['.', '..'])) {
                 continue;
             }
-            try {
-                $items[] = new Submission($this, $submission);
-            } catch (\Exception $e) {
+            $s = new Submission($this, $submission);
+            if ($statusFilter && $statusFilter != $s->status) {
                 continue;
             }
+            $items[$s->datetime->format('YmdHis')] = $s;
         }
+        krsort($items);
         return $items;
     }
 
-    public function getLibelle()
+    public function countByStatus()
     {
-        return (isset($this->config['libelle']))? $this->config['libelle'] : $this->name;
+        $submissions = $this->getSubmissions();
+        $result = array_fill_keys(Submission::$allStatus, 0);
+        foreach ($submissions as $submission) {
+            $result[$submission->status]++;
+        }
+        return $result;
+    }
+
+    public function getConfigItem($item)
+    {
+        if (!isset($this->config[$item])) {
+            throw new \Exception("No < $item > item record's config");
+        }
+        return $this->config[$item];
     }
 }
