@@ -1,3 +1,7 @@
+<?php echo View::instance()->render('global/etapes.html.php', 'text/html', [
+  'steps' => ['Formulaire' => 0, 'Annexes' => 1, 'Validation' => 0]
+]) ?>
+
 <form method="POST" class="row" action="/fill<?php echo (isset($record))? '?record='.$record->name : ''; ?>">
 
 <input type="hidden" value="<?php echo $pdfForm->pdfFile ?>" name="file">
