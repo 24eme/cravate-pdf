@@ -108,7 +108,7 @@ class Submission
         if (!$this->xfdf) {
             throw new \Exception("xfdf file needed");
         }
-        $xfdf = simplexml_load_file($this->path.$this->xfdf);
+        $xfdf = simplexml_load_file($this->path.preg_replace('|^.*/|', '', $this->xfdf));
         $config = $this->record->config;
         if (!isset($config['ATTACHED_FILE'])) {
             return null;
