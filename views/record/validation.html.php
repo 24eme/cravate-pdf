@@ -1,5 +1,3 @@
-<h1>Dossier <?php echo $record->getConfigItem('title') ?></h1>
-
 <nav class="navbar navbar-expand-lg bg-body-tertiary mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
@@ -9,6 +7,10 @@
     </ol>
   </div>
 </nav>
+
+<h1>Dossier <?php echo $record->getConfigItem('title') ?></h1>
+
+<?php echo View::instance()->render('global/etapes.html.php'); ?>
 
 <h1 class="pb-2 my-4">
   <?php echo $submission->getLibelle() ?>

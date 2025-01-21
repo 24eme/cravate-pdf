@@ -89,6 +89,7 @@ class Record
                     ]]);
         }
 
+        $f3->get('steps')->activate(Steps::STEP_VALIDATION);
         $f3->set('record', $record);
         $f3->set('submission', $submission);
         $f3->set('content', 'record/validation.html.php');
