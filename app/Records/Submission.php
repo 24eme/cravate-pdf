@@ -195,4 +195,16 @@ class Submission
         return $fields;
     }
 
+    public function updateStatus($newStatus)
+    {
+        $newPath = str_replace($this->status, $newStatus, $this->path);
+        if (!rename($this->path, $newPath)) {
+            throw new \Exception("Submission folder rename failed");
+        }
+        $this->path = $newPath;
+        $this->name = str_replace($this->status, $newStatus, $this->name);
+        $this->status = $newStatus;
+        return true;
+    }
+
 }

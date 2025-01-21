@@ -128,4 +128,17 @@ class Record
             return $f3->error(404, "File not found");
         }
     }
+
+    public function updatestatus(Base $f3)
+    {
+        $record = new Rec($f3->get('PARAMS.record'));
+        $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        $newStatus = $f3->get('POST.status');
+
+        if (!in_array($newStatus, Submission::$allStatus)) {
+            return $f3->error(404, "Status < $newStatus > not allowed");
+        }
+        $submission->updateStatus($newStatus);
+        return $f3->reroute(['record_submission', ['record' => $record->name, 'submission' => $submission->name]]);
+    }
 }
