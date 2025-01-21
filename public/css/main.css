@@ -55,6 +55,10 @@
     color: var(--bs-black);
 }
 
+.step-item.active ~ .step-item:before {
+    border-color: #000;
+}
+
 .step-item.active ~ .step-item a {
     color: var(--bs-black);
 }
