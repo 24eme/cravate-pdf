@@ -1,3 +1,13 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary mt-2" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <div class="container-fluid">
+    <ol class="my-1 breadcrumb">
+      <li class="breadcrumb-item"><a href="/records">Dossiers</a></li>
+      <li class="breadcrumb-item"><a href="/record/<?php echo $submission->record->name ?>/submissions"><?php echo $submission->record->getConfigItem('subtitle') ?></a></li>
+      <li class="breadcrumb-item">Saisie</li>
+    </ol>
+  </div>
+</nav>
+
 <h1>Dossier <?php echo isset($record) ? $record->getConfigItem('title') : '' ?></h1>
 
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
