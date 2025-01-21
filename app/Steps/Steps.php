@@ -16,12 +16,18 @@ class Steps
         self::STEP_VALIDATION
     ];
 
+    const stepsLinks = [
+        self::STEP_FORM => 'record_submission_new',
+        self::STEP_ANNEXES => 'record_attachment',
+        self::STEP_VALIDATION => 'record_validation'
+    ];
+
     public $steps = [];
 
     public function __construct()
     {
         foreach (self::stepsOrder as $step) {
-            $this->steps[$step] = new Step($step);
+            $this->steps[$step] = new Step($step, self::stepsLinks[$step]);
         }
 
         $firstStep = current($this->steps);

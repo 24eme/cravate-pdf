@@ -5,11 +5,13 @@ namespace Steps;
 class Step
 {
     public $name;
+    public $link;
     public $active = false;
 
-    public function __construct($name)
+    public function __construct($name, $link = null)
     {
         $this->name = $name;
+        $this->link = $link;
     }
 
     public function activate()
@@ -30,6 +32,11 @@ class Step
     public function get()
     {
         return $this->name;
+    }
+
+    public function link()
+    {
+        return $this->link;
     }
 
     public function __toString()
