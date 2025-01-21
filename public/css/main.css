@@ -27,9 +27,10 @@
 .step-item:before {
     box-sizing: border-box;
     border-radius: 50%;
-    border: 3px solid #fff;
-    padding: 4px 10px;
+    border: 1px solid #fff;
+    padding: 2px 8px;
     content: counter(step);
+    margin-right: 1ch;
 }
 
 .step-item:first-child {
