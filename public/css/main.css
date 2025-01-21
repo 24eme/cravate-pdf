@@ -20,10 +20,21 @@
     margin-right: 2px;
 
     display: block;
+
+    counter-increment: step;
+}
+
+.step-item:before {
+    box-sizing: border-box;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    padding: 4px 10px;
+    content: counter(step);
 }
 
 .step-item:first-child {
     margin-left: 0px;
+    counter-reset: step;
 }
 
 .step-item:last-child {
