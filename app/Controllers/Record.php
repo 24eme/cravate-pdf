@@ -83,7 +83,7 @@ class Record
 
         if ($f3->get('VERB') === 'POST') {
             $submission->setStatus(Submission::STATUS_SUBMITTED);
-            return $f3->reroute(['record_validation', [
+            return $f3->reroute(['record_submission', [
                         'record' => $record->name,
                         'submission' => $submission->name
                     ]]);
