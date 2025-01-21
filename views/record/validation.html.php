@@ -46,7 +46,7 @@
 </div>
 
 <?php if ($submission->status === Records\Submission::STATUS_DRAFT): ?>
-<div class="row">
+<div class="text-center">
   <form method="post">
     <button type=submit class="btn btn-primary"><i class="bi bi-upload"></i> Soumettre le dossier</button>
   </form>
