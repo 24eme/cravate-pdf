@@ -10,7 +10,7 @@
 
 <h1 class="pb-2 my-4">
   <?php echo $submission->getLibelle() ?>
-  <div class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap"><?php echo ucfirst(strtolower($submission->status)) ?></div>
+  <div class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap"><?php echo Records\Submission::printStatus($submission->status) ?></div>
 </h1>
 
 <div class="row">
@@ -45,7 +45,7 @@
       <div class="col-8">
         <select class="form-select">
           <?php foreach(Records\Submission::$statusThemeColor as $status => $themeColor): ?>
-          <option value="<?php echo $status ?>"<?php if ($status == $submission->status): ?> selected<?php endif ?>><i class="text-<?php echo $themeColor ?> bi bi-circle-fill"></i> <?php echo ucfirst(strtolower($status)) ?></option>
+          <option value="<?php echo $status ?>"<?php if ($status == $submission->status): ?> selected<?php endif ?>><i class="text-<?php echo $themeColor ?> bi bi-circle-fill"></i> <?php echo Records\Submission::printStatus($status) ?></option>
           <?php endforeach; ?>
         </select>
       </div>

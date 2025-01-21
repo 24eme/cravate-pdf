@@ -5,14 +5,15 @@ namespace Records;
 class Submission
 {
 
-    const STATUS_DRAFT = 'DRAFT';
-    const STATUS_SUBMITTED = 'SUBMITTED';
-    const STATUS_VALIDATED = 'VALIDATED';
-    const STATUS_UNCOMPLETED = 'UNCOMPLETED';
-    const STATUS_REJECTED = 'REJECTED';
+    const STATUS_DRAFT = 'NOUVEAU';
+    const STATUS_SUBMITTED = 'DÉPOSÉ';
+    const STATUS_VALIDATED = 'VALIDÉ';
+    const STATUS_UNCOMPLETED = 'INCOMPLET';
+    const STATUS_REJECTED = 'REJETÉ';
+    const STATUS_CLOSED = 'CLOTURÉ';
 
-    public static $allStatus = [self::STATUS_DRAFT, self::STATUS_SUBMITTED, self::STATUS_VALIDATED, self::STATUS_UNCOMPLETED, self::STATUS_REJECTED];
-    public static $statusThemeColor = [self::STATUS_DRAFT => 'light', self::STATUS_SUBMITTED => 'secondary', self::STATUS_VALIDATED => 'success', self::STATUS_UNCOMPLETED => 'warning', self::STATUS_REJECTED => 'danger'];
+    public static $allStatus = [self::STATUS_DRAFT, self::STATUS_SUBMITTED, self::STATUS_VALIDATED, self::STATUS_UNCOMPLETED, self::STATUS_REJECTED, self::STATUS_CLOSED];
+    public static $statusThemeColor = [self::STATUS_DRAFT => 'light', self::STATUS_SUBMITTED => 'secondary', self::STATUS_VALIDATED => 'success', self::STATUS_UNCOMPLETED => 'warning', self::STATUS_REJECTED => 'danger', self::STATUS_CLOSED => 'dark'];
 
     public $record;
     public $name;
@@ -172,6 +173,11 @@ class Submission
             }
         }
         return $datas;
+    }
+
+    public static function printStatus($status)
+    {
+        return ucfirst(mb_strtolower($status));
     }
 
 }
