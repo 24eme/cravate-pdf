@@ -108,7 +108,7 @@ class Submission
         if (!$this->xfdf) {
             throw new \Exception("xfdf file needed");
         }
-        $xfdf = simplexml_load_file($this->xfdf);
+        $xfdf = simplexml_load_file($this->path.$this->xfdf);
         $config = $this->record->config;
         if (!isset($config['ATTACHED_FILE'])) {
             return null;
@@ -178,6 +178,21 @@ class Submission
     public static function printStatus($status)
     {
         return ucfirst(mb_strtolower($status));
+    }
+
+    public function getForm() {
+
+        return $this->record->config['form'];
+    }
+
+    public function getFields() {
+        $fields = [];
+
+        foreach($this->getForm() as $key => $field) {
+            $fields[$field['category']][$key] = $field;
+        }
+
+        return $fields;
     }
 
 }

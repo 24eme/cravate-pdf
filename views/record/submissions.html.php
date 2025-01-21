@@ -7,7 +7,7 @@
   </div>
 </nav>
 
-<h1 class="border-bottom pb-2 mt-4">Dépôts<a href="/form?record=<?php echo $record->name ?>" class="btn btn-primary mt-2 float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i></a></h1>
+<h1 class="border-bottom pb-2 mt-4">Dépôts<a href="<?php echo Base::instance()->alias('record_submission_new', ['record' => $record->name]) ?>" class="btn btn-light mt-2 float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i> Saisir une dossier</a></h1>
 
 <div class="row">
   <div class="col-9">

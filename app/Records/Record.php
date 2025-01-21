@@ -7,7 +7,7 @@ use Records\Submission;
 class Record
 {
     const PDF_FILENAME = 'form.pdf';
-    const CONFIG_FILENAME = 'form.ini';
+    const CONFIG_FILENAME = 'form.php';
     const METAS_FILENAME = 'form.json';
     const SUBMISSIONS_PATH = 'submissions/';
 
@@ -49,10 +49,13 @@ class Record
     {
         $this->config = [];
         if (file_exists($this->path.self::CONFIG_FILENAME)) {
+            $this->config = include($this->path.self::CONFIG_FILENAME);
+        }
+        /*if (file_exists($this->path.self::CONFIG_FILENAME)) {
             if ($config = parse_ini_file($this->path.self::CONFIG_FILENAME, true)) {
                 $this->config = $config;
             }
-        }
+        }*/
     }
 
     private function loadMetas()
