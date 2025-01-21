@@ -41,9 +41,9 @@
   <div class="col-4">
     <p class="mt-4 fs-5 text-end">Dépot : <?php echo $submission->datetime->format('d/m/Y H:i'); ?></p>
     <h2 class="pb-2 h3"><i class="bi bi-gear"></i> Statut</h2>
-    <div class="row mb-4">
+    <form action="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/status" method="post" class="row mb-4">
       <div class="col-8">
-        <select class="form-select">
+        <select name="status" class="form-select">
           <?php foreach(Records\Submission::$statusThemeColor as $status => $themeColor): ?>
           <option value="<?php echo $status ?>"<?php if ($status == $submission->status): ?> selected<?php endif ?>><i class="text-<?php echo $themeColor ?> bi bi-circle-fill"></i> <?php echo Records\Submission::printStatus($status) ?></option>
           <?php endforeach; ?>
@@ -52,7 +52,7 @@
       <div class="col-4">
         <input class="btn btn-warning w-100" type="submit" value="Modifier" />
       </div>
-    </div>
+    </form>
     <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
     <ul class="list-group">
       <a class="list-group-item list-group-item-action" href="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/getfile?disposition=attachment&file=<?php echo $submission->pdf ?>" target="_blank">
