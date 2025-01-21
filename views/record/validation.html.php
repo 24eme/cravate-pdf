@@ -42,3 +42,11 @@
     </ul>
   </div>
 </div>
+
+<?php if ($submission->status === "DRAFT"): ?>
+<div class="row">
+  <form method="post">
+    <button type=submit class="btn btn-primary">Valider</button>
+  </form>
+</div>
+<?php endif ?>

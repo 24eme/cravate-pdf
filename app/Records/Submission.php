@@ -2,6 +2,8 @@
 
 namespace Records;
 
+use DomainException;
+
 class Submission
 {
 
@@ -100,6 +102,26 @@ class Submission
             throw new \Exception("xfdf save failed");
         }
         $this->xfdf = $this->path.$filename.'.xfdf';
+    }
+
+    public function setStatus($status)
+    {
+        if (in_array($status, self::$allStatus) === false) {
+            throw new DomainException("{$status} n'est pas un status valide");
+        }
+
+        $oldStatus = $this->status;
+        $newName = str_replace($oldStatus, $status, $this->name);
+
+        if ($this->name === $newName) { // Pas de changement de status
+            return true;
+        }
+
+        $newPath = str_replace($this->name, $newName, $this->path);
+        rename($this->path, $newPath);
+        $this->load($newName);
+
+        return true;
     }
 
     public function getAttachmentNeeded()

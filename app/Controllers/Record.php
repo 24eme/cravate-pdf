@@ -68,6 +68,15 @@ class Record
     {
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
+
+        if ($f3->get('VERB') === 'POST') {
+            $submission->setStatus(Submission::STATUS_SUBMITTED);
+            return $f3->reroute(['record_validation', [
+                        'record' => $record->name,
+                        'submission' => $submission->name
+                    ]]);
+        }
+
         $f3->set('record', $record);
         $f3->set('submission', $submission);
         $f3->set('content', 'record/validation.html.php');
