@@ -43,7 +43,7 @@
   </div>
 </div>
 
-<?php if ($submission->status === Submission::STATUS_DRAFT): ?>
+<?php if ($submission->status === Records\Submission::STATUS_DRAFT): ?>
 <div class="row">
   <form method="post">
     <button type=submit class="btn btn-primary">Valider</button>
