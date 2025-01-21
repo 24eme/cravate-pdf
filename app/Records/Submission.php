@@ -7,9 +7,9 @@ use DomainException;
 class Submission
 {
 
-    const STATUS_DRAFT = 'NOUVEAU';
+    const STATUS_DRAFT = 'BROUILLON';
     const STATUS_SUBMITTED = 'DÉPOSÉ';
-    const STATUS_VALIDATED = 'VALIDÉ';
+    const STATUS_VALIDATED = 'APPROUVÉ';
     const STATUS_UNCOMPLETED = 'INCOMPLET';
     const STATUS_REJECTED = 'REJETÉ';
     const STATUS_CLOSED = 'CLOTURÉ';
