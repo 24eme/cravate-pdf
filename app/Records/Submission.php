@@ -188,6 +188,10 @@ class Submission
 
     public function getDatas()
     {
+        if (! $this->xfdf) {
+            return [];
+        }
+
         $xfdf = simplexml_load_file($this->path.$this->xfdf);
         $datas = [];
         if ($xfdf) {

@@ -63,6 +63,15 @@ class Record
         echo View::instance()->render('layout.html.php');
     }
 
+    public function edit(Base $f3)
+    {
+        $f3->set('record', $this->record);
+        $f3->set('submission', $this->submission);
+        $f3->set('content', 'record/form.html.php');
+
+        echo View::instance()->render('layout.html.php');
+    }
+
     public function attachment(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
