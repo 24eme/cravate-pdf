@@ -19,7 +19,7 @@ class RecordsSteps //implements ISteps
     ];
 
     const stepsLinks = [
-        self::STEP_FORM => 'record_submission_new',
+        self::STEP_FORM => 'record_edit|record_submission_new',
         self::STEP_ANNEXES => 'record_attachment',
         self::STEP_VALIDATION => 'record_validation'
     ];
@@ -37,10 +37,13 @@ class RecordsSteps //implements ISteps
     {
         $s = [];
         foreach (self::stepsOrder as $step) {
-            $link = ($this->submission->name) ? self::stepsLinks[$step]
-                                              : null;
+            $split = explode('|', self::stepsLinks[$step]);
 
-            $s[$step] = new Step($step, $link);
+            if ($this->submission->name !== null) {
+                $s[$step] = new Step($step, $split[0]);
+            } else {
+                $s[$step] = new Step($step, null);
+            }
         }
         return $s;
     }
