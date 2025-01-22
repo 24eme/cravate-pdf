@@ -11,9 +11,23 @@ use Records\Submission;
 use Records\Record as Rec;
 
 use Steps\Steps;
+use Steps\RecordsSteps;
 
 class Record
 {
+    private ?Rec $record = null;
+    private ?Submission $submission = null;
+
+    public function beforeroute(Base $f3)
+    {
+        if ($f3->get('PARAMS.record')) {
+            $this->record = new Rec($f3->get('PARAMS.record'));
+            $this->submission = new Submission($this->record, $f3->get('PARAMS.submission'));
+
+            $f3->set('steps', new Steps(new RecordsSteps($this->record, $this->submission)));
+        }
+    }
+
     public function index(Base $f3)
     {
         $f3->set('records', Records::getRecords());
@@ -72,7 +86,7 @@ class Record
         $f3->set('submission', $submission);
         $f3->set('content', 'record/attachmentForm.html.php');
 
-        $f3->get('steps')->activate(Steps::STEP_ANNEXES);
+        $f3->get('steps')->activate(RecordsSteps::STEP_ANNEXES);
         echo View::instance()->render('layout.html.php');
     }
 
@@ -89,7 +103,7 @@ class Record
                     ]]);
         }
 
-        $f3->get('steps')->activate(Steps::STEP_VALIDATION);
+        $f3->get('steps')->activate(RecordsSteps::STEP_VALIDATION);
         $f3->set('record', $record);
         $f3->set('submission', $submission);
         $f3->set('content', 'record/validation.html.php');

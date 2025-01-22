@@ -6,29 +6,13 @@ use Steps\Step;
 
 class Steps
 {
-    const STEP_FORM = 'Formulaire';
-    const STEP_ANNEXES = 'Annexes';
-    const STEP_VALIDATION = 'Validation';
-
-    const stepsOrder = [
-        self::STEP_FORM,
-        self::STEP_ANNEXES,
-        self::STEP_VALIDATION
-    ];
-
-    const stepsLinks = [
-        self::STEP_FORM => 'record_submission_new',
-        self::STEP_ANNEXES => 'record_attachment',
-        self::STEP_VALIDATION => 'record_validation'
-    ];
-
     public $steps = [];
+    public $args = [];
 
-    public function __construct()
+    public function __construct(/*ISteps */$steps)
     {
-        foreach (self::stepsOrder as $step) {
-            $this->steps[$step] = new Step($step, self::stepsLinks[$step]);
-        }
+        $this->steps = $steps->generateSteps();
+        $this->args = $steps->getArgs();
 
         $firstStep = current($this->steps);
         $firstStep->activate();
@@ -37,7 +21,7 @@ class Steps
     public function activate($name)
     {
         if (array_key_exists($name, $this->steps) === false) {
-            throw new \LogicException("L'étape {$name} n'existe pas");
+            throw new \DomainException("L'étape {$name} n'existe pas");
         }
 
         foreach ($this->steps as $step) {
@@ -50,5 +34,10 @@ class Steps
     public function getSteps()
     {
         return $this->steps;
+    }
+
+    public function getLinkArgs()
+    {
+        return $this->args;
     }
 }
