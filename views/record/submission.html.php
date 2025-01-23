@@ -25,7 +25,7 @@
       </li>
     </ul>
     <?php if ($displaypdf): ?>
-      <object type="application/pdf" style="height: 75vh;" class="w-100" data="<?php echo Base::instance()->alias('record_submission_getfile', [], ['file' => $submission->pdf, 'disposition' => 'inline']) ?>#toolbar=0"></object>
+      <object type="application/pdf" style="height: 75vh;" class="w-100" data="<?php echo Base::instance()->alias('record_submission_getfile', [], ['file' => $submission->pdf, 'disposition' => 'inline']) ?>#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0"></object>
     <?php else: ?>
       <table class="table table-striped table-hover">
       <?php foreach($submission->getDatas() as $field => $value): ?>
