@@ -11,11 +11,11 @@ class Submission
     const STATUS_SUBMITTED = 'DÉPOSÉ';
     const STATUS_VALIDATED = 'APPROUVÉ';
     const STATUS_UNCOMPLETED = 'INCOMPLET';
-    const STATUS_REJECTED = 'REJETÉ';
+    const STATUS_CANCELED = 'ANNULÉ';
     const STATUS_CLOSED = 'CLOTURÉ';
 
-    public static $allStatus = [self::STATUS_DRAFT, self::STATUS_SUBMITTED, self::STATUS_VALIDATED, self::STATUS_UNCOMPLETED, self::STATUS_REJECTED, self::STATUS_CLOSED];
-    public static $statusThemeColor = [self::STATUS_DRAFT => 'light', self::STATUS_SUBMITTED => 'secondary', self::STATUS_VALIDATED => 'success', self::STATUS_UNCOMPLETED => 'warning', self::STATUS_REJECTED => 'danger', self::STATUS_CLOSED => 'dark'];
+    public static $allStatus = [self::STATUS_DRAFT, self::STATUS_SUBMITTED, self::STATUS_VALIDATED, self::STATUS_UNCOMPLETED, self::STATUS_CANCELED, self::STATUS_CLOSED];
+    public static $statusThemeColor = [self::STATUS_DRAFT => 'light', self::STATUS_SUBMITTED => 'secondary', self::STATUS_VALIDATED => 'success', self::STATUS_UNCOMPLETED => 'warning', self::STATUS_CANCELED => 'danger', self::STATUS_CLOSED => 'dark'];
 
     public $record;
     public $name;
