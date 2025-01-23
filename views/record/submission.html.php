@@ -45,7 +45,9 @@
       <div class="col-8">
         <select name="status" class="form-select">
           <?php foreach(Records\Submission::$statusThemeColor as $status => $themeColor): ?>
-          <option value="<?php echo $status ?>"<?php if ($status == $submission->status): ?> selected<?php endif ?>><i class="text-<?php echo $themeColor ?> bi bi-circle-fill"></i> <?php echo Records\Submission::printStatus($status) ?></option>
+            <option value="<?php echo $status ?>"<?php if ($status == $submission->status): ?> selected<?php endif ?>>
+              <?php echo Records\Submission::printStatus($status) ?>
+            </option>
           <?php endforeach; ?>
         </select>
       </div>
