@@ -25,7 +25,7 @@
       </li>
     </ul>
     <?php if ($displaypdf): ?>
-    <iframe style="height: 75vh;" class="w-100" src="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/getfile?disposition=inline&file=<?php echo $submission->pdf ?>"></iframe>
+      <object type="application/pdf" style="height: 75vh;" class="w-100" data="<?php echo Base::instance()->alias('record_submission_getfile', [], ['file' => $submission->pdf, 'disposition' => 'inline']) ?>#toolbar=0"></object>
     <?php else: ?>
       <table class="table table-striped table-hover">
       <?php foreach($submission->getDatas() as $field => $value): ?>
