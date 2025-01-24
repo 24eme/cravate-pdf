@@ -13,6 +13,10 @@ use Records\Record as Rec;
 use Steps\Steps;
 use Steps\RecordsSteps;
 
+use Emails\Email;
+
+use Exception;
+
 class Record
 {
     private ?Rec $record = null;
@@ -172,6 +176,13 @@ class Record
             return $f3->error(404, "Status < $newStatus > not allowed");
         }
         $submission->setStatus($newStatus);
+
+        try {
+            $f3->get('mail')
+               ->headers(['From' => 'sender@example.com', 'To' => 'to@example.com', 'Subject' => 'kokok'])
+               ->send('chgtstatus.eml', compact('submission'));
+        } catch (Exception $e) { }
+
         return $f3->reroute(['record_submission', ['record' => $record->name, 'submission' => $submission->name]]);
     }
 }

@@ -1,0 +1,5 @@
+Bonjour,
+
+Votre dossier <?php echo $submission->name ?> a été mis à jour.
+
+Cordialement.
