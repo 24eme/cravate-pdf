@@ -4,7 +4,7 @@ $config = [
     'mail' => [
         'host' => '127.0.0.1',
         'port' => '25',
-        'scheme' => 'tls',
+        'scheme' => 'tls', // tls, ssl, null
         'user' => '',
         'pass' => ''
     ]

@@ -20,7 +20,7 @@ $mailConf = Config::getInstance()->get('mail');
 $smtp = new SMTP(
     $mailConf['host'],
     $mailConf['port'],
-    'tls',
+    $mailConf['scheme'],
     $mailConf['user'],
     $mailConf['pass']
 );
