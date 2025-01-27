@@ -6,6 +6,8 @@ use Base;
 use View;
 use Web;
 
+use Config;
+
 use Records\Records;
 use Records\Submission;
 use Records\Record as Rec;
@@ -179,7 +181,7 @@ class Record
 
         try {
             $f3->get('mail')
-               ->headers(['From' => 'sender@example.com', 'To' => 'to@example.com', 'Subject' => 'kokok'])
+               ->headers(['From' => Config::getInstance()->get('mail')['host'], 'To' => $submission->getDatas()['EMAIL'], 'Subject' => 'Changement de Status de votre dossier'])
                ->send('chgtstatus.eml', compact('submission'));
         } catch (Exception $e) { }
 

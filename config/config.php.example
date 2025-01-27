@@ -6,6 +6,7 @@ $config = [
         'port' => '25',
         'scheme' => 'tls', // tls, ssl, null
         'user' => '',
-        'pass' => ''
+        'pass' => '',
+        'from' => 'from@example.com'
     ]
 ];
