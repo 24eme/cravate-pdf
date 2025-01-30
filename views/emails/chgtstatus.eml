@@ -1,5 +1,5 @@
 Bonjour,
 
-Votre dossier <?php echo $submission->name ?> a été mis à jour.
+Le status de votre dossier <?php echo $submission->name ?> a été mis à jour avec le status : <?php echo $submission->status ?>.
 
 Cordialement.
