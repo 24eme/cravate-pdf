@@ -181,7 +181,7 @@ class Record
 
         try {
             $f3->get('mail')
-               ->headers(['From' => Config::getInstance()->get('mail')['host'], 'To' => $submission->getDatas()['EMAIL'], 'Subject' => 'Changement de Status de votre dossier'])
+               ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $submission->getDatas()['EMAIL'], 'Subject' => 'Changement de Status de votre dossier'])
                ->send('chgtstatus.eml', compact('submission'));
         } catch (Exception $e) { }
 
