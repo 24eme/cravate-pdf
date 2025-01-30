@@ -45,10 +45,12 @@ class Record
     public function submissions(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
-        $statusFilter = $f3->get('GET.status');
-        if ($statusFilter && !in_array($statusFilter, Submission::$allStatus)) {
+        $statusFilter = $f3->get('GET.status') ?? Submission::STATUS_SUBMITTED;
+
+        if (!in_array($statusFilter, [Submission::STATUS_TOUS]+Submission::$allStatus)) {
             return $f3->error(404, "Status not found");
         }
+
         $f3->set('record', $record);
         $f3->set('content', 'record/submissions.html.php');
         $f3->set('statusFilter', $statusFilter);

@@ -68,7 +68,7 @@ class Record
         }
     }
 
-    public function getSubmissions($statusFilter = null)
+    public function getSubmissions($statusFilter = Submission::STATUS_TOUS)
     {
         $submissions = scandir($this->submissionsPath);
         if (!$submissions) {
@@ -80,7 +80,7 @@ class Record
                 continue;
             }
             $s = new Submission($this, $submission);
-            if ($statusFilter && $statusFilter != $s->status) {
+            if ($statusFilter !== Submission::STATUS_TOUS && $statusFilter != $s->status) {
                 continue;
             }
             $items[$s->datetime->format('YmdHis')] = $s;
