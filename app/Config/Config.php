@@ -49,7 +49,23 @@ class Config
     }
 
     public function get($key, $default = null) {
-        return array_key_exists($key, $this->config) ? $this->config[$key] : $default;
+        if (array_key_exists($key, $this->config)) {
+            return $this->config[$key];
+        }
+
+        if (strpos($key, '.') !== false) {
+            $segments = explode('.', $key);
+            $root = $this->config;
+
+            foreach ($segments as $segment) {
+                $root = $root[$segment];
+            }
+
+            $this->config[$key] = $root;
+            return $root;
+        }
+
+        return $default;
     }
 
     public function exists($v) {
