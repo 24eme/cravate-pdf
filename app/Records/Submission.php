@@ -186,7 +186,7 @@ class Submission
         return trim(str_replace([$this->datetime->format('YmdHis'), $this->status, '_'], ['', '', ' '], $this->name));
     }
 
-    public function getDatas()
+    public function getDatas($key = null)
     {
         if (! $this->xfdf) {
             return [];
@@ -200,6 +200,11 @@ class Submission
                 $datas[((string)$field->attributes()['name'])] = (string)$field->value;
             }
         }
+
+        if ($key && array_key_exists($key, $datas)) {
+            return $datas[$key];
+        }
+
         return $datas;
     }
 
