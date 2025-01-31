@@ -24,6 +24,7 @@ class Submission
     public $path;
     public $pdf;
     public $xfdf;
+    public $datas = [];
 
     const ATTACHMENTS_PATH = 'attachments/';
 
@@ -49,6 +50,7 @@ class Submission
             }
             if (strpos($file, '.xfdf') !== false) {
                 $this->xfdf = $file;
+                $this->loadXFDF();
             }
         }
         $pos = strpos($this->name, "_");
@@ -186,26 +188,37 @@ class Submission
         return trim(str_replace([$this->datetime->format('YmdHis'), $this->status, '_'], ['', '', ' '], $this->name));
     }
 
-    public function getDatas($key = null)
+    public function loadDatas(array $datas)
+    {
+        $this->datas = array_merge($this->datas, $datas);
+    }
+
+    public function loadXFDF()
     {
         if (! $this->xfdf) {
-            return [];
+            return false;
         }
 
         $xfdf = simplexml_load_file($this->path.$this->xfdf);
-        $datas = [];
         if ($xfdf) {
             foreach ($xfdf->fields->field as $field) {
                 $this->name = str_replace('%'.((string)$field->attributes()['name']).'%', (string)$field->value, $this->name);
-                $datas[((string)$field->attributes()['name'])] = (string)$field->value;
+                $this->datas[((string)$field->attributes()['name'])] = (string)$field->value;
             }
         }
+    }
 
-        if ($key && array_key_exists($key, $datas)) {
-            return $datas[$key];
+    public function getDatas($key = null)
+    {
+        if (empty($this->datas)) {
+            return [];
         }
 
-        return $datas;
+        if ($key && array_key_exists($key, $this->datas)) {
+            return $this->datas[$key];
+        }
+
+        return $this->datas;
     }
 
     public static function printStatus($status)
