@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Base;
+use Flash;
 use View;
 use Web;
 use PDF\PDFForm;
@@ -10,6 +11,7 @@ use PDF\PDFtk;
 use Records\Record;
 use Records\Submission;
 use Steps\Steps;
+use Validator\Validation;
 
 class Main
 {
@@ -65,21 +67,34 @@ class Main
         $pdfForm = new PDFForm($pdffile);
 
         $cleanedData = PDFtk::cleanData($pdfForm->getFields(), $postData);
-        $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
 
         if ($f3->get('GET.record')) {
             try {
                 $record = new Record($f3->get('GET.record'));
                 $submission = new Submission($record);
+
+                $validator = new Validation();
+                $valid = $validator->validate($cleanedData, $record->getValidation());
+
+                if ($valid === false) {
+                    Flash::instance()->setKey('form-error', $validator->getErrors());
+                    return $f3->reroute(['record_edit', ['record' => $record->name, 'submission' => $submission->name]]);
+                }
+
+                $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
+
                 $submission->save($outputFile);
                 if ($submission->getAttachmentNeeded()) {
                     return $f3->reroute(['record_attachment', ['record' => $record->name, 'submission' => $submission->name]]);
                 } else {
                     return $f3->reroute('records');
                 }
-
-            } catch(\Exception $e) { }
+            } catch(\Exception $e) {
+                return $f3->reroute('@records');
+            }
         }
+
+        $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
 
         Web::instance()->send($outputFile['pdf'], 'application/pdf', null, true);
         unlink($outputFile['pdf']);

@@ -106,4 +106,12 @@ class Record
         }
         return $this->config[$item];
     }
+
+    public function getValidation()
+    {
+        return array_combine(
+            array_keys($this->getConfigItem('form')),
+            array_column($this->getConfigItem('form'), 'validate')
+        );
+    }
 }

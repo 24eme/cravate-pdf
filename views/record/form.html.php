@@ -12,6 +12,13 @@
 
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
 
+<?php if (Flash::instance()->hasKey('form-error')): ?>
+  <?php $errors = Flash::instance()->getKey('form-error'); ?>
+  <div class="alert alert-danger">
+    <?php implode(', ', array_column($errors, 'fields')); ?>
+  </div>
+<?php endif ?>
+
 <form method="POST" class="row" action="/fill<?php echo (isset($record))? '?record='.$record->name : ''; ?>">
 
 <input type="hidden" value="<?php echo $record->pdf ?>" name="file">
