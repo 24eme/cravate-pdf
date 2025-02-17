@@ -1,6 +1,8 @@
 <?php
-
 $config = [
+    'theme' => '',
+    'header_link' => '',
+    'footer_link' => '',
     'mail' => [
         'host' => '127.0.0.1',
         'port' => '25',

@@ -12,11 +12,26 @@
     <link href="/vendor/bootstrap/bootstrap.min.css?v5.3.3" rel="stylesheet" />
     <link href="/vendor/bootstrap/bootstrap-icons.min.css?v5.3.3" rel="stylesheet" />
     <link href="/css/main.css?<?php echo $VERSION ?>" rel="stylesheet" />
+    <?php
+      if ($theme = $config->get('theme')) {
+        include("$ROOT/themes/$theme/css.php");
+      }
+    ?>
   </head>
   <body>
-    <div class="container">
-    <?php include($content); ?>
+    <?php
+      if ($theme = $config->get('theme')) {
+        include("$ROOT/themes/$theme/header.php");
+      }
+    ?>
+    <div class="container pb-4">
+      <?php include($content); ?>
     </div>
+    <?php
+      if ($theme = $config->get('theme')) {
+        include("$ROOT/themes/$theme/footer.php");
+      }
+    ?>
     <script src="/vendor/bootstrap/bootstrap.bundle.min.js?v5.3.3"></script>
     <script src="/js/main.js?<?php echo $VERSION ?>"></script>
   </body>
