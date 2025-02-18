@@ -53,7 +53,7 @@ class Record
         $record = new Rec($f3->get('PARAMS.record'));
         $statusFilter = $f3->get('GET.status') ?? Submission::STATUS_SUBMITTED;
 
-        if (!in_array($statusFilter, [Submission::STATUS_TOUS]+Submission::$allStatus)) {
+        if (in_array($statusFilter, array_merge([Submission::STATUS_TOUS], Submission::$allStatus)) === false) {
             return $f3->error(404, "Status not found");
         }
 
