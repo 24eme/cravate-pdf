@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Base;
+use Flash;
 use View;
 use Web;
 
@@ -16,6 +17,10 @@ use Steps\Steps;
 use Steps\RecordsSteps;
 
 use Emails\Email;
+
+use PDF\PDFForm;
+use PDF\PDFtk;
+use Validator\Validation;
 
 use Exception;
 use Scrape\Declarvin;
@@ -84,6 +89,45 @@ class Record
         }
 
         echo View::instance()->render('layout.html.php');
+    }
+
+    public function fill(Base $f3)
+    {
+        $postData = $f3->get('POST');
+
+        if (isset($postData['file']) === false) {
+            $f3->error(403, 'Missing file parameter');
+        }
+
+        $pdffile = $postData['file'];
+        $pdfForm = new PDFForm($pdffile);
+
+        $cleanedData = PDFtk::cleanData($pdfForm->getFields(), $postData);
+
+        try {
+            $submission = new Submission($this->record, $f3->get('POST.submission'));
+
+            $validator = new Validation();
+            $valid = $validator->validate($cleanedData, $this->record->getValidation());
+
+            if ($valid === false) {
+                Flash::instance()->setKey('form-error', $validator->getErrors());
+                return $submission->name
+                    ? $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->name]])
+                    : $f3->reroute(['record_submission_new', ['record' => $this->record->name]]);
+            }
+
+            $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
+
+            $submission->save($outputFile);
+            if ($submission->getAttachmentNeeded()) {
+                return $f3->reroute(['record_attachment', ['record' => $this->record->name, 'submission' => $submission->name]]);
+            } else {
+                return $f3->reroute('records');
+            }
+        } catch(\Exception $e) {
+            return $f3->reroute('@records');
+        }
     }
 
     public function attachment(Base $f3)

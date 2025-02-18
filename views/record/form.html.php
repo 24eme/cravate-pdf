@@ -15,12 +15,19 @@
 <?php if (Flash::instance()->hasKey('form-error')): ?>
   <?php $errors = Flash::instance()->getKey('form-error'); ?>
   <div class="alert alert-danger">
-    <?php implode(', ', array_column($errors, 'fields')); ?>
+    <ul>
+    <?php foreach ($errors as $error): ?>
+      <li><strong><?php echo $error['field'] ?></strong> <?php echo $error['message'] ?></li>
+    <?php endforeach ?>
+    </ul>
   </div>
 <?php endif ?>
 
-<form method="POST" class="row" action="/fill<?php echo (isset($record))? '?record='.$record->name : ''; ?>">
+<form method="POST" class="row" action="<?php echo Base::instance()->alias('record_fill') ?>">
 
+<?php if (Base::instance()->get('PARAMS.submission')): ?>
+  <input type="hidden" value="<?php echo $submission->name ?>" name="submission">
+<?php endif ?>
 <input type="hidden" value="<?php echo $record->pdf ?>" name="file">
 
 <div class="col-6 offset-3 mt-3 justify-content-center">
