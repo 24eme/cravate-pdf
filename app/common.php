@@ -3,7 +3,6 @@
 use Config\Config;
 use DB\DBManager;
 use Emails\Email;
-use SMTP;
 
 $f3 = Base::instance();
 

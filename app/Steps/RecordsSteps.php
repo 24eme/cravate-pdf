@@ -25,7 +25,7 @@ class RecordsSteps //implements ISteps
     ];
 
     private Record $record;
-    private Submission|null $submission;
+    private Submission $submission;
 
     public function __construct(Record $record, Submission $submission = null)
     {
