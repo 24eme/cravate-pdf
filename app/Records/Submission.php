@@ -137,6 +137,8 @@ class Submission
             return true;
         }
 
+        $this->addHistory("Mis à jour vers le status $status");
+
         $newPath = str_replace($this->name, $newName, $this->path);
         if (!rename($this->path, $newPath)) {
             throw new \Exception("Submission folder rename failed");
