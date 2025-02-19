@@ -22,6 +22,8 @@ class Submission
     public $record;
     public $name;
 
+    public $filename;
+
     public $datetime;
     public $status;
     public $path;
@@ -73,6 +75,10 @@ class Submission
         if (!in_array($this->status, self::$allStatus)) {
             /* throw new \Exception("< $this->status > is not a valid status"); */
         }
+
+        $this->filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
+                    ? $this->record->config['SUBMISSION']['filename']
+                    : null;
     }
 
     /**
@@ -86,9 +92,7 @@ class Submission
 
         $oldPath = $this->path;
 
-        $filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
-                    ? $this->record->config['SUBMISSION']['filename']
-                    : basename($pdf, '.pdf');
+        $filename = $this->filename ?: basename($pdf, '.pdf');
 
         // fichier de tmp -> dans dossier
         if (!rename($pdf, $this->path.$filename.'.pdf')) {
