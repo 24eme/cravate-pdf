@@ -146,6 +146,13 @@ class Submission
         return true;
     }
 
+    public function addHistory($data)
+    {
+        $data = ['date' => (new \DateTime())->format('c'), 'entrie' => $data];
+        $this->json->history[] = json_decode(json_encode($data));
+        file_put_contents($this->path.$this->filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT));
+    }
+
     public function getAttachmentNeeded()
     {
         $config = $this->record->config;
