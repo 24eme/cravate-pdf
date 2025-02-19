@@ -84,6 +84,28 @@ class Submission
         $pdf = $files['pdf'];
         $xfdf = $files['xfdf'];
 
+        $oldPath = $this->path;
+
+        $filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
+                    ? $this->record->config['SUBMISSION']['filename']
+                    : basename($pdf, '.pdf');
+
+        // fichier de tmp -> dans dossier
+        if (!rename($pdf, $this->path.$filename.'.pdf')) {
+            throw new \Exception("pdf save failed");
+        }
+        $this->pdf =  $this->path.$filename.'.pdf';
+
+        // fichier de tmp -> dans dossier
+        if (!rename($xfdf, $this->path.$filename.'.xfdf')) {
+            throw new \Exception("xfdf save failed");
+        }
+        $this->xfdf = $this->path.$filename.'.xfdf';
+
+        $this->json->form = json_decode(json_encode($data));
+        file_put_contents($this->path.$filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT));
+
+        // on renomme le dossier
         $this->name = date('YmdHis');
         if (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['format_dir'])) {
             $this->name .= '_'.$this->record->config['SUBMISSION']['format_dir'];
@@ -93,28 +115,9 @@ class Submission
         }
 
         $this->name .= '_'.self::STATUS_DRAFT;
-
         $this->path = $this->record->submissionsPath.$this->name.DIRECTORY_SEPARATOR;
-        if (!file_exists($this->path)) {
-            mkdir($this->path);
-        }
 
-        $filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
-                    ? $this->record->config['SUBMISSION']['filename']
-                    : basename($pdf, '.pdf');
-
-        if (!rename($pdf, $this->path.$filename.'.pdf')) {
-            throw new \Exception("pdf save failed");
-        }
-        $this->pdf =  $this->path.$filename.'.pdf';
-
-        if (!rename($xfdf, $this->path.$filename.'.xfdf')) {
-            throw new \Exception("xfdf save failed");
-        }
-        $this->xfdf = $this->path.$filename.'.xfdf';
-
-        $this->json->form = json_decode(json_encode($data));
-        file_put_contents($this->path.$filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT));
+        rename($oldPath, $this->path);
     }
 
     public function setStatus($status)

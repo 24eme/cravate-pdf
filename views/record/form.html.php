@@ -25,7 +25,7 @@
 
 <form method="POST" class="row" action="<?php echo Base::instance()->alias('record_fill') ?>">
 
-<?php if (Base::instance()->get('PARAMS.submission')): ?>
+<?php if ($submission->name): ?>
   <input type="hidden" value="<?php echo $submission->name ?>" name="submission">
 <?php endif ?>
 <input type="hidden" value="<?php echo $record->pdf ?>" name="file">
