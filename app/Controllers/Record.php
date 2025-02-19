@@ -68,9 +68,9 @@ class Record
     public function new(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record);
 
-        shell_exec($record->getConfigItem('initDossier'));
+        shell_exec($record->getConfigItem('initDossier')." CIVP00001");
+        $submission = new Submission($record, "CIVP00001");
 
         $f3->set('record', $record);
         $f3->set('submission', $submission);

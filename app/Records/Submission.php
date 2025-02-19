@@ -56,21 +56,22 @@ class Submission
                 $this->loadJSON($file);
             }
         }
+
         $pos = strpos($this->name, "_");
         if ($pos === false) {
-            throw new \Exception("The name < $this->name > does not contain datetime");
+            /* throw new \Exception("The name < $this->name > does not contain datetime"); */
         }
         $this->datetime = \DateTime::createFromFormat('YmdHis', substr($this->name, 0, $pos));
         if (!$this->datetime) {
-            throw new \Exception("< ".substr($this->name, 0, $pos)." > is not a valid datetime");
+            /* throw new \Exception("< ".substr($this->name, 0, $pos)." > is not a valid datetime"); */
         }
         $pos = strrpos($this->name, "_");
         if ($pos === false) {
-            throw new \Exception("The name < $this->name > does not contain status");
+            /* throw new \Exception("The name < $this->name > does not contain status"); */
         }
         $this->status = substr($this->name, $pos + 1);
         if (!in_array($this->status, self::$allStatus)) {
-            throw new \Exception("< $this->status > is not a valid status");
+            /* throw new \Exception("< $this->status > is not a valid status"); */
         }
     }
 
