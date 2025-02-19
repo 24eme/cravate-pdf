@@ -14,19 +14,23 @@ class Submission
     const STATUS_CANCELED = 'ANNULÉ';
     const STATUS_CLOSED = 'CLOTURÉ';
 
+    const ATTACHMENTS_PATH = 'attachments/';
+
     public static $allStatus = [self::STATUS_DRAFT, self::STATUS_SUBMITTED, self::STATUS_VALIDATED, self::STATUS_UNCOMPLETED, self::STATUS_CANCELED, self::STATUS_CLOSED];
     public static $statusThemeColor = [self::STATUS_DRAFT => 'light', self::STATUS_SUBMITTED => 'secondary', self::STATUS_VALIDATED => 'success', self::STATUS_UNCOMPLETED => 'warning', self::STATUS_CANCELED => 'danger', self::STATUS_CLOSED => 'dark'];
 
     public $record;
     public $name;
+
     public $datetime;
     public $status;
     public $path;
+
     public $pdf;
     public $xfdf;
-    public $datas = [];
+    public $json;
 
-    const ATTACHMENTS_PATH = 'attachments/';
+    public $datas = [];
 
     public function __construct(Record $record, $name = null)
     {
@@ -48,9 +52,8 @@ class Submission
             if (strpos($file, '.pdf') !== false) {
                 $this->pdf = $file;
             }
-            if (strpos($file, '.xfdf') !== false) {
-                $this->xfdf = $file;
-                $this->loadXFDF();
+            if (strpos($file, '.json') !== false) {
+                $this->loadJSON($file);
             }
         }
         $pos = strpos($this->name, "_");
@@ -71,40 +74,46 @@ class Submission
         }
     }
 
-    public function save($files)
+    /**
+     * @param $data array<string, string> pour le json->form
+     * @param $files array{pdf: string, xfdf: string} nom des deux fichiers
+     */
+    public function save($data, $files)
     {
         $pdf = $files['pdf'];
-        $xfdf = simplexml_load_file($files['xfdf']);
+        $xfdf = $files['xfdf'];
 
         $this->name = date('YmdHis');
         if (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['format_dir'])) {
             $this->name .= '_'.$this->record->config['SUBMISSION']['format_dir'];
-            if ($xfdf) {
-                foreach ($xfdf->fields->field as $field) {
-                    $this->name = str_replace('%'.((string)$field->attributes()['name']).'%', (string)$field->value, $this->name);
-                }
+            foreach ($data as $field => $value) {
+                $this->name = str_replace("%$field%", (string) $value, $this->name);
             }
         }
+
         $this->name .= '_'.self::STATUS_DRAFT;
+
         $this->path = $this->record->submissionsPath.$this->name.DIRECTORY_SEPARATOR;
         if (!file_exists($this->path)) {
             mkdir($this->path);
         }
 
-        if (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename'])) {
-            $filename = $this->record->config['SUBMISSION']['filename'];
-        } else {
-            $filename = basename($pdf, '.pdf');
-        }
+        $filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
+                    ? $this->record->config['SUBMISSION']['filename']
+                    : basename($pdf, '.pdf');
 
         if (!rename($pdf, $this->path.$filename.'.pdf')) {
             throw new \Exception("pdf save failed");
         }
         $this->pdf =  $this->path.$filename.'.pdf';
-        if (!rename($files['xfdf'], $this->path.$filename.'.xfdf')) {
+
+        if (!rename($xfdf, $this->path.$filename.'.xfdf')) {
             throw new \Exception("xfdf save failed");
         }
         $this->xfdf = $this->path.$filename.'.xfdf';
+
+        $this->json->form = json_decode(json_encode($data));
+        file_put_contents($this->path.$filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT));
     }
 
     public function setStatus($status)
@@ -205,6 +214,15 @@ class Submission
                 $this->name = str_replace('%'.((string)$field->attributes()['name']).'%', (string)$field->value, $this->name);
                 $this->datas[((string)$field->attributes()['name'])] = (string)$field->value;
             }
+        }
+    }
+
+    public function loadJSON($file)
+    {
+        $this->json = json_decode(file_get_contents($this->path.$file));
+
+        foreach ($this->json->form as $field => $value) {
+            $this->datas[$field] = $value;
         }
     }
 
