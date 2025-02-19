@@ -144,17 +144,11 @@ class Submission
 
     public function getAttachmentNeeded()
     {
-        if (!$this->xfdf) {
-            throw new \Exception("xfdf file needed");
-        }
-        $xfdf = simplexml_load_file($this->path.preg_replace('|^.*/|', '', $this->xfdf));
         $config = $this->record->config;
         if (!isset($config['ATTACHED_FILE'])) {
             return null;
         }
-        foreach ($xfdf->fields->field as $field) {
-            $name = (string)$field->attributes()['name'];
-            $value = (string)$field->value;
+        foreach ($this->json->form as $name => $value) {
             if (isset($config['ATTACHED_FILE'][$name][$value])) {
                 return $config['ATTACHED_FILE'][$name][$value];
             }
