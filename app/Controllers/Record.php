@@ -70,6 +70,8 @@ class Record
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record);
 
+        shell_exec($record->getConfigItem('initDossier'));
+
         $f3->set('record', $record);
         $f3->set('submission', $submission);
         $f3->set('content', 'record/form.html.php');
