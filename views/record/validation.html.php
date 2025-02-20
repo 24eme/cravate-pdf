@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
-      <li class="breadcrumb-item"><a href="/records">Dossiers</a></li>
-      <li class="breadcrumb-item"><a href="/record/<?php echo $submission->record->name ?>/submissions"><?php echo $submission->record->getConfigItem('subtitle') ?></a></li>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('records') ?>">Dossiers</a></li>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('record_submissions') ?>"><?php echo $submission->record->getConfigItem('subtitle') ?></a></li>
       <li class="breadcrumb-item"><?php echo $submission->getLibelle() ?></li>
     </ol>
   </div>
@@ -33,11 +33,11 @@
   <div class="col-4">
     <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
     <ul class="list-group">
-      <a class="list-group-item list-group-item-action" href="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/getfile?disposition=attachment&file=<?php echo $submission->pdf ?>" target="_blank">
+        <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('record_submission_getfile', [], ['disposition' => 'attachment', 'file' => $submission->pdf]) ?>" target="_blank">
         <i class="bi bi-filetype-pdf"></i> Formulaire complété
       </a>
       <?php foreach ($submission->getAttachments() as $i => $attachment): ?>
-      <a class="list-group-item list-group-item-action" href="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/getfile?disposition=attachment&file=<?php echo Records\Submission::ATTACHMENTS_PATH.$attachment ?>" target="_blank">
+        <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('record_submission_getfile', [], ['disposition' => 'attachment', 'file' => Records\Submission::ATTACHMENTS_PATH.$attachment]) ?>" target="_blank">
         <i class="bi bi-file"></i> Annexe <?php echo $i+1 ?> : <small><?php echo basename($attachment) ?></small>
       </a>
       <?php endforeach; ?>
