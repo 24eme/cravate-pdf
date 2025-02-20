@@ -102,7 +102,7 @@ class Record
     public function getConfigItem($item)
     {
         if (!isset($this->config[$item])) {
-            throw new \Exception("No < $item > item record's config");
+            return null;
         }
         return $this->config[$item];
     }
