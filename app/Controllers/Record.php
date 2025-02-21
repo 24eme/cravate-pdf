@@ -67,11 +67,12 @@ class Record
 
     public function new(Base $f3)
     {
+        $dir = "202502211811_CIVP25123_RS_BROUILLON";
         $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, "CIVP00001");
+        $submission = new Submission($record, $dir);
 
         if($record->getConfigItem('initDossier')) {
-            shell_exec($record->getConfigItem('initDossier')." CIVP00001");
+            shell_exec($record->getConfigItem('initDossier').$dir);
         }
 
         $f3->set('record', $record);
