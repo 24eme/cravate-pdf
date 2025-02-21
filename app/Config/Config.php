@@ -107,4 +107,9 @@ class Config
 
         return substr($commit, 0, 7);
     }
+
+    public function isSendingMail() {
+
+        return $this->get('mail');
+    }
 }

@@ -37,6 +37,7 @@ class Submission
     public function __construct(Record $record, $name = null)
     {
         $this->record = $record;
+        $this->json = new \stdClass();
         if ($name) {
             $this->load($name);
         }
@@ -105,7 +106,6 @@ class Submission
             throw new \Exception("xfdf save failed");
         }
         $this->xfdf = $this->path.$filename.'.xfdf';
-
         $this->json->form = json_decode(json_encode($data));
         file_put_contents($this->path.$filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT));
 
@@ -176,6 +176,19 @@ class Submission
             mkdir($attachmentsPath);
         }
         return $attachmentsPath;
+    }
+
+    public function getAttachmentByName($name) {
+        $attachments = $this->getAttachments();
+
+        foreach($attachments as $attachment) {
+            if(pathinfo(basename($attachment))['filename'] == $name) {
+
+                return $attachment;
+            }
+        }
+
+        return null;
     }
 
     public function getAttachments()
