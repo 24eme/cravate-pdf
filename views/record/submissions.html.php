@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
-      <li class="breadcrumb-item"><a href="/records">Dossiers</a></li>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('records') ?>">Dossiers</a></li>
       <li class="breadcrumb-item"><?php echo $record->getConfigItem('subtitle') ?></li>
     </ol>
   </div>
