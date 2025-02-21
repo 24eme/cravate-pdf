@@ -90,11 +90,6 @@ class Record
         $f3->set('submission', $this->submission);
         $f3->set('content', 'record/form.html.php');
 
-        if ($f3->get('GET.reload')) {
-            $infos = Declarvin::instance()->retrieveInfo("CIVP001234");
-            $this->submission->loadDatas($infos);
-        }
-
         echo View::instance()->render('layout.html.php');
     }
 
