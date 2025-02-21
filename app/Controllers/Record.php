@@ -140,19 +140,12 @@ class Record
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
 
         if ($f3->get('VERB') === 'POST') {
-            $newUpload = 0;
             foreach($_FILES as $name => $file) {
                 if ($file['error'] != UPLOAD_ERR_OK) {
                     continue;
                 }
                 $newUpload++;
                 move_uploaded_file($file['tmp_name'], $submission->getAttachmentsPath() . $name.".".pathinfo($file['name'])['extension']);
-            }
-
-            if($newUpload > 0) {
-                $f3->get('mail')
-                   ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $submission->getDatas('EMAIL'), 'Subject' => 'Nouvelle pièce'])
-                   ->send('newattachment.eml', compact('submission', 'f3'));
             }
 
             return $f3->reroute(['record_validation', [
