@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
-      <li class="breadcrumb-item"><a href="/records">Dossiers</a></li>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('records') ?>">Dossiers</a></li>
     </ol>
   </div>
 </nav>
@@ -21,7 +21,7 @@
         <p class="card-text"><?php echo $record->getConfigItem('text') ?></p>
         <p class="text-center">
           <a href="<?php echo Base::instance()->alias('record_submission_new', ['record' => $record->name]) ?>" class="btn btn-primary mt-2 d-block"><i class="bi bi-file-earmark-plus"></i> Saisir le dossier</a>
-          <a href="/record/<?php echo $record->name ?>/submissions" class="mt-2 d-block">Liste des dépôts</a>
+          <a href="<?php echo Base::instance()->alias('record_submissions', ['record' => $record->name]) ?>" class="mt-2 d-block">Liste des dépôts</a>
         </p>
       </div>
     </div>

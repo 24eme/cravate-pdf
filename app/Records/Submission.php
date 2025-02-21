@@ -124,7 +124,7 @@ class Submission
         rename($oldPath, $this->path);
     }
 
-    public function setStatus($status)
+    public function setStatus($status, $comment = null)
     {
         if (in_array($status, self::$allStatus) === false) {
             throw new DomainException("{$status} n'est pas un status valide");
@@ -137,7 +137,7 @@ class Submission
             return true;
         }
 
-        $this->addHistory("Mis à jour vers le status $status");
+        $this->addHistory("Mis à jour vers le status $status", $comment);
 
         $newPath = str_replace($this->name, $newName, $this->path);
         if (!rename($this->path, $newPath)) {
@@ -148,11 +148,11 @@ class Submission
         return true;
     }
 
-    public function addHistory($data)
+    public function addHistory($data, $comment = null)
     {
-        $data = ['date' => (new \DateTime())->format('c'), 'entrie' => $data];
+        $data = ['date' => (new \DateTime())->format('c'), 'entrie' => $data, 'comment' => $comment];
         $this->json->history[] = json_decode(json_encode($data));
-        file_put_contents($this->path.$this->filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT));
+        file_put_contents($this->path.$this->filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
     }
 
     public function getAttachmentNeeded()

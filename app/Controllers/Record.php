@@ -228,11 +228,12 @@ class Record
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
         $newStatus = $f3->get('POST.status');
+        $comment = $f3->get('POST.comment');
 
         if (!in_array($newStatus, Submission::$allStatus)) {
             return $f3->error(404, "Status < $newStatus > not allowed");
         }
-        $submission->setStatus($newStatus);
+        $submission->setStatus($newStatus, $comment);
 
         try {
             $f3->get('mail')

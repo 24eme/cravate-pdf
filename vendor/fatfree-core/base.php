@@ -1572,7 +1572,7 @@ final class Base extends Prefab implements ArrayAccess {
 		$url=$this->build($this->hive['ALIASES'][$name],$params);
 		if (is_array($query))
 			$query=http_build_query($query);
-		return $url.($query?('?'.$query):'').($fragment?'#'.$fragment:'');
+		return $this->BASE.$url.($query?('?'.$query):'').($fragment?'#'.$fragment:'');
 	}
 
 	/**
