@@ -178,6 +178,19 @@ class Submission
         return $attachmentsPath;
     }
 
+    public function getAttachmentByName($name) {
+        $attachments = $this->getAttachments();
+
+        foreach($attachments as $attachment) {
+            if(pathinfo(basename($attachment))['filename'] == $name) {
+
+                return $attachment;
+            }
+        }
+
+        return null;
+    }
+
     public function getAttachments()
     {
         $attachments = scandir($this->getAttachmentsPath());

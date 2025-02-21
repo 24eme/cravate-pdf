@@ -16,10 +16,14 @@
 <form method="POST" enctype="multipart/form-data" action="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/attachment">
   <div class="row justify-content-center">
     <div class="col-6">
-    <h3>Joindre une pièce complémentaire</h3>
-    <ul class="list-group mt-3">
-    <?php foreach(["Registre de mise", "Déclaration de conditionnement", "Autre"] as $annexe): ?>
-        <li class="list-group-item"><label><?php echo $annexe ?></label> <input type="file" class="form-control form-control-sm float-end w-50" name="<?php echo $annexe ?>" /></li>
+    <h3 class="mt-3">Joindre une pièce complémentaire</h3>
+    <ul class="list-group mt-4">
+    <?php foreach(["Registre_de_mise", "Déclaration_de_conditionnement"] as $annexe): ?>
+        <li class="list-group-item"><label><?php echo str_replace("_", " ", $annexe) ?></label> <input type="file" class="form-control form-control-sm float-end w-50" style="<?php if($submission->getAttachmentByName($annexe)): ?>display:none<?php endif; ?>" name="<?php echo $annexe ?>" />
+        <?php if($submission->getAttachmentByName($annexe)): ?>
+          <span class="float-end"><a href="" ><?php echo $submission->getAttachmentByName($annexe); ?></a> <button class="btn btn-link btn-sm"><i class="bi bi-pencil-square"></i></button></span>
+        <?php endif; ?>
+      </li>
     <?php endforeach; ?>
     </ul>
     <div class="text-end">
