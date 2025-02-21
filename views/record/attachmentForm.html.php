@@ -12,18 +12,20 @@
 
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
 
-<h3>Joindre une pièce complémentaire</h3>
 
-<form method="POST" class="row" enctype="multipart/form-data" action="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/attachment">
-<p class="text-center"><?php echo $this->raw($submission->getAttachmentNeeded()); ?></p>
-<div class="col-6 offset-3 mt-3 justify-content-center">
-  <?php if (isset($uploadError)): ?><p class="text-center text-danger">Une erreur est survenue</p><?php endif; ?>
-  <div class="mb-3 text-center">
-    <label class="form-label" for="attachment">Sélectionner un fichier</label>
-    <input type="file" class="form-control form-control-lg" name="attachment" />
+<form method="POST" enctype="multipart/form-data" action="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/attachment">
+  <div class="row justify-content-center">
+    <div class="col-6">
+    <h3>Joindre une pièce complémentaire</h3>
+    <ul class="list-group mt-3">
+    <?php foreach(["Registre de mise", "Déclaration de conditionnement", "Autre"] as $annexe): ?>
+        <li class="list-group-item"><label><?php echo $annexe ?></label> <input type="file" class="form-control form-control-sm float-end w-50" name="<?php echo $annexe ?>" /></li>
+    <?php endforeach; ?>
+    </ul>
+    <div class="text-end">
+      <button type="submit" class="btn btn-primary mt-3">Continuer</button>
+    </div>
+    </div>
   </div>
-  <div class="text-end">
-    <button type="submit" class="btn btn-primary">Joindre</button>
-  </div>
-</div>
+
 </form>
