@@ -21,7 +21,7 @@
     <?php foreach(["Registre_de_mise", "Déclaration_de_conditionnement"] as $annexe): ?>
         <li class="list-group-item"><label><?php echo str_replace("_", " ", $annexe) ?></label> <input type="file" class="form-control form-control-sm float-end w-50" style="<?php if($submission->getAttachmentByName($annexe)): ?>display:none<?php endif; ?>" name="<?php echo $annexe ?>" />
         <?php if($submission->getAttachmentByName($annexe)): ?>
-          <span class="float-end"><a href="" ><?php echo $submission->getAttachmentByName($annexe); ?></a> <button class="btn btn-link btn-sm"><i class="bi bi-pencil-square"></i></button></span>
+          <span class="float-end"><a href=""><i class="bi bi-file-earmark"></i> Voir le fichier</a> <button class="btn btn-link btn-sm"><i class="bi bi-pencil-square"></i></button></span>
         <?php endif; ?>
       </li>
     <?php endforeach; ?>
