@@ -67,13 +67,15 @@ class Record
 
     public function new(Base $f3)
     {
-        $dir = "202502211811_CIVP25123_RS_BROUILLON";
+        $dirname = (new \DateTime())->format('YmdHis')."_".$_SESSION['etablissement_id']."_RS_BROUILLON";
         $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $dir);
+        $submission = new Submission($record, $dirname);
 
         if($record->getConfigItem('initDossier')) {
-            shell_exec($record->getConfigItem('initDossier').$dir);
+            shell_exec($record->getConfigItem('initDossier')." $submission->path");
         }
+
+        $submission = new Submission($record, $dirname);
 
         $f3->set('record', $record);
         $f3->set('submission', $submission);
