@@ -26,3 +26,14 @@ $smtp = new SMTP(
 );
 
 $f3->set('mail', new Email($smtp, $f3->get('UI').'emails/'));
+
+// intégration session externe
+if (Config::getInstance()->get('session')) {
+    session_name($f3->get('config')->get('session.name'));
+    session_start();
+
+    if (isset($_SESSION['etablissement_id']) === false) {
+        header('Location: /');
+        exit;
+    }
+}
