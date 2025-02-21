@@ -13,7 +13,7 @@
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
 
 
-<form method="POST" enctype="multipart/form-data" action="/record/<?php echo $submission->record->name ?>/submission/<?php echo $submission->name ?>/attachment">
+<form method="POST" enctype="multipart/form-data" action="<?php echo Base::instance()->alias("record_attachment", ['record' => $submission->record->name, 'submission' => $submission->name]) ?>">
   <div class="row justify-content-center">
     <div class="col-6">
     <h3 class="mt-3">Joindre une pièce complémentaire</h3>
@@ -21,7 +21,7 @@
     <?php foreach(["Registre_de_mise", "Déclaration_de_conditionnement"] as $annexe): ?>
         <li class="list-group-item"><label><?php echo str_replace("_", " ", $annexe) ?></label> <input type="file" class="form-control form-control-sm float-end w-50" style="<?php if($submission->getAttachmentByName($annexe)): ?>display:none<?php endif; ?>" name="<?php echo $annexe ?>" />
         <?php if($submission->getAttachmentByName($annexe)): ?>
-          <span class="float-end"><a href=""><i class="bi bi-file-earmark"></i> Voir le fichier</a> <button class="btn btn-link btn-sm"><i class="bi bi-pencil-square"></i></button></span>
+          <span class="float-end"><a href="<?php echo Base::instance()->alias('record_submission_getfile', [], ['disposition' => 'attachment', 'file' => Records\Submission::ATTACHMENTS_PATH.$submission->getAttachmentByName($annexe)]) ?>"><i class="bi bi-file-earmark"></i> Voir le fichier</a> <button class="btn btn-link btn-sm"><i class="bi bi-pencil-square"></i></button></span>
         <?php endif; ?>
       </li>
     <?php endforeach; ?>
