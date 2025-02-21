@@ -226,11 +226,11 @@ class Record
         }
         $submission->setStatus($newStatus, $comment);
 
-        try {
-            $f3->get('mail')
-               ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $submission->getDatas('EMAIL'), 'Subject' => 'Changement de Status de votre dossier'])
-               ->send('chgtstatus.eml', compact('submission'));
-        } catch (Exception $e) { }
+        /* try { */
+        /*     $f3->get('mail') */
+        /*        ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $submission->getDatas('EMAIL'), 'Subject' => 'Changement de Status de votre dossier']) */
+        /*        ->send('chgtstatus.eml', compact('submission')); */
+        /* } catch (Exception $e) { } */
 
         return $f3->reroute(['record_submission', ['record' => $record->name, 'submission' => $submission->name]]);
     }
