@@ -67,7 +67,7 @@
         <textarea class="form-control" rows="4" name="comment" placeholder="Commentaires lié au statut"></textarea>
       </div>
       <div class="col-12 text-end">
-        <input class="btn btn-warning w-50" type="submit" value="Modifier" />
+        <button class="btn btn-warning w-50" type="submit">Changer le statut</button>
       </div>
     </form>
     <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
