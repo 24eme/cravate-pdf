@@ -31,7 +31,7 @@
     box-sizing: border-box;
     border-radius: 50%;
     border: 1px solid #fff;
-    padding: 2px 8px;
+    padding: 4px 8px;
     content: counter(step);
     margin-right: 1ch;
 }

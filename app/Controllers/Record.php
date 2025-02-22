@@ -67,12 +67,15 @@ class Record
 
     public function new(Base $f3)
     {
+        $dirname = (new \DateTime())->format('YmdHis')."_".$_SESSION['etablissement_id']."_RS_BROUILLON";
         $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, "CIVP00001");
+        $submission = new Submission($record, $dirname);
 
         if($record->getConfigItem('initDossier')) {
-            shell_exec($record->getConfigItem('initDossier')." CIVP00001");
+            shell_exec($record->getConfigItem('initDossier')." $submission->path");
         }
+
+        $submission = new Submission($record, $dirname);
 
         $f3->set('record', $record);
         $f3->set('submission', $submission);
@@ -86,11 +89,6 @@ class Record
         $f3->set('record', $this->record);
         $f3->set('submission', $this->submission);
         $f3->set('content', 'record/form.html.php');
-
-        if ($f3->get('GET.reload')) {
-            $infos = Declarvin::instance()->retrieveInfo("CIVP001234");
-            $this->submission->loadDatas($infos);
-        }
 
         echo View::instance()->render('layout.html.php');
     }
@@ -224,11 +222,11 @@ class Record
         }
         $submission->setStatus($newStatus, $comment);
 
-        try {
-            $f3->get('mail')
-               ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $submission->getDatas('EMAIL'), 'Subject' => 'Changement de Status de votre dossier'])
-               ->send('chgtstatus.eml', compact('submission'));
-        } catch (Exception $e) { }
+        /* try { */
+        /*     $f3->get('mail') */
+        /*        ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $submission->getDatas('EMAIL'), 'Subject' => 'Changement de Status de votre dossier']) */
+        /*        ->send('chgtstatus.eml', compact('submission')); */
+        /* } catch (Exception $e) { } */
 
         return $f3->reroute(['record_submission', ['record' => $record->name, 'submission' => $submission->name]]);
     }
