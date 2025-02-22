@@ -155,18 +155,20 @@ class Submission
         file_put_contents($this->path.$this->filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
     }
 
-    public function getAttachmentNeeded()
+    public function getAttachmentsNeeded()
     {
         $config = $this->record->config;
         if (!isset($config['ATTACHED_FILE'])) {
-            return null;
+            return [];
         }
-        foreach ($this->json->form as $name => $value) {
-            if (isset($config['ATTACHED_FILE'][$name][$value])) {
-                return $config['ATTACHED_FILE'][$name][$value];
+        $attachments = [];
+        foreach ($config['ATTACHED_FILE'] as $attachment) {
+            if($attachment['filter'] && $this->getDatas(explode(":", $attachment['filter'])[0]) != explode(":", $attachment['filter'])[1]) {
+                continue;
             }
+            $attachments[] = $attachment;
         }
-        return null;
+        return $attachments;
     }
 
     public function getAttachmentsPath()

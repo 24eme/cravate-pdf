@@ -124,11 +124,7 @@ class Record
             $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
             $submission->save($cleanedData, $outputFile);
 
-            if ($submission->getAttachmentNeeded()) {
-                return $f3->reroute(['record_attachment', ['record' => $this->record->name, 'submission' => $submission->name]]);
-            } else {
-                return $f3->reroute('records');
-            }
+            return $f3->reroute(['record_attachment', ['record' => $this->record->name, 'submission' => $submission->name]]);
         } catch(\Exception $e) {
             return $f3->reroute('@records');
         }
