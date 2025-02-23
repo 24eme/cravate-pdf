@@ -38,17 +38,15 @@
       </a>
       <?php foreach ($submission->getAttachments() as $i => $attachment): ?>
         <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('record_submission_getfile', [], ['disposition' => 'attachment', 'file' => Records\Submission::ATTACHMENTS_PATH.$attachment]) ?>" target="_blank">
-        <i class="bi bi-file"></i> Annexe <?php echo $i+1 ?> : <small><?php echo basename($attachment) ?></small>
+        <i class="bi bi-file"></i> Annexe <?php echo $i+1 ?> : <small><?php echo preg_replace('/\.url$/', '&nbsp;&nbsp;<i class="bi bi-box-arrow-up-right small"></i>', basename($attachment)) ?></small>
       </a>
       <?php endforeach; ?>
     </ul>
   </div>
 </div>
 
-<?php if ($submission->status === Records\Submission::STATUS_DRAFT): ?>
 <div class="text-center">
   <form method="post">
     <button type=submit class="btn btn-primary"><i class="bi bi-upload"></i> Soumettre le dossier</button>
   </form>
 </div>
-<?php endif ?>

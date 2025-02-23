@@ -16,6 +16,7 @@
 <div class="row">
 
   <div class="col-8">
+    <a href="<?php echo Base::instance()->alias('record_edit', ['submission' => $submission->name ]) ?>" class="btn btn-outline-secondary btn-sm float-end mt-1">Modifier</a>
     <ul class="nav nav-tabs mb-4">
       <li class="nav-item">
         <a class="nav-link<?php if (!$displaypdf): ?> active<?php endif; ?>" aria-current="page" href="<?php echo Base::instance()->alias('record_submission') ?>">Données</a>
@@ -36,7 +37,7 @@
       <?php endforeach; ?>
       </table>
     <?php endif; ?>
-    <h2 class="pb-2 h3"><i class="bi bi-clock-history"></i> Historique</h2>
+    <h2 class="pb-2 h3 pt-2"><i class="bi bi-clock-history"></i> Historique</h2>
     <table class="table table-striped">
       <tbody>
           <?php foreach (array_reverse($submission->json->history) as $history): ?>
@@ -63,21 +64,21 @@
           <?php endforeach; ?>
         </select>
       </div>
-      <div class="col-12 mb-2">
+      <div class="col-12 mb-2 mt-2">
         <textarea class="form-control" rows="4" name="comment" placeholder="Commentaires lié au statut"></textarea>
       </div>
       <div class="col-12 text-end">
         <button class="btn btn-warning w-50" type="submit">Changer le statut</button>
       </div>
     </form>
-    <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
+    <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers <a href="<?php echo Base::instance()->alias('record_attachment', ['submission' => $submission->name ]) ?>" class="btn btn-outline-secondary btn-sm float-end mt-1">Modifier</a></h2>
     <ul class="list-group">
       <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('record_submission_getfile', [], ['disposition' => 'attachment', 'file' => $submission->pdf]) ?>" target="_blank">
         <i class="bi bi-filetype-pdf"></i> Formulaire complété
       </a>
       <?php foreach ($submission->getAttachments() as $i => $attachment): ?>
         <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('record_submission_getfile', [], ['disposition' => 'attachment', 'file' => Records\Submission::ATTACHMENTS_PATH.$attachment]) ?>" target="_blank">
-        <i class="bi bi-file"></i> Annexe <?php echo $i+1 ?> : <small><?php echo basename($attachment) ?></small>
+        <i class="bi bi-file"></i> Annexe <?php echo $i+1 ?> : <small><?php echo preg_replace('/\.url$/', '&nbsp;&nbsp;<i class="bi bi-box-arrow-up-right small"></i>', basename($attachment)) ?></small>
       </a>
       <?php endforeach; ?>
     </ul>

@@ -207,6 +207,11 @@ class Record
 
         $download = $disposition === 'attachment';
 
+        if(preg_match('/\.url$/', $file)) {
+
+            return $f3->reroute(file_get_contents($file));
+        }
+
         return Web::instance()->send($file, null, 0, $download, basename($file));
     }
 
