@@ -15,7 +15,7 @@
 <?php if (Flash::instance()->hasKey('form-error')): ?>
   <?php $errors = Flash::instance()->getKey('form-error'); ?>
   <div class="alert alert-danger">
-    <ul>
+    <ul class="list-unstyled mb-0">
     <?php foreach ($errors as $error): ?>
       <li><strong><?php echo $error['field'] ?></strong> <?php echo $error['message'] ?></li>
     <?php endforeach ?>
