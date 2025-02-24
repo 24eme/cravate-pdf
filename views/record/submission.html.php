@@ -37,6 +37,7 @@
       <?php endforeach; ?>
       </table>
     <?php endif; ?>
+    <?php if (property_exists($submission->json, "history")): ?>
     <h2 class="pb-2 h3 pt-2"><i class="bi bi-clock-history"></i> Historique</h2>
     <table class="table table-striped">
       <tbody>
@@ -49,6 +50,7 @@
           <?php endforeach; ?>
       </tbody>
     </table>
+    <?php endif; ?>
   </div>
 
   <div class="col-4">
