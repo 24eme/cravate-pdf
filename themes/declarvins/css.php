@@ -6,6 +6,9 @@ body {
   font-size: 12px !important;
   line-height: 1.2 !important;
 }
+.container {
+    width: 940px;
+}
 a {
   color: #494949;
   text-decoration: none;
@@ -284,4 +287,47 @@ a.highlight_link:hover {
   float: left;
   margin: 0 0 0 15px;
 }
+
+h1 {
+  color: #86005b;
+  font-size: 22px;
+  font-weight: normal;
+  margin: 0 0 20px;
+}
+.step-item {
+    background: none;
+    border: 1px solid #86005b;
+}
+.step-item.active {
+  background-color: #86005b;
+}
+.step-item.active a, a:link, a:visited, .link {
+  color: #fff;
+}
+.step-item::before {
+  border: 1px solid #86005b;
+  color: #86005b;
+}
+.step-item.active::before {
+  border: 1px solid #fff;
+  color: #fff;
+}
+a, a:link, a:visited, .link {
+    color: #86005b;
+}
+a:hover, a:active {
+    color: #c582af;
+    text-decoration: none;
+}
+.btn-danger {
+    color: #fff !important;
+}
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+	background-color: #86005b;
+}
+.btn-primary, .btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+	background-color: #86005b;
+	border-color: #86005b;
+}
+
 </style>
