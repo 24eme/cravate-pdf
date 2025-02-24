@@ -36,7 +36,7 @@
   <?php foreach($fields as $id => $field): ?>
   <?php if ($field['type'] == 'text'): ?>
     <div class="form-floating mb-3">
-    <input type="text" class="form-control" name="<?php echo $id ?>" id="<?php echo $field['type'].'_'.$id ?>" required="required" value="<?php echo isset($submission->getDatas()[$id]) ? $submission->getDatas()[$id] : null ?>">
+    <input type="text" class="form-control" name="<?php echo $id ?>" id="<?php echo $field['type'].'_'.$id ?>" required="required" value="<?php echo $submission->getDatas($id) ?>">
       <label for="<?php echo $field['type'].'_'.$id ?>"><?php echo $field['label'] ?></label>
     </div>
   <?php endif; ?>
@@ -56,7 +56,7 @@
       <label class="form-label"><?php echo $field['label'] ?> :</label>
       <?php foreach($field['choices'] as $choiceKey => $choiceLabel): ?>
       <div class="form-check">
-        <input class="form-check-input" name="<?php echo $id ?>" value="<?php echo $choiceKey ?>" id="option_<?php echo $id ?>_<?php echo $choiceKey ?>" type="radio" required="required" <?php echo isset($submission->getDatas()[$id]) && $submission->getDatas()[$id] === $choiceKey ? "checked" : null ?>>
+        <input class="form-check-input" name="<?php echo $id ?>" value="<?php echo $choiceKey ?>" id="option_<?php echo $id ?>_<?php echo $choiceKey ?>" type="radio" required="required" <?php echo $submission->getDatas($id) === $choiceKey ? "checked" : null ?>>
         <label class="form-check-label" for="option_<?php echo $id ?>_<?php echo $choiceKey ?>">
           <?php echo $choiceLabel ?>
         </label>
@@ -69,7 +69,7 @@
       <label class="form-label"><?php echo $field['label'] ?> :</label>
       <?php foreach($field['choices'] as $choiceKey => $choiceLabel): ?>
       <div class="form-check">
-        <input class="form-check-input" name="<?php echo $id ?>" value="<?php echo $choiceKey ?>" id="option_<?php echo $id ?>_<?php echo $choiceKey ?>" type="checkbox" <?php echo isset($submission->getDatas()[$id]) && $submission->getDatas()[$id] === $choiceKey ? "checked" : null ?>>
+        <input class="form-check-input" name="<?php echo $id ?>" value="<?php echo $choiceKey ?>" id="option_<?php echo $id ?>_<?php echo $choiceKey ?>" type="checkbox" <?php echo $submission->getDatas($id) === $choiceKey ? "checked" : null ?>>
         <label class="form-check-label" for="option_<?php echo $id ?>_<?php echo $choiceKey ?>">
           <?php echo $choiceLabel ?>
         </label>
