@@ -57,7 +57,7 @@
     <p class="mt-4 fs-5 text-end">Dépot : <?php echo $submission->datetime->format('d/m/Y H:i'); ?></p>
     <h2 class="pb-2 h3"><i class="bi bi-gear"></i> Statut</h2>
     <form action="<?php echo Base::instance()->alias('record_submission_updatestatus') ?>" method="post" class="row mb-4">
-      <div class="col-8">
+      <div class="col-12">
         <select name="status" class="form-select">
           <?php foreach(Records\Submission::$statusThemeColor as $status => $themeColor): ?>
             <option value="<?php echo $status ?>"<?php if ($status == $submission->status): ?> selected<?php endif ?>>
@@ -70,7 +70,7 @@
         <textarea class="form-control" rows="4" name="comment" placeholder="Commentaires lié au statut"></textarea>
       </div>
       <div class="col-12 text-end">
-        <button class="btn btn-warning w-50" type="submit">Changer le statut</button>
+        <button class="btn btn-warning w-75" type="submit">Changer le statut</button>
       </div>
     </form>
     <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers <a href="<?php echo Base::instance()->alias('record_attachment', ['submission' => $submission->name ]) ?>" class="btn btn-outline-secondary btn-sm float-end mt-1">Modifier</a></h2>
