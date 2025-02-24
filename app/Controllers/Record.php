@@ -195,6 +195,9 @@ class Record
     {
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        if ($submission->status == Submission::STATUS_DRAFT) {
+            return $f3->reroute(['record_validation', ['record' => $record->name, 'submission' => $submission->name]]);
+        }
         $f3->set('submission', $submission);
         $f3->set('content', 'record/submission.html.php');
         $f3->set('displaypdf', $f3->get('GET.pdf'));
