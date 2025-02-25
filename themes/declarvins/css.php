@@ -308,6 +308,12 @@ h1 {
   border: 1px solid #86005b;
   color: #86005b;
 }
+.step-item.active ~ .step-item::before {
+  border-color: #86005b;
+}
+.step-item.active ~ .step-item {
+  color: #86005b;
+}
 .step-item.active::before {
   border: 1px solid #fff;
   color: #fff;
@@ -325,9 +331,13 @@ a:hover, a:active {
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
 	background-color: #86005b;
 }
-.btn-primary, .btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+.btn-primary, .btn-primary:hover, .btn-primary:focus, .btn-primary:link, .btn-primary:visited, .btn-primary:active, .btn:first-child:active, .btn-primary.focus, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
 	background-color: #86005b;
 	border-color: #86005b;
+}
+
+a.btn-primary, a.btn-primary:link, a.btn-primary:visited {
+    color: #fff;
 }
 
 </style>
