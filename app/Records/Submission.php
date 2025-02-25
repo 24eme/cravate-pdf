@@ -106,8 +106,10 @@ class Submission
             throw new \Exception("xfdf save failed");
         }
         $this->xfdf = $this->path.$filename.'.xfdf';
+
         $this->json->form = json_decode(json_encode($data));
-        file_put_contents($this->path.$filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT));
+        $this->status = self::STATUS_DRAFT;
+        $this->updateJSON();
 
         // on renomme le dossier
         $this->name = date('YmdHis');
@@ -145,14 +147,31 @@ class Submission
         }
         $this->load($newName);
 
+        $this->updateJSON();
+
         return true;
+    }
+
+    public function updateJSON()
+    {
+        $date = (new \DateTime())->format('c');
+
+        if (property_exists($this->json, 'createdAt') === false) {
+            $this->json->createdAt = $date;
+        }
+
+        $this->json->modifiedAt = $date;
+        $this->json->status = $this->status;
+
+        file_put_contents($this->path.$this->filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
     }
 
     public function addHistory($data, $comment = null)
     {
         $data = ['date' => (new \DateTime())->format('c'), 'entrie' => $data, 'comment' => $comment];
         $this->json->history[] = json_decode(json_encode($data));
-        file_put_contents($this->path.$this->filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+
+        $this->updateJSON();
     }
 
     public function getAttachmentsNeeded()
