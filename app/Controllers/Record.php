@@ -88,6 +88,9 @@ class Record
     {
         $f3->set('record', $this->record);
         $f3->set('submission', $this->submission);
+        if (!$this->submission->isEditable()) {
+            return $f3->error(403, "Submission not editable");
+        }
         $f3->set('content', 'record/form.html.php');
 
         echo View::instance()->render('layout.html.php');
@@ -108,6 +111,9 @@ class Record
 
         try {
             $submission = new Submission($this->record, $f3->get('POST.submission'));
+            if (!$submission->isEditable()) {
+                return $f3->error(403, "Submission not editable");
+            }
 
             $validator = new Validation();
             $valid = $validator->validate($cleanedData, $this->record->getValidation());
@@ -132,6 +138,9 @@ class Record
     {
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        if (!$submission->isEditable()) {
+            return $f3->error(403, "Submission not editable");
+        }
 
         if ($f3->get('VERB') === 'POST') {
             foreach($_FILES as $name => $file) {
@@ -160,6 +169,9 @@ class Record
     {
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        if (!$submission->isEditable()) {
+            return $f3->error(403, "Submission not editable");
+        }
 
         if ($f3->get('VERB') === 'POST') {
             $submission->setStatus(Submission::STATUS_SUBMITTED);
@@ -183,6 +195,9 @@ class Record
     {
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        if ($submission->status == Submission::STATUS_DRAFT) {
+            return $f3->reroute(['record_validation', ['record' => $record->name, 'submission' => $submission->name]]);
+        }
         $f3->set('submission', $submission);
         $f3->set('content', 'record/submission.html.php');
         $f3->set('displaypdf', $f3->get('GET.pdf'));

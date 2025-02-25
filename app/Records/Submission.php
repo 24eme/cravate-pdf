@@ -289,4 +289,9 @@ class Submission
         return $fields;
     }
 
+    public function isEditable()
+    {
+        return in_array($this->status, [self::STATUS_DRAFT, self::STATUS_UNCOMPLETED]);
+    }
+
 }
