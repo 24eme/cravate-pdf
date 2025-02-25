@@ -13,10 +13,20 @@
   <div class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap"><?php echo Records\Submission::printStatus($submission->status) ?></div>
 </h1>
 
+<?php if ($submission->status == Records\Submission::STATUS_UNCOMPLETED): ?>
+<?php $entrie = $submission->getHistoryForStatus(Records\Submission::STATUS_UNCOMPLETED); ?>
+<div class="alert alert-warning" role="alert">
+<i class="bi bi-exclamation-circle"></i> Votre dossier n'est pas complet <?php echo ($entrie->comment)? ' : '.$entrie->comment : '' ?>
+<ul class="mb-0">
+  <li>Modifiez vos informations en suivant ce lien : <a href="<?php echo Base::instance()->alias('record_edit', ['submission' => $submission->name ]) ?>">Informations</a></li>
+  <li>Complétez vos annexes en suivant ce lien : <a href="<?php echo Base::instance()->alias('record_attachment', ['submission' => $submission->name ]) ?>">Annexes</a></li>
+</ul>
+</div>
+<?php endif; ?>
+
 <div class="row">
 
   <div class="col-8">
-    <a href="<?php echo Base::instance()->alias('record_edit', ['submission' => $submission->name ]) ?>" class="btn btn-outline-secondary btn-sm float-end mt-1">Modifier</a>
     <ul class="nav nav-tabs mb-4">
       <li class="nav-item">
         <a class="nav-link<?php if (!$displaypdf): ?> active<?php endif; ?>" aria-current="page" href="<?php echo Base::instance()->alias('record_submission') ?>">Données</a>
@@ -73,7 +83,7 @@
         <button class="btn btn-warning w-75" type="submit">Changer le statut</button>
       </div>
     </form>
-    <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers <a href="<?php echo Base::instance()->alias('record_attachment', ['submission' => $submission->name ]) ?>" class="btn btn-outline-secondary btn-sm float-end mt-1">Modifier</a></h2>
+    <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
     <ul class="list-group">
       <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('record_submission_getfile', [], ['disposition' => 'attachment', 'file' => $submission->pdf]) ?>" target="_blank">
         <i class="bi bi-filetype-pdf"></i> Formulaire complété
