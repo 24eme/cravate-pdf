@@ -37,15 +37,15 @@
       <?php endforeach; ?>
       </table>
     <?php endif; ?>
-    <?php if (property_exists($submission->json, "history")): ?>
+    <?php if ($history = $submission->getHistory()): ?>
     <h2 class="pb-2 h3 pt-2"><i class="bi bi-clock-history"></i> Historique</h2>
     <table class="table table-striped">
       <tbody>
-          <?php foreach (array_reverse($submission->json->history) as $history): ?>
+          <?php foreach ($history as $item): ?>
           <tr>
-            <td><?php echo date('d/m/Y H:i', strtotime($history->date)) ?></td>
-            <td><?php echo $history->entrie ?></td>
-            <td class="w-50"><?php echo $history->comment ?></td>
+            <td><?php echo date('d/m/Y H:i', strtotime($item->date)) ?></td>
+            <td><?php echo $item->entrie ?></td>
+            <td class="w-50"><?php echo $item->comment ?></td>
           </tr>
           <?php endforeach; ?>
       </tbody>

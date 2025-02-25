@@ -290,4 +290,22 @@ class Submission
         return in_array($this->status, [self::STATUS_DRAFT, self::STATUS_UNCOMPLETED]);
     }
 
+    public function getHistory()
+    {
+        if (property_exists($this->json, 'history')) {
+            return array_reverse($this->json->history);
+        }
+        return [];
+    }
+
+    public function getHistoryForStatus($status)
+    {
+        foreach ($this->getHistory() as $item) {
+            if (strpos($item->entrie, self::STATUS_UNCOMPLETED)) {
+                return $item;
+            }
+        }
+        return null;
+    }
+
 }
