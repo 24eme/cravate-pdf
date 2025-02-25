@@ -252,7 +252,7 @@ class Submission
         }
     }
 
-    public function getDatas($key = null)
+    public function getDatas($key = null, $default = null)
     {
         if (empty($this->datas)) {
             return [];
@@ -260,6 +260,10 @@ class Submission
 
         if ($key && array_key_exists($key, $this->datas)) {
             return $this->datas[$key];
+        }
+
+        if ($key) {
+            return $default;
         }
 
         return $this->datas;

@@ -120,6 +120,8 @@ class Record
 
             if ($valid === false) {
                 Flash::instance()->setKey('form-error', $validator->getErrors());
+                \Helpers\Old::instance()->set($cleanedData);
+
                 return $submission->name
                     ? $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->name]])
                     : $f3->reroute(['record_submission_new', ['record' => $this->record->name]]);
