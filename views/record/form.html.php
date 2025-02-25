@@ -36,7 +36,7 @@
   <?php foreach($fields as $id => $field): ?>
   <?php if ($field['type'] == 'text'): ?>
     <div class="form-floating mb-3">
-    <input type="text" class="form-control" name="<?php echo $id ?>" id="<?php echo $field['type'].'_'.$id ?>" required="required" value="<?php echo $submission->getDatas($id) ?>">
+    <input type="text" class="form-control" name="<?php echo $id ?>" id="<?php echo $field['type'].'_'.$id ?>" required="required" value="<?php echo \Helpers\Old::instance()->get($id, $submission->getDatas($id)) ?>">
       <label for="<?php echo $field['type'].'_'.$id ?>"><?php echo $field['label'] ?></label>
     </div>
   <?php endif; ?>
