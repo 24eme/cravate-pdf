@@ -242,26 +242,6 @@ class Submission
         return trim(str_replace([$this->datetime->format('YmdHis'), $this->status, '_'], ['', '', ' '], $this->name));
     }
 
-    public function loadDatas(array $datas)
-    {
-        $this->datas = array_merge($this->datas, $datas);
-    }
-
-    public function loadXFDF()
-    {
-        if (! $this->xfdf) {
-            return false;
-        }
-
-        $xfdf = simplexml_load_file($this->path.$this->xfdf);
-        if ($xfdf) {
-            foreach ($xfdf->fields->field as $field) {
-                $this->name = str_replace('%'.((string)$field->attributes()['name']).'%', (string)$field->value, $this->name);
-                $this->datas[((string)$field->attributes()['name'])] = (string)$field->value;
-            }
-        }
-    }
-
     public function loadJSON($file)
     {
         $this->json = json_decode(file_get_contents($this->path.$file));
