@@ -149,7 +149,6 @@ class Record
                 if ($file['error'] != UPLOAD_ERR_OK) {
                     continue;
                 }
-                $newUpload++;
                 move_uploaded_file($file['tmp_name'], $submission->getAttachmentsPath() . $name.".".pathinfo($file['name'])['extension']);
             }
 
