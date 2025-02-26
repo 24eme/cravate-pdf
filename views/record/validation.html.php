@@ -21,10 +21,20 @@
 
   <div class="col-8">
       <table class="table table-striped table-hover">
+      <?php $formConfig = $submission->record->getConfigItem('form'); ?>
       <?php foreach($submission->getDatas() as $field => $value): ?>
         <tr>
           <th><?php echo $field ?> :</th>
-          <td><?php echo $value ?></td>
+          <?php if (array_key_exists('format', $formConfig[$field])): ?>
+            <td><?php echo preg_replace(
+                             strtok($formConfig[$field]['format'], '#'),
+                             strtok('#'),
+                             $value
+                           ) ?>
+            </td>
+          <?php else: ?>
+            <td><?php echo $value ?></td>
+          <?php endif ?>
         </tr>
       <?php endforeach; ?>
       </table>

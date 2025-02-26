@@ -40,10 +40,20 @@
       <object type="application/pdf" style="height: 75vh;" class="w-100" data="<?php echo Base::instance()->alias('record_submission_getfile', [], ['file' => $submission->pdf, 'disposition' => 'inline']) ?>#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0"></object>
     <?php else: ?>
       <table class="table table-striped table-hover">
+      <?php $formConfig = $submission->record->getConfigItem('form'); ?>
       <?php foreach($submission->getDatas() as $field => $value): ?>
         <tr>
           <th><?php echo $field ?> :</th>
-          <td><?php echo $value ?></td>
+          <?php if (array_key_exists('format', $formConfig[$field])): ?>
+            <td><?php echo preg_replace(
+                             strtok($formConfig[$field]['format'], '#'),
+                             strtok('#'),
+                             $value
+                           ) ?>
+            </td>
+          <?php else: ?>
+            <td><?php echo $value ?></td>
+          <?php endif ?>
         </tr>
       <?php endforeach; ?>
       </table>
