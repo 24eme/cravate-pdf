@@ -7,11 +7,16 @@ use Records\Submission;
 class Validation
 {
     public $errors = [];
+    public $warnings = [];
 
     public function checkSubmission(Submission $submission)
     {
-        if ($submission->getAttachmentsNeeded() && empty($submission->getAttachments())) {
-            $this->errors[] = ['field' => 'ATTACHED_FILE', 'message' => "Vous n'avez pas soumis de pièce jointe"];
+        if ($submission->getAttachmentsNeeded()) {
+           if (empty($submission->getAttachments())) {
+               $this->errors[] = ['field' => 'ATTACHED_FILE', 'message' => "Vous n'avez pas soumis de pièce jointe"];
+           } elseif (count($submission->getAttachmentsNeeded()) !== count($submission->getAttachments())) {
+               $this->warnings[] = ['field' => 'ATTACHED_FILE', 'message' => "Il manque des pièces jointes"];
+           }
         }
     }
 
@@ -59,6 +64,16 @@ class Validation
     public function hasErrors()
     {
         return count($this->errors) > 0;
+    }
+
+    public function getWarnings()
+    {
+        return $this->warnings;
+    }
+
+    public function hasWarnings()
+    {
+        return count($this->warnings) > 0;
     }
 
     public function max($max, $value)

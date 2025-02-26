@@ -28,6 +28,16 @@
   </div>
 <?php endif ?>
 
+<?php if ($validator->hasWarnings()): ?>
+  <div class="alert alert-warning" role="alert">
+    <ul class="list-unstyled mb-0">
+    <?php foreach ($validator->getWarnings() as $warn): ?>
+      <li><?php echo $warn['message'] ?></li>
+    <?php endforeach ?>
+    </ul>
+  </div>
+<?php endif ?>
+
 <div class="row">
 
   <div class="col-8">
