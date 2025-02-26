@@ -168,7 +168,7 @@ class Submission
 
     public function addHistory($data, $comment = null)
     {
-        $data = ['date' => (new \DateTime())->format('c'), 'entrie' => $data, 'comment' => $comment];
+        $data = ['date' => (new \DateTime())->format('c'), 'entry' => $data, 'comment' => $comment];
         $this->json->history[] = json_decode(json_encode($data));
 
         $this->updateJSON();
@@ -304,7 +304,7 @@ class Submission
     public function getHistoryForStatus($status)
     {
         foreach ($this->getHistory() as $item) {
-            if (strpos($item->entrie, self::STATUS_UNCOMPLETED)) {
+            if (strpos($item->entry, self::STATUS_UNCOMPLETED)) {
                 return $item;
             }
         }

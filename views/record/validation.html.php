@@ -46,7 +46,7 @@
             <?php foreach (array_reverse($submission->json->history) as $history): ?>
             <tr>
               <td><?php echo date('d/m/Y H:i', strtotime($history->date)) ?></td>
-              <td><?php echo $history->entrie ?></td>
+              <td><?php echo $history->entry ?></td>
               <td class="w-50"><?php echo $history->comment ?></td>
             </tr>
             <?php endforeach; ?>

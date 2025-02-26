@@ -15,9 +15,9 @@
 </h1>
 
 <?php if ($submission->status == Records\Submission::STATUS_UNCOMPLETED): ?>
-<?php $entrie = $submission->getHistoryForStatus(Records\Submission::STATUS_UNCOMPLETED); ?>
+<?php $entry = $submission->getHistoryForStatus(Records\Submission::STATUS_UNCOMPLETED); ?>
 <div class="alert alert-warning" role="alert">
-<i class="bi bi-exclamation-circle"></i> Votre dossier n'est pas complet <?php echo ($entrie->comment)? ' : '.$entrie->comment : '' ?>
+<i class="bi bi-exclamation-circle"></i> Votre dossier n'est pas complet <?php echo ($entry->comment)? ' : '.$entry->comment : '' ?>
 <ul class="mb-0">
   <li>Modifiez vos informations en suivant ce lien : <a href="<?php echo Base::instance()->alias('record_edit', ['submission' => $submission->name ]) ?>">Informations</a></li>
   <li>Complétez vos annexes en suivant ce lien : <a href="<?php echo Base::instance()->alias('record_attachment', ['submission' => $submission->name ]) ?>">Annexes</a></li>
@@ -65,7 +65,7 @@
           <?php foreach ($history as $item): ?>
           <tr>
             <td><?php echo date('d/m/Y H:i', strtotime($item->date)) ?></td>
-            <td><?php echo $item->entrie ?></td>
+            <td><?php echo $item->entry ?></td>
             <td class="w-50"><?php echo $item->comment ?></td>
           </tr>
           <?php endforeach; ?>
