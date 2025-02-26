@@ -8,9 +8,10 @@
   </div>
 </nav>
 
+<div class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap fs-3 mt-3"><?php echo Records\Submission::printStatus($submission->status) ?></div>
+
 <h1 class="pb-2 my-4">
   <?php echo $submission->getLibelle() ?>
-  <div class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap"><?php echo Records\Submission::printStatus($submission->status) ?></div>
 </h1>
 
 <?php if ($submission->status == Records\Submission::STATUS_UNCOMPLETED): ?>
