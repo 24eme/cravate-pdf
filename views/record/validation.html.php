@@ -18,6 +18,16 @@
   <?php echo $submission->getLibelle() ?>
 </h1>
 
+<?php if ($validator->hasErrors()): ?>
+  <div class="alert alert-danger" role="alert">
+    <ul class="list-unstyled mb-0">
+    <?php foreach ($validator->getErrors() as $error): ?>
+      <li><?php echo $error['message'] ?></li>
+    <?php endforeach ?>
+    </ul>
+  </div>
+<?php endif ?>
+
 <div class="row">
 
   <div class="col-8">
@@ -74,8 +84,10 @@
   </div>
 </div>
 
-<div class="text-center">
-  <form method="post">
-    <button type=submit class="btn btn-primary"><i class="bi bi-upload"></i> Soumettre le dossier</button>
-  </form>
-</div>
+<?php if ($validator->hasErrors() === false): ?>
+  <div class="text-center">
+    <form method="post">
+      <button type=submit class="btn btn-primary"><i class="bi bi-upload"></i> Soumettre le dossier</button>
+    </form>
+  </div>
+<?php endif ?>

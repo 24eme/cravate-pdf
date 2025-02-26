@@ -174,7 +174,14 @@ class Record
             return $f3->error(403, "Submission not editable");
         }
 
+        $validator = new Validation();
+        $validator->checkSubmission($submission);
+
         if ($f3->get('VERB') === 'POST') {
+            if ($validator->hasErrors()) {
+                return $f3->reroute('@record_validation');
+            }
+
             $submission->setStatus(Submission::STATUS_SUBMITTED);
             return $f3->reroute(['record_submission', [
                         'record' => $record->name,
@@ -185,6 +192,7 @@ class Record
         $f3->get('steps')->activate(RecordsSteps::STEP_VALIDATION);
         $f3->set('record', $record);
         $f3->set('submission', $submission);
+        $f3->set('validator', $validator);
         $f3->set('content', 'record/validation.html.php');
 
         $f3->set('readonly', true);

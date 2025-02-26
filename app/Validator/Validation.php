@@ -2,9 +2,18 @@
 
 namespace Validator;
 
+use Records\Submission;
+
 class Validation
 {
     public $errors = [];
+
+    public function checkSubmission(Submission $submission)
+    {
+        if ($submission->getAttachmentsNeeded() && empty($submission->getAttachments())) {
+            $this->errors[] = ['field' => 'ATTACHED_FILE', 'message' => "Vous n'avez pas soumis de pièce jointe"];
+        }
+    }
 
     public function validate($submittedData, $validators)
     {
@@ -45,6 +54,11 @@ class Validation
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    public function hasErrors()
+    {
+        return count($this->errors) > 0;
     }
 
     public function max($max, $value)
