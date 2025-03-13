@@ -13,5 +13,8 @@ $config = [
     ],
     'session' => [
         'name' => 'symfony',
+        "credentials_key" => "symfony/user/sfUser/credentials",
+        "default_etablissement_id" => '',
+        "default_is_admin" => ''
     ]
 ];
