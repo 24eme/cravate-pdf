@@ -91,6 +91,9 @@ class Record
         if (!$this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
+        if (!$_SESSION['is_admin'] && !$this->submission->isAuthor($_SESSION['etablissement_id'])) {
+            return $f3->error(403, "Etablissement forbidden");
+        }
         $f3->set('content', 'record/form.html.php');
 
         echo View::instance()->render('layout.html.php');
@@ -113,6 +116,9 @@ class Record
             $submission = new Submission($this->record, $f3->get('POST.submission'));
             if (!$submission->isEditable()) {
                 return $f3->error(403, "Submission not editable");
+            }
+            if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+                return $f3->error(403, "Etablissement forbidden");
             }
 
             $validator = new Validation();
@@ -143,6 +149,9 @@ class Record
         if (!$submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
+        if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+            return $f3->error(403, "Etablissement forbidden");
+        }
 
         if ($f3->get('VERB') === 'POST') {
             foreach($_FILES as $name => $file) {
@@ -172,6 +181,9 @@ class Record
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
         if (!$submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
+        }
+        if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+            return $f3->error(403, "Etablissement forbidden");
         }
 
         $validator = new Validation();
@@ -204,6 +216,9 @@ class Record
     {
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+            return $f3->error(403, "Etablissement forbidden");
+        }
         if ($submission->status == Submission::STATUS_DRAFT) {
             return $f3->reroute(['record_validation', ['record' => $record->name, 'submission' => $submission->name]]);
         }
@@ -218,6 +233,9 @@ class Record
     {
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+            return $f3->error(403, "Etablissement forbidden");
+        }
         $file = $submission->path.$f3->get('GET.file');
         $disposition = $f3->get('GET.disposition');
 
@@ -241,6 +259,9 @@ class Record
 
     public function updatestatus(Base $f3)
     {
+        if (!$_SESSION['is_admin']) {
+            return $f3->error(403, "Only admin");
+        }
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
         $newStatus = $f3->get('POST.status');
