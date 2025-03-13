@@ -13,7 +13,7 @@
 
 <div class="row">
   <div class="col-9">
-    <?php if ($submissions = $record->getSubmissions($statusFilter)): ?>
+    <?php if ($submissions = $record->getSubmissions($statusFilter, (!$_SESSION['is_admin'])? $_SESSION['etablissement_id'] : null)): ?>
     <table class="table table-hover table-striped mt-3">
       <thead>
         <tr>
@@ -43,7 +43,7 @@
     <?php endif; ?>
   </div>
   <div class="col-3 mt-5 pt-2">
-    <?php $countByStatus = $record->countByStatus(); ?>
+    <?php $countByStatus = $record->countByStatus((!$_SESSION['is_admin'])? $_SESSION['etablissement_id'] : null); ?>
     <ul class="list-group">
       <a class="list-group-item list-group-item-action<?php if ($statusFilter === Submission::STATUS_TOUS): ?> active<?php endif; ?>" aria-current="page"
          href="<?php echo Base::instance()->alias('record_submissions', [], ['status' => Submission::STATUS_TOUS]) ?>">
