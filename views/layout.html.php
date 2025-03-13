@@ -19,7 +19,7 @@
       }
     ?>
   </head>
-  <body<?php if($config->get('instance') == 'preprod' ): ?> style="background-color: #C44C51;"<?php endif; ?>>
+  <body<?php if($config->get('instance') == 'preprod' ): ?> class="preprod"<?php endif; ?>>
     <?php
       if ($theme = $config->get('theme')) {
         include("$ROOT/themes/$theme/header.php");

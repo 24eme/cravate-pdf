@@ -6,6 +6,10 @@ body {
   font-size: 12px !important;
   line-height: 1.2 !important;
 }
+body.preprod,
+body.preprod .themeHeaderContainer {
+    background-color: #C44C51 !important;
+}
 .container {
     width: 940px;
 }
