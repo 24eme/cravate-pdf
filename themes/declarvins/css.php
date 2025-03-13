@@ -31,7 +31,7 @@ a.highlight_link:hover {
 }
 #header {
   zoom: 1;
-  margin: 0 0 10px;
+  margin: 0 -12px 10px;
 }
 #header:before,
 #header:after {
@@ -54,6 +54,9 @@ a.highlight_link:hover {
 #header #logo p {
   color: #fff;
   font-size: 14px;
+}
+#header p {
+  margin: 0;
 }
 #header nav {
   float: right;
