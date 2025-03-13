@@ -1,6 +1,7 @@
 <?php
 $config = [
     'theme' => '',
+    'instance' => '',
     'header_link' => '',
     'footer_link' => '',
     'mail' => [
