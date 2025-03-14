@@ -68,7 +68,7 @@ class Record
         }
     }
 
-    public function getSubmissions($statusFilter = Submission::STATUS_TOUS)
+    public function getSubmissions($statusFilter = Submission::STATUS_TOUS, $identifiant = null)
     {
         $submissions = scandir($this->submissionsPath);
         if (!$submissions) {
@@ -83,15 +83,18 @@ class Record
             if ($statusFilter !== Submission::STATUS_TOUS && $statusFilter != $s->status) {
                 continue;
             }
+            if ($identifiant && !$s->isAuthor($identifiant)) {
+                continue;
+            }
             $items[$s->datetime->format('YmdHis')] = $s;
         }
         krsort($items);
         return $items;
     }
 
-    public function countByStatus()
+    public function countByStatus($identifiant = null)
     {
-        $submissions = $this->getSubmissions();
+        $submissions = $this->getSubmissions(Submission::STATUS_TOUS, $identifiant);
         $result = array_fill_keys(Submission::$allStatus, 0);
         foreach ($submissions as $submission) {
             $result[$submission->status]++;

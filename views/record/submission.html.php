@@ -76,6 +76,7 @@
 
   <div class="col-4">
     <p class="mt-4 fs-5 text-end">Dépot : <?php echo $submission->datetime->format('d/m/Y H:i'); ?></p>
+    <?php if($_SESSION['is_admin']): ?>
     <h2 class="pb-2 h3"><i class="bi bi-gear"></i> Statut</h2>
     <form action="<?php echo Base::instance()->alias('record_submission_updatestatus') ?>" method="post" class="row mb-4">
       <div class="col-12">
@@ -94,6 +95,7 @@
         <button class="btn btn-warning w-75" type="submit">Changer le statut</button>
       </div>
     </form>
+    <?php endif; ?>
     <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
     <ul class="list-group">
       <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('record_submission_getfile', [], ['disposition' => 'attachment', 'file' => $submission->pdf]) ?>" target="_blank">

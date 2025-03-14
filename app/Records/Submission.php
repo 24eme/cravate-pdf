@@ -311,4 +311,9 @@ class Submission
         return null;
     }
 
+    public function isAuthor($identifiant)
+    {
+        return (strpos($this->name, $identifiant) !== false);
+    }
+
 }

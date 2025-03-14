@@ -9,11 +9,11 @@
   </div>
 </nav>
 
-<h1 class="border-bottom pb-2 mt-4">Dépôts<a href="<?php echo Base::instance()->alias('record_submission_new', ['record' => $record->name]) ?>" class="btn btn-light mt-2 float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i> Saisir un dossier</a></h1>
+<h1 class="border-bottom pb-2 mt-4 clearfix"><span class="float-start pt-2">Dépôts</span><a href="<?php echo Base::instance()->alias('record_submission_new', ['record' => $record->name]) ?>" class="btn btn-light float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i> Saisir un dossier</a></h1>
 
 <div class="row">
   <div class="col-9">
-    <?php if ($submissions = $record->getSubmissions($statusFilter)): ?>
+    <?php if ($submissions = $record->getSubmissions($statusFilter, (!$_SESSION['is_admin'])? $_SESSION['etablissement_id'] : null)): ?>
     <table class="table table-hover table-striped mt-3">
       <thead>
         <tr>
@@ -43,7 +43,7 @@
     <?php endif; ?>
   </div>
   <div class="col-3 mt-5 pt-2">
-    <?php $countByStatus = $record->countByStatus(); ?>
+    <?php $countByStatus = $record->countByStatus((!$_SESSION['is_admin'])? $_SESSION['etablissement_id'] : null); ?>
     <ul class="list-group">
       <a class="list-group-item list-group-item-action<?php if ($statusFilter === Submission::STATUS_TOUS): ?> active<?php endif; ?>" aria-current="page"
          href="<?php echo Base::instance()->alias('record_submissions', [], ['status' => Submission::STATUS_TOUS]) ?>">
