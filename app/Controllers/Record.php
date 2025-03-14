@@ -233,13 +233,22 @@ class Record
     {
         $record = new Rec($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
+
         if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
             return $f3->error(403, "Etablissement forbidden");
         }
-        $file = $submission->path.$f3->get('GET.file');
+
         $disposition = $f3->get('GET.disposition');
 
-        if (file_exists($file) === false) {
+        $file = realpath($submission->path.$f3->get('GET.file'));
+        $path = realpath($submission->path);
+
+        // si pas le path dans le chemin, on le rajoute
+        if (strpos($file, $path) !== 0) {
+            $file = $path.$file;
+        }
+
+        if (is_file($file) === false) {
             return $f3->error(404, "File not found");
         }
 
