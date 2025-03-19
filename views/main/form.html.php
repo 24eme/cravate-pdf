@@ -2,7 +2,7 @@
 
 <?php echo View::instance()->render('global/etapes.html.php') ?>
 
-<form method="POST" class="row" action="/fill<?php echo (isset($record))? '?record='.$record->name : ''; ?>">
+<form method="POST" class="row" action="<?php Base::instance()->alias('record_fill', ['record' => $record->getName()]) ?> ?>">
 
 <input type="hidden" value="<?php echo $pdfForm->pdfFile ?>" name="file">
 

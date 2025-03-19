@@ -33,7 +33,7 @@ class MainController
     public function beforeroute(Base $f3)
     {
         if ($f3->get('PARAMS.record')) {
-            $this->record = new Rec($f3->get('PARAMS.record'));
+            $this->record = new Record($f3->get('PARAMS.record'));
             $this->submission = new Submission($this->record, $f3->get('PARAMS.submission'));
 
             $f3->set('steps', new Steps(new RecordsSteps($this->record, $this->submission)));
@@ -67,15 +67,8 @@ class MainController
 
     public function new(Base $f3)
     {
-        $dirname = (new \DateTime())->format('YmdHis')."_".$_SESSION['etablissement_id']."_RS_BROUILLON";
-        $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $dirname);
-
-        if($record->getConfigItem('initDossier')) {
-            shell_exec($record->getConfigItem('initDossier')." $submission->path");
-        }
-
-        $submission = new Submission($record, $dirname);
+        $record = Record::getInstance($f3->get('PARAMS.record'));
+        $submission = $record->create();
 
         $f3->set('record', $record);
         $f3->set('submission', $submission);

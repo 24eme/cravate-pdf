@@ -17,6 +17,14 @@ class Record
     public $config;
     public $metas;
     public $submissionsPath;
+    private static $_instance = [];
+
+    public static function getInstance($name) {
+        if (!isset(self::$_instance[$name])) {
+            self::$_instance[$name] = new Record($name);
+        }
+        return self::$_instance[$name];
+    }
 
     public static function getRecordPath($name)
     {
@@ -66,6 +74,16 @@ class Record
                 $this->metas = json_decode($content);
             }
         }
+    }
+
+    public function create() {
+        $submission = new Submission($this, (new \DateTime())->format('YmdHis')."_".$_SESSION['etablissement_id']."_RS_BROUILLON");
+
+        if($this->getConfigItem('initDossier')) {
+            shell_exec($this->getConfigItem('initDossier')." $submission->path");
+        }
+
+        return $submission;
     }
 
     public function getSubmissions($statusFilter = Submission::STATUS_TOUS, $identifiant = null)
