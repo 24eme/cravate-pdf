@@ -149,16 +149,19 @@ class Record
         }
 
         $pdffile = $postData['file'];
-        $pdfForm = new PDFForm($pdffile);
+        $formFields = $this->record->getConfigItem('form');
 
-        $cleanedData = PDFtk::cleanData($pdfForm->getFields(), $postData);
+        $cleanedData = Validation::cleanData($formFields, $postData);
 
         try {
             $submission = new Submission($this->record, $f3->get('POST.submission'));
-            if (!$submission->isEditable()) {
+            $cleanedData = array_merge($cleanedData, $submission->getDisabledFields());
+
+            if (! $submission->isEditable()) {
                 return $f3->error(403, "Submission not editable");
             }
-            if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+
+            if ($this->user->isAdmin === false && !$submission->isAuthor($this->user->etablissement)) {
                 return $f3->error(403, "Etablissement forbidden");
             }
 

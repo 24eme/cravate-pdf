@@ -288,6 +288,19 @@ class Submission
         return $fields;
     }
 
+    public function getDisabledFields()
+    {
+        $fields = [];
+
+        foreach ($this->record->getConfigItem('form') as $fieldKey => $conf) {
+            if (isset($conf['disabled'])) {
+                $fields[$fieldKey] = $this->getDatas($fieldKey);
+            }
+        }
+
+        return $fields;
+    }
+
     public function isEditable()
     {
         return in_array($this->status, [self::STATUS_DRAFT, self::STATUS_UNCOMPLETED]);
