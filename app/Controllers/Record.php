@@ -230,33 +230,32 @@ class Record
      */
     public function validation(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
-        if (!$submission->isEditable()) {
+        if (! $this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
-        if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+
+        if ($this->user->isAdmin === false && ! $this->submission->isAuthor($this->user->etablissement)) {
             return $f3->error(403, "Etablissement forbidden");
         }
 
         $validator = new Validation();
-        $validator->checkSubmission($submission);
+        $validator->checkSubmission($this->submission);
 
         if ($f3->get('VERB') === 'POST') {
             if ($validator->hasErrors()) {
                 return $f3->reroute('@record_validation');
             }
 
-            $submission->setStatus(Submission::STATUS_SUBMITTED);
+            $this->submission->setStatus(Submission::STATUS_SUBMITTED);
             return $f3->reroute(['record_submission', [
-                        'record' => $record->name,
-                        'submission' => $submission->name
+                        'record' => $this->record->name,
+                        'submission' => $this->submission->name
                     ]]);
         }
 
         $f3->get('steps')->activate(RecordsSteps::STEP_VALIDATION);
-        $f3->set('record', $record);
-        $f3->set('submission', $submission);
+        $f3->set('record', $this->record);
+        $f3->set('submission', $this->submission);
         $f3->set('validator', $validator);
         $f3->set('content', 'record/validation.html.php');
 
@@ -271,15 +270,15 @@ class Record
      */
     public function submission(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
-        if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+        if ($this->user->isAdmin === false && ! $this->submission->isAuthor($this->user->etablissement)) {
             return $f3->error(403, "Etablissement forbidden");
         }
-        if ($submission->status == Submission::STATUS_DRAFT) {
-            return $f3->reroute(['record_validation', ['record' => $record->name, 'submission' => $submission->name]]);
+
+        if ($this->submission->status === Submission::STATUS_DRAFT) {
+            return $f3->reroute(['record_validation', ['record' => $this->record->name, 'submission' => $this->submission->name]]);
         }
-        $f3->set('submission', $submission);
+
+        $f3->set('submission', $this->submission);
         $f3->set('content', 'record/submission.html.php');
         $f3->set('displaypdf', $f3->get('GET.pdf'));
 
@@ -292,17 +291,14 @@ class Record
      */
     public function getfile(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
-
-        if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+        if ($this->user->isAdmin === false && ! $this->submission->isAuthor($this->user->etablissement)) {
             return $f3->error(403, "Etablissement forbidden");
         }
 
         $disposition = $f3->get('GET.disposition');
 
-        $file = realpath($submission->path.$f3->get('GET.file'));
-        $path = realpath($submission->path);
+        $file = realpath($this->submission->path.$f3->get('GET.file'));
+        $path = realpath($this->submission->path);
 
         // si pas le path dans le chemin, on le rajoute
         if (strpos($file, $path) !== 0) {
@@ -333,29 +329,29 @@ class Record
      */
     public function updatestatus(Base $f3)
     {
-        if (!$_SESSION['is_admin']) {
+        if ($this->user->isAdmin === false) {
             return $f3->error(403, "Only admin");
         }
-        $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
+
         $newStatus = $f3->get('POST.status');
         $comment = $f3->get('POST.comment');
 
         if (!in_array($newStatus, Submission::$allStatus)) {
             return $f3->error(404, "Status < $newStatus > not allowed");
         }
-        $submission->setStatus($newStatus, $comment);
+
+        $this->submission->setStatus($newStatus, $comment);
 
         if ($f3->exists('mail')) {
             try {
                 $f3->get('mail')
-                   ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $submission->getDatas('EMAIL'), 'Subject' => 'Changement de Status de votre dossier'])
-                   ->send('chgtstatus.eml', compact('submission'));
+                   ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $this->submission->getDatas('EMAIL'), 'Subject' => 'Changement de Status de votre dossier'])
+                   ->send('chgtstatus.eml', ['submission' => $this->submission]);
             } catch (Exception $e) {
                 // log message
             }
         }
 
-        return $f3->reroute(['record_submission', ['record' => $record->name, 'submission' => $submission->name]]);
+        return $f3->reroute(['record_submission', ['record' => $this->record->name, 'submission' => $this->submission->name]]);
     }
 }
