@@ -23,11 +23,13 @@ use PDF\PDFtk;
 use Validator\Validation;
 
 use Exception;
+use stdClass;
 
 class Record
 {
     private ?Rec $record = null;
     private ?Submission $submission = null;
+    private stdClass $user;
 
     public function beforeroute(Base $f3)
     {
@@ -36,6 +38,10 @@ class Record
             $this->submission = new Submission($this->record, $f3->get('PARAMS.submission'));
 
             $f3->set('steps', new Steps(new RecordsSteps($this->record, $this->submission)));
+
+            $this->user = new stdClass();
+            $this->user->isAdmin = $_SESSION['is_admin'] ?? false;
+            $this->user->etablissement = $this->user->isAdmin === true ? null : $_SESSION['etablissement_id'];
         }
     }
 
@@ -63,10 +69,8 @@ class Record
             return $f3->error(404, "Status not found");
         }
 
-        $filter = $_SESSION['is_admin'] ? null : $_SESSION['etablissement_id'];
-        $submissions = $this->record->getSubmissions($status, $filter);
-
-        $countByStatus = $this->record->countByStatus($filter);
+        $submissions = $this->record->getSubmissions($status, $this->user->etablissement);
+        $countByStatus = $this->record->countByStatus($this->user->etablissement);
 
         $f3->set('record', $this->record);
         $f3->set('submissions', $submissions);
