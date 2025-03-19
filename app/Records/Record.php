@@ -92,6 +92,9 @@ class Record
         return $items;
     }
 
+    /**
+     * @return array<string, int>
+     */
     public function countByStatus($identifiant = null)
     {
         $submissions = $this->getSubmissions(Submission::STATUS_TOUS, $identifiant);

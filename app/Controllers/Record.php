@@ -57,16 +57,22 @@ class Record
      */
     public function submissions(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
-        $statusFilter = $f3->get('GET.status') ?? Submission::STATUS_SUBMITTED;
+        $status = $f3->get('GET.status') ?? Submission::STATUS_SUBMITTED;
 
-        if (in_array($statusFilter, array_merge([Submission::STATUS_TOUS], Submission::$allStatus)) === false) {
+        if (in_array($status, array_merge([Submission::STATUS_TOUS], Submission::$allStatus)) === false) {
             return $f3->error(404, "Status not found");
         }
 
-        $f3->set('record', $record);
+        $filter = $_SESSION['is_admin'] ? null : $_SESSION['etablissement_id'];
+        $submissions = $this->record->getSubmissions($status, $filter);
+
+        $countByStatus = $this->record->countByStatus($filter);
+
+        $f3->set('record', $this->record);
+        $f3->set('submissions', $submissions);
+        $f3->set('submissionsByStatus', $countByStatus);
+        $f3->set('status', $status);
         $f3->set('content', 'record/submissions.html.php');
-        $f3->set('statusFilter', $statusFilter);
         $f3->set('statusThemeColor', Submission::$statusThemeColor);
 
         echo View::instance()->render('layout.html.php');
