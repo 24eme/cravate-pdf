@@ -98,13 +98,16 @@ class Record
 
         $submission = new Submission($this->record, $dirname);
 
-        if($record->getConfigItem('initDossier')) {
-            shell_exec($record->getConfigItem('initDossier')." $submission->path");
+        if($this->user->isAdmin === false && $this->record->getConfigItem('initDossier')) {
+            shell_exec(
+                escapeshellcmd($this->record->getConfigItem('initDossier')." $submission->path")
+            );
         }
 
-        $submission = new Submission($record, $dirname);
+        // On recharge le dossier pour prendre en compte le json télécharger juste avant
+        $submission = new Submission($this->record, $dirname);
 
-        $f3->set('record', $record);
+        $f3->set('record', $this->record);
         $f3->set('submission', $submission);
         $f3->set('content', 'record/form.html.php');
 
