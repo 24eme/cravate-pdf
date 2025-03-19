@@ -94,18 +94,12 @@ class MainController
 
     public function fill(Base $f3)
     {
+        $record = Record::getInstance($f3->get('PARAMS.record'));
         $postData = $f3->get('POST');
 
-        if (isset($postData['file']) === false) {
-            $f3->error(403, 'Missing file parameter');
-        }
+        $submission = $record->find($f3->get('POST.submission'));
+        $cleanedData = $postData;
 
-        $pdffile = $postData['file'];
-        $pdfForm = new PDFForm($pdffile);
-
-        $cleanedData = PDFtk::cleanData($pdfForm->getFields(), $postData);
-
-        $submission = new Submission($this->record, $f3->get('POST.submission'));
         if (!$submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
@@ -114,21 +108,22 @@ class MainController
         }
 
         $validator = new Validation();
-        $valid = $validator->validate($cleanedData, $this->record->getValidation());
+        $valid = $validator->validate($cleanedData, $record->getValidation());
 
         if ($valid === false) {
             Flash::instance()->setKey('form-error', $validator->getErrors());
             \Helpers\Old::instance()->set($cleanedData);
 
             return $submission->name
-                ? $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->name]])
-                : $f3->reroute(['record_submission_new', ['record' => $this->record->name]]);
+                ? $f3->reroute(['record_edit', ['record' => $record->name, 'submission' => $submission->name]])
+                : $f3->reroute(['record_submission_new', ['record' => $record->name]]);
         }
 
-        $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
-        $submission->save($cleanedData, $outputFile);
 
-        return $f3->reroute(['record_attachment', ['record' => $this->record->name, 'submission' => $submission->name]]);
+        $submission->setDatas($cleanedData);
+        $submission->save();
+
+        return $f3->reroute(['record_attachment', ['record' => $record->name, 'submission' => $submission->name]]);
     }
 
     public function attachment(Base $f3)

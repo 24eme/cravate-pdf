@@ -3,6 +3,7 @@
 namespace Records;
 
 use DomainException;
+use PDF\PDFtk;
 
 class Submission
 {
@@ -82,32 +83,26 @@ class Submission
                     : null;
     }
 
-    /**
-     * @param $data array<string, string> pour le json->form
-     * @param $files array{pdf: string, xfdf: string} nom des deux fichiers
-     */
-    public function save($data, $files)
+    public function setDatas($datas) {
+        $this->json->form = json_decode(json_encode($datas));
+    }
+
+    public function save()
     {
-        $pdf = $files['pdf'];
-        $xfdf = $files['xfdf'];
-
         $oldPath = $this->path;
-
         $filename = $this->filename ?: basename($pdf, '.pdf');
-
+        $this->pdf =  $this->path.$filename.'.pdf';
+        $files = PDFTk::fillForm($this->pdf, $this->getDatas());
         // fichier de tmp -> dans dossier
-        if (!rename($pdf, $this->path.$filename.'.pdf')) {
+        if (!rename($files['pdf'], $this->path.$filename.'.pdf')) {
             throw new \Exception("pdf save failed");
         }
-        $this->pdf =  $this->path.$filename.'.pdf';
-
         // fichier de tmp -> dans dossier
-        if (!rename($xfdf, $this->path.$filename.'.xfdf')) {
+        if (!rename($files['xfdf'], $this->path.$filename.'.xfdf')) {
             throw new \Exception("xfdf save failed");
         }
         $this->xfdf = $this->path.$filename.'.xfdf';
 
-        $this->json->form = json_decode(json_encode($data));
         $this->status = self::STATUS_DRAFT;
         $this->updateJSON();
 
@@ -115,7 +110,7 @@ class Submission
         $this->name = date('YmdHis');
         if (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['format_dir'])) {
             $this->name .= '_'.$this->record->config['SUBMISSION']['format_dir'];
-            foreach ($data as $field => $value) {
+            foreach ($this->getDatas() as $field => $value) {
                 $this->name = str_replace("%$field%", (string) $value, $this->name);
             }
         }

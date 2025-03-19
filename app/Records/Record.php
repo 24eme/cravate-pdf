@@ -86,6 +86,11 @@ class Record
         return $submission;
     }
 
+    public function find($id) {
+
+        return new Submission($this, $id);
+    }
+
     public function getSubmissions($statusFilter = Submission::STATUS_TOUS, $identifiant = null)
     {
         $submissions = scandir($this->submissionsPath);
