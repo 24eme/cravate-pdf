@@ -122,12 +122,15 @@ class Record
     {
         $f3->set('record', $this->record);
         $f3->set('submission', $this->submission);
-        if (!$this->submission->isEditable()) {
+
+        if (! $this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
-        if (!$_SESSION['is_admin'] && !$this->submission->isAuthor($_SESSION['etablissement_id'])) {
+
+        if ($this->user->isAdmin === false && !$this->submission->isAuthor($this->user->etablissement)) {
             return $f3->error(403, "Etablissement forbidden");
         }
+
         $f3->set('content', 'record/form.html.php');
 
         echo View::instance()->render('layout.html.php');
