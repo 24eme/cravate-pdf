@@ -72,7 +72,7 @@ class MainController
         $submission = new Submission($record, $dirname);
 
         if($record->getConfigItem('initDossier')) {
-            //shell_exec($record->getConfigItem('initDossier')." $submission->path");
+            shell_exec($record->getConfigItem('initDossier')." $submission->path");
         }
 
         $submission = new Submission($record, $dirname);
@@ -112,34 +112,30 @@ class MainController
 
         $cleanedData = PDFtk::cleanData($pdfForm->getFields(), $postData);
 
-        try {
-            $submission = new Submission($this->record, $f3->get('POST.submission'));
-            if (!$submission->isEditable()) {
-                return $f3->error(403, "Submission not editable");
-            }
-            if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
-                return $f3->error(403, "Etablissement forbidden");
-            }
-
-            $validator = new Validation();
-            $valid = $validator->validate($cleanedData, $this->record->getValidation());
-
-            if ($valid === false) {
-                Flash::instance()->setKey('form-error', $validator->getErrors());
-                \Helpers\Old::instance()->set($cleanedData);
-
-                return $submission->name
-                    ? $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->name]])
-                    : $f3->reroute(['record_submission_new', ['record' => $this->record->name]]);
-            }
-
-            $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
-            $submission->save($cleanedData, $outputFile);
-
-            return $f3->reroute(['record_attachment', ['record' => $this->record->name, 'submission' => $submission->name]]);
-        } catch(\Exception $e) {
-            return $f3->reroute('@records');
+        $submission = new Submission($this->record, $f3->get('POST.submission'));
+        if (!$submission->isEditable()) {
+            return $f3->error(403, "Submission not editable");
         }
+        if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+            return $f3->error(403, "Etablissement forbidden");
+        }
+
+        $validator = new Validation();
+        $valid = $validator->validate($cleanedData, $this->record->getValidation());
+
+        if ($valid === false) {
+            Flash::instance()->setKey('form-error', $validator->getErrors());
+            \Helpers\Old::instance()->set($cleanedData);
+
+            return $submission->name
+                ? $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->name]])
+                : $f3->reroute(['record_submission_new', ['record' => $this->record->name]]);
+        }
+
+        $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
+        $submission->save($cleanedData, $outputFile);
+
+        return $f3->reroute(['record_attachment', ['record' => $this->record->name, 'submission' => $submission->name]]);
     }
 
     public function attachment(Base $f3)
