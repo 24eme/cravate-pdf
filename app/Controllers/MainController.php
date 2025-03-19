@@ -11,7 +11,7 @@ use Config;
 
 use Records\Records;
 use Records\Submission;
-use Records\Record as Rec;
+use Records\Record;
 
 use Steps\Steps;
 use Steps\RecordsSteps;
@@ -27,7 +27,7 @@ use Scrape\Declarvin;
 
 class MainController
 {
-    private ?Rec $record = null;
+    private ?Record $record = null;
     private ?Submission $submission = null;
 
     public function beforeroute(Base $f3)
@@ -50,7 +50,7 @@ class MainController
 
     public function submissions(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
+        $record = new Record($f3->get('PARAMS.record'));
         $statusFilter = $f3->get('GET.status') ?? Submission::STATUS_SUBMITTED;
 
         if (in_array($statusFilter, array_merge([Submission::STATUS_TOUS], Submission::$allStatus)) === false) {
@@ -140,7 +140,7 @@ class MainController
 
     public function attachment(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
+        $record = new Record($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
         if (!$submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
@@ -173,7 +173,7 @@ class MainController
 
     public function validation(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
+        $record = new Record($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
         if (!$submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
@@ -210,7 +210,7 @@ class MainController
 
     public function submission(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
+        $record = new Record($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
         if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
             return $f3->error(403, "Etablissement forbidden");
@@ -227,7 +227,7 @@ class MainController
 
     public function getfile(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
+        $record = new Record($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
 
         if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
@@ -267,7 +267,7 @@ class MainController
         if (!$_SESSION['is_admin']) {
             return $f3->error(403, "Only admin");
         }
-        $record = new Rec($f3->get('PARAMS.record'));
+        $record = new Record($f3->get('PARAMS.record'));
         $submission = new Submission($record, $f3->get('PARAMS.submission'));
         $newStatus = $f3->get('POST.status');
         $comment = $f3->get('POST.comment');
