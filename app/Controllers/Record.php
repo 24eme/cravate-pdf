@@ -194,12 +194,11 @@ class Record
      */
     public function attachment(Base $f3)
     {
-        $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
-        if (!$submission->isEditable()) {
+        if (! $this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
-        if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
+
+        if ($this->user->isAdmin === false && ! $this->submission->isAuthor($this->user->etablissement)) {
             return $f3->error(403, "Etablissement forbidden");
         }
 
@@ -208,17 +207,17 @@ class Record
                 if ($file['error'] != UPLOAD_ERR_OK) {
                     continue;
                 }
-                move_uploaded_file($file['tmp_name'], $submission->getAttachmentsPath() . $name.".".pathinfo($file['name'])['extension']);
+                move_uploaded_file($file['tmp_name'], $this->submission->getAttachmentsPath() . $name.".".pathinfo($file['name'])['extension']);
             }
 
             return $f3->reroute(['record_validation', [
-               'record' => $record->name,
-               'submission' => $submission->name,
+               'record' => $this->record->name,
+               'submission' => $this->submission->name,
             ]]);
         }
 
-        $f3->set('record', $record);
-        $f3->set('submission', $submission);
+        $f3->set('record', $this->record);
+        $f3->set('submission', $this->submission);
         $f3->set('content', 'record/attachmentForm.html.php');
 
         $f3->get('steps')->activate(RecordsSteps::STEP_ANNEXES);
