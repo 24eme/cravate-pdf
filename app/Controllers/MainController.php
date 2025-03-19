@@ -25,7 +25,7 @@ use Validator\Validation;
 use Exception;
 use Scrape\Declarvin;
 
-class Record
+class MainController
 {
     private ?Rec $record = null;
     private ?Submission $submission = null;
@@ -72,7 +72,7 @@ class Record
         $submission = new Submission($record, $dirname);
 
         if($record->getConfigItem('initDossier')) {
-            shell_exec($record->getConfigItem('initDossier')." $submission->path");
+            //shell_exec($record->getConfigItem('initDossier')." $submission->path");
         }
 
         $submission = new Submission($record, $dirname);
