@@ -17,15 +17,17 @@ $f3->set('config', Config::getInstance());
 
 $mailConf = Config::getInstance()->get('mail');
 
-$smtp = new SMTP(
-    $mailConf['host'],
-    $mailConf['port'],
-    $mailConf['scheme'],
-    $mailConf['user'],
-    $mailConf['pass']
-);
+if ($mailConf) {
+    $smtp = new SMTP(
+        $mailConf['host'],
+        $mailConf['port'],
+        $mailConf['scheme'],
+        $mailConf['user'],
+        $mailConf['pass']
+    );
 
-$f3->set('mail', new Email($smtp, $f3->get('UI').'emails/'));
+    $f3->set('mail', new Email($smtp, $f3->get('UI').'emails/'));
+}
 
 // intégration session externe
 if (Config::getInstance()->get('session')) {
