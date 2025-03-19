@@ -23,7 +23,6 @@ use PDF\PDFtk;
 use Validator\Validation;
 
 use Exception;
-use Scrape\Declarvin;
 
 class Record
 {

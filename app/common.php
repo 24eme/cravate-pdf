@@ -1,7 +1,6 @@
 <?php
 
 use Config\Config;
-use DB\DBManager;
 use Emails\Email;
 
 $f3 = Base::instance();
