@@ -39,6 +39,10 @@ class Record
         }
     }
 
+    /**
+     * Methode: GET
+     * Liste les types de dossier
+     */
     public function index(Base $f3)
     {
         $f3->set('records', Records::getRecords());
@@ -47,6 +51,10 @@ class Record
         echo View::instance()->render('layout.html.php');
     }
 
+    /**
+     * Methode: GET
+     * Liste les dossiers soumis pour un type donné
+     */
     public function submissions(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
@@ -64,6 +72,10 @@ class Record
         echo View::instance()->render('layout.html.php');
     }
 
+    /**
+     * Methode: GET
+     * Créé un nouveau dossier
+     */
     public function new(Base $f3)
     {
         $dirname = (new \DateTime())->format('YmdHis')."_".$_SESSION['etablissement_id']."_RS_BROUILLON";
@@ -83,6 +95,10 @@ class Record
         echo View::instance()->render('layout.html.php');
     }
 
+    /**
+     * Methode: GET
+     * Edite un dossier
+     */
     public function edit(Base $f3)
     {
         $f3->set('record', $this->record);
@@ -98,6 +114,10 @@ class Record
         echo View::instance()->render('layout.html.php');
     }
 
+    /**
+     * Methode: POST
+     * Prends les informations du form, les enregistrent dans l'objet et rempli le pdf
+     */
     public function fill(Base $f3)
     {
         $postData = $f3->get('POST');
@@ -141,6 +161,10 @@ class Record
         }
     }
 
+    /**
+     * Methode: GET
+     * Ajoute un fichier complémentaire au dossier
+     */
     public function attachment(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
@@ -174,6 +198,10 @@ class Record
         echo View::instance()->render('layout.html.php');
     }
 
+    /**
+     * Methode: GET, POST
+     * Page de validation du dossier
+     */
     public function validation(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
@@ -211,6 +239,10 @@ class Record
         echo View::instance()->render('layout.html.php');
     }
 
+    /**
+     * Methode: GET
+     * Page de visualisation d'un dossier
+     */
     public function submission(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
@@ -228,6 +260,10 @@ class Record
         echo View::instance()->render('layout.html.php');
     }
 
+    /**
+     * Methode: GET
+     * Télécharge un fichier d'un dossier
+     */
     public function getfile(Base $f3)
     {
         $record = new Rec($f3->get('PARAMS.record'));
@@ -265,6 +301,10 @@ class Record
         return Web::instance()->send($file, null, 0, $download, basename($file));
     }
 
+    /**
+     * Methode: POST
+     * Met à jour le status d'un dossier
+     */
     public function updatestatus(Base $f3)
     {
         if (!$_SESSION['is_admin']) {
