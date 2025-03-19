@@ -88,9 +88,15 @@ class Record
      */
     public function new(Base $f3)
     {
-        $dirname = (new \DateTime())->format('YmdHis')."_".$_SESSION['etablissement_id']."_RS_BROUILLON";
-        $record = new Rec($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $dirname);
+        if (isset($_SESSION['datetime']) === false) {
+            $_SESSION['datetime'] = (new \DateTime())->format('YmdHis');
+        }
+
+        $dirname = $_SESSION['datetime'];
+        $dirname .= $this->user->isAdmin ? "_ADMIN_" : "_".$this->user->etablissement."_";
+        $dirname .= "_RS_BROUILLON";
+
+        $submission = new Submission($this->record, $dirname);
 
         if($record->getConfigItem('initDossier')) {
             shell_exec($record->getConfigItem('initDossier')." $submission->path");
@@ -161,6 +167,8 @@ class Record
                     ? $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->name]])
                     : $f3->reroute(['record_submission_new', ['record' => $this->record->name]]);
             }
+
+            unset($_SESSION['datetime']);
 
             $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
             $submission->save($cleanedData, $outputFile);
