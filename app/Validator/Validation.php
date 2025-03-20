@@ -61,7 +61,6 @@ class Validation
             }
 
             foreach (explode('|', $validator) as $func) {
-                continue;
                 $callback = strtok($func, ':');
                 $arg = strtok(':');
 
