@@ -29,7 +29,6 @@ class Submission
     public $status;
     public $path;
 
-    public $xfdf;
     public $json;
 
     public $datas = [];
@@ -96,7 +95,6 @@ class Submission
         if (!rename($xfdf, $this->path.$filename.'.xfdf')) {
             throw new \Exception("xfdf save failed");
         }
-        $this->xfdf = $this->path.$filename.'.xfdf';
 
         $this->json->form = json_decode(json_encode($data));
         $this->status = self::STATUS_DRAFT;
