@@ -26,6 +26,7 @@ class Submission
     public $filename;
 
     public $id;
+    public $userId;
     public $createdAd;
     public $status;
     public $path;
@@ -36,15 +37,16 @@ class Submission
 
     public $datas = [];
 
-    public function __construct(Record $record)
+    public function __construct(Record $record, $userId = null)
     {
         $this->record = $record;
         $this->status = Submission::STATUS_DRAFT;
         $this->id = date('YmdHis');
+        $this->userId = $userId;
         $this->createdAt = new \DateTime();
         $this->json = new \stdClass();
-        $this->name = $this->id;
-        $this->path = $this->record->submissionsPath.$this->id.DIRECTORY_SEPARATOR;
+        $this->name = $this->id.'_'.$this->userId;
+        $this->path = $this->record->submissionsPath.$this->name.DIRECTORY_SEPARATOR;
         $this->filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
                     ? $this->record->config['SUBMISSION']['filename']
                     : null;
@@ -75,6 +77,9 @@ class Submission
     {
         if (!is_dir($this->path)) {
             mkdir($this->path);
+            if($this->record->getConfigItem('initDossier')) {
+                shell_exec($this->record->getConfigItem('initDossier')." ".$this->path);
+            }
         }
 
         $oldPath = $this->path;
@@ -97,7 +102,7 @@ class Submission
         $this->updateJSON();
 
         // on renomme le dossier
-        $this->name = $this->id;
+        $this->name = $this->id.'_'.$this->userId;
         if (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['format_dir'])) {
             $this->name .= '_'.$this->record->config['SUBMISSION']['format_dir'];
             foreach ($this->getDatas() as $field => $value) {
@@ -139,6 +144,7 @@ class Submission
         $this->json->modifiedAt = $date;
         $this->json->status = $this->status;
         $this->json->id = $this->id;
+        $this->json->userId = $this->userId;
 
         file_put_contents($this->path.$this->filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
     }
@@ -233,6 +239,9 @@ class Submission
         if(isset($this->json->id)) {
             $this->id = $this->json->id;
         }
+        if(isset($this->json->userId)) {
+            $this->userId = $this->json->userId;
+        }
         if(isset($this->json->createdAt)) {
             $this->createdAt = new \DateTime($this->json->createdAt);
         }
@@ -298,9 +307,9 @@ class Submission
         return null;
     }
 
-    public function isAuthor($identifiant)
+    public function isAuthor($userId)
     {
-        return (strpos($this->name, $identifiant) !== false);
+        return $userId == $this->userId;
     }
 
 }

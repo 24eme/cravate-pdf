@@ -76,13 +76,8 @@ class Record
         }
     }
 
-    public function create() {
-        $submission = new Submission($this, (new \DateTime())->format('YmdHis')."_".$_SESSION['etablissement_id']."_RS_BROUILLON");
-
-        if($this->getConfigItem('initDossier')) {
-            shell_exec($this->getConfigItem('initDossier')." $submission->path");
-        }
-
+    public function create($userId) {
+        $submission = new Submission($this, $userId);
         $submission->setStatus(Submission::STATUS_DRAFT, null, true);
 
         return $submission;

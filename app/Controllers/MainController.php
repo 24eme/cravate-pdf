@@ -8,6 +8,7 @@ use View;
 use Web;
 
 use Config;
+use User\User;
 
 use Records\Records;
 use Records\Submission;
@@ -39,6 +40,10 @@ class MainController
             $this->submission = $this->record->find($f3->get('PARAMS.submission'));
             $f3->set('steps', new Steps(new RecordsSteps($this->record, $this->submission)));
         }
+
+        if(isset($this->submission) && !User::getInstance()->isAdmin() && !$this->submission->isAuthor(User::getInstance()->getUserId())) {
+            return $f3->error(403, "Etablissement forbidden");
+        }
     }
 
     public function index(Base $f3)
@@ -67,7 +72,7 @@ class MainController
 
     public function new(Base $f3)
     {
-        $submission = $this->record->create();
+        $submission = $this->record->create(User::getInstance()->getUserId());
         $submission->save();
 
         $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->id]]);
@@ -75,15 +80,12 @@ class MainController
 
     public function edit(Base $f3)
     {
-        $f3->set('record', $this->record);
-        $f3->set('submission', $this->submission);
-
         if (!$this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
-        if (!$_SESSION['is_admin'] && !$this->submission->isAuthor($_SESSION['etablissement_id'])) {
-            return $f3->error(403, "Etablissement forbidden");
-        }
+
+        $f3->set('record', $this->record);
+        $f3->set('submission', $this->submission);
         $f3->set('content', 'record/form.html.php');
 
         echo View::instance()->render('layout.html.php');
@@ -97,9 +99,6 @@ class MainController
         if (!$this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
-        if (!$_SESSION['is_admin'] && !$this->submission->isAuthor($_SESSION['etablissement_id'])) {
-            return $f3->error(403, "Etablissement forbidden");
-        }
 
         $validator = new Validation();
         $valid = $validator->validate($cleanedData, $this->record->getValidation());
@@ -111,7 +110,6 @@ class MainController
             return $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $this->submission->id]]);
         }
 
-
         $this->submission->setDatas($cleanedData);
         $this->submission->save();
 
@@ -122,10 +120,6 @@ class MainController
     {
         if (!$this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
-        }
-
-        if (!$_SESSION['is_admin'] && !$this->submission->isAuthor($_SESSION['etablissement_id'])) {
-            return $f3->error(403, "Etablissement forbidden");
         }
 
         if ($f3->get('VERB') === 'POST') {
@@ -154,9 +148,6 @@ class MainController
     {
         if (!$this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
-        }
-        if (!$_SESSION['is_admin'] && !$this->submission->isAuthor($_SESSION['etablissement_id'])) {
-            return $f3->error(403, "Etablissement forbidden");
         }
 
         $validator = new Validation();
@@ -188,9 +179,6 @@ class MainController
 
     public function submission(Base $f3)
     {
-        if (!$_SESSION['is_admin'] && !$this->submission->isAuthor($_SESSION['etablissement_id'])) {
-            return $f3->error(403, "Etablissement forbidden");
-        }
         if ($this->submission->status == Submission::STATUS_DRAFT) {
             return $f3->reroute(['record_validation', ['record' => $thi->record->name, 'submission' => $this->submission->id]]);
         }
@@ -203,10 +191,6 @@ class MainController
 
     public function getfile(Base $f3)
     {
-        if (!$_SESSION['is_admin'] && !$this->submission->isAuthor($_SESSION['etablissement_id'])) {
-            return $f3->error(403, "Etablissement forbidden");
-        }
-
         $disposition = $f3->get('GET.disposition');
 
         $file = realpath($this->submission->path.$f3->get('GET.file'));
@@ -237,7 +221,7 @@ class MainController
 
     public function updatestatus(Base $f3)
     {
-        if (!$_SESSION['is_admin']) {
+        if (!User::getInstance()->isAdmin()) {
             return $f3->error(403, "Only admin");
         }
         $newStatus = $f3->get('POST.status');
