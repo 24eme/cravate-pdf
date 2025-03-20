@@ -93,7 +93,7 @@ class Record
         }
 
         $dirname = $_SESSION['datetime'];
-        $dirname .= $this->user->isAdmin ? "_ADMIN_" : "_".$this->user->etablissement."_";
+        $dirname .= $this->user->isAdmin ? "_ADMIN_" : "_".$this->user->etablissement;
         $dirname .= "_RS_BROUILLON";
 
         $submission = new Submission($this->record, $dirname);
