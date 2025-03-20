@@ -70,17 +70,19 @@ class MainController
         $record = Record::getInstance($f3->get('PARAMS.record'));
         $submission = $record->create();
 
-        $f3->set('record', $record);
-        $f3->set('submission', $submission);
-        $f3->set('content', 'record/form.html.php');
+        $submission->save();
 
-        echo View::instance()->render('layout.html.php');
+        $f3->reroute(['record_edit', ['record' => $record->name, 'submission' => $submission->name]]);
     }
 
     public function edit(Base $f3)
     {
+        $record = Record::getInstance($f3->get('PARAMS.record'));
+        $submission = $record->find($f3->get('PARAMS.submission'));
+
         $f3->set('record', $this->record);
         $f3->set('submission', $this->submission);
+
         if (!$this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
@@ -95,9 +97,9 @@ class MainController
     public function fill(Base $f3)
     {
         $record = Record::getInstance($f3->get('PARAMS.record'));
-        $postData = $f3->get('POST');
+        $submission = $record->find($f3->get('PARAMS.submission'));
 
-        $submission = $record->find($f3->get('POST.submission'));
+        $postData = $f3->get('POST');
         $cleanedData = $postData;
 
         if (!$submission->isEditable()) {
@@ -257,8 +259,9 @@ class MainController
         if (!$_SESSION['is_admin']) {
             return $f3->error(403, "Only admin");
         }
-        $record = new Record($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        $record = Record::getInstance($f3->get('PARAMS.record'));
+        $submission = $record->find($f3->get('PARAMS.submission'));
+
         $newStatus = $f3->get('POST.status');
         $comment = $f3->get('POST.comment');
 
@@ -266,7 +269,7 @@ class MainController
             return $f3->error(404, "Status < $newStatus > not allowed");
         }
         $submission->setStatus($newStatus, $comment);
-
+        $submission->save();
         /* try { */
         /*     $f3->get('mail') */
         /*        ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $submission->getDatas('EMAIL'), 'Subject' => 'Changement de Status de votre dossier']) */

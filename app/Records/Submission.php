@@ -78,18 +78,21 @@ class Submission
     public function save()
     {
         $oldPath = $this->path;
-        $filename = $this->filename ?: basename($this->record->pdf, '.pdf');
-        $this->pdf =  $this->path.$filename.'.pdf';
-        $files = PDFTk::fillForm($this->record->pdf, $this->getDatas());
-        // fichier de tmp -> dans dossier
-        if (!rename($files['pdf'], $this->path.$filename.'.pdf')) {
-            throw new \Exception("pdf save failed");
+
+        if(count($this->getDatas())) {
+            $filename = $this->filename ?: basename($this->record->pdf, '.pdf');
+            $this->pdf =  $this->path.$filename.'.pdf';
+            $files = PDFTk::fillForm($this->record->pdf, $this->getDatas());
+            // fichier de tmp -> dans dossier
+            if (!rename($files['pdf'], $this->path.$filename.'.pdf')) {
+                throw new \Exception("pdf save failed");
+            }
+            // fichier de tmp -> dans dossier
+            if (!rename($files['xfdf'], $this->path.$filename.'.xfdf')) {
+                throw new \Exception("xfdf save failed");
+            }
+            $this->xfdf = $this->path.$filename.'.xfdf';
         }
-        // fichier de tmp -> dans dossier
-        if (!rename($files['xfdf'], $this->path.$filename.'.xfdf')) {
-            throw new \Exception("xfdf save failed");
-        }
-        $this->xfdf = $this->path.$filename.'.xfdf';
 
         $this->updateJSON();
 

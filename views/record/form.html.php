@@ -25,11 +25,6 @@
 
 <form method="POST" class="row" action="<?php echo Base::instance()->alias('record_fill') ?>">
 
-<?php if ($submission->name): ?>
-  <input type="hidden" value="<?php echo $submission->name ?>" name="submission">
-<?php endif ?>
-<input type="hidden" value="<?php echo $record->pdf ?>" name="file">
-
 <div class="col-6 offset-3 mt-3 justify-content-center">
   <?php foreach($submission->getFields() as $category => $fields): ?>
   <h3><?php echo $category; ?></h3>

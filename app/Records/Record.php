@@ -83,6 +83,8 @@ class Record
             shell_exec($this->getConfigItem('initDossier')." $submission->path");
         }
 
+        $submission->setStatus(Submission::STATUS_DRAFT);
+
         return $submission;
     }
 
