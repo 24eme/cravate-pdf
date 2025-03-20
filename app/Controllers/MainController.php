@@ -227,7 +227,7 @@ class MainController
     public function submission(Base $f3)
     {
         if ($this->submission->status === Submission::STATUS_DRAFT) {
-            return $f3->reroute(['record_validation', ['record' => $this->record->name, 'submission' => $this->submission->name]]);
+            return $f3->reroute(['record_validation', ['record' => $this->record->name, 'submission' => $this->submission->id]]);
         }
 
         $f3->set('submission', $this->submission);
