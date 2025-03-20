@@ -124,6 +124,7 @@ class Submission
         }
 
         $oldStatus = $this->status;
+        $this->status = $status;
         $newName = str_replace($oldStatus, $status, $this->name);
 
         if ($this->name === $newName) { // Pas de changement de status
