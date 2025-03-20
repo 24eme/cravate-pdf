@@ -58,7 +58,7 @@ class MainController
     public function index(Base $f3)
     {
         $f3->set('records', Records::getRecords());
-        $f3->set('content', 'record/list.html.php');
+        $f3->set('content', 'main/index.html.php');
 
         echo View::instance()->render('layout.html.php');
     }
@@ -82,7 +82,7 @@ class MainController
         $f3->set('submissions', $submissions);
         $f3->set('submissionsByStatus', $countByStatus);
         $f3->set('status', $status);
-        $f3->set('content', 'record/submissions.html.php');
+        $f3->set('content', 'main/submissions.html.php');
         $f3->set('statusThemeColor', Submission::$statusThemeColor);
 
         echo View::instance()->render('layout.html.php');
@@ -112,7 +112,7 @@ class MainController
         $f3->set('record', $this->record);
         $f3->set('submission', $this->submission);
 
-        $f3->set('content', 'record/form.html.php');
+        $f3->set('content', 'main/edit.html.php');
 
         echo View::instance()->render('layout.html.php');
     }
@@ -177,7 +177,7 @@ class MainController
 
         $f3->set('record', $this->record);
         $f3->set('submission', $this->submission);
-        $f3->set('content', 'record/attachmentForm.html.php');
+        $f3->set('content', 'main/attachment.html.php');
 
         $f3->get('steps')->activate(RecordsSteps::STEP_ANNEXES);
         echo View::instance()->render('layout.html.php');
@@ -213,7 +213,7 @@ class MainController
         $f3->set('record', $this->record);
         $f3->set('submission', $this->submission);
         $f3->set('validator', $validator);
-        $f3->set('content', 'record/validation.html.php');
+        $f3->set('content', 'main/validation.html.php');
 
         $f3->set('readonly', true);
 
@@ -231,7 +231,7 @@ class MainController
         }
 
         $f3->set('submission', $this->submission);
-        $f3->set('content', 'record/submission.html.php');
+        $f3->set('content', 'main/submission.html.php');
         $f3->set('displaypdf', $f3->get('GET.pdf'));
 
         echo View::instance()->render('layout.html.php');

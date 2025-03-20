@@ -12,6 +12,6 @@ $f3->route('GET|POST @record_edit: /record/@record/submission/@submission/edit',
 $f3->route('POST @record_fill: /record/@record/submission/@submission/fill', MainController::class.'->fill');
 $f3->route('GET|POST @record_attachment: /record/@record/submission/@submission/attachment', MainController::class.'->attachment');
 $f3->route('GET|POST @record_validation: /record/@record/submission/@submission/validation', MainController::class.'->validation');
-$f3->route('GET @record_submission: /record/@record/submission/@submission/display', MainController::class.'->submission');
+$f3->route('GET @record_submission: /record/@record/submission/@submission/submission', MainController::class.'->submission');
 $f3->route('GET @record_submission_getfile: /record/@record/submission/@submission/getfile', MainController::class.'->getfile');
 $f3->route('POST @record_submission_updatestatus: /record/@record/submission/@submission/status', MainController::class.'->updatestatus');
