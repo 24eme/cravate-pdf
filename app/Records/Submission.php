@@ -166,18 +166,23 @@ class Submission
 
     public function getAttachmentsNeeded()
     {
-        $config = $this->record->config;
-        if (!isset($config['ATTACHED_FILE'])) {
+        $attachments = $this->record->getConfigItem('ATTACHED_FILE');
+
+        if ($attachments === null) {
             return [];
         }
-        $attachments = [];
-        foreach ($config['ATTACHED_FILE'] as $attachment) {
-            if($attachment['filter'] && $this->getDatas(explode(":", $attachment['filter'])[0]) != explode(":", $attachment['filter'])[1]) {
-                continue;
+
+        $needed = [];
+        foreach ($attachments as $attachment) {
+            if ($attachment['filter']) {
+                [$field, $requirement] = explode(":", $attachment['filter']);
+                if ($this->getDatas($field) !== $requirement) {
+                    continue;
+                }
             }
-            $attachments[] = $attachment;
+            $needed[] = $attachment;
         }
-        return $attachments;
+        return $needed;
     }
 
     public function getAttachmentsPath()
