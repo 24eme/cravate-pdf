@@ -9,6 +9,31 @@ class Validation
     public $errors = [];
     public $warnings = [];
 
+    public static function cleanData(array $configData, array $sentData)
+    {
+        $cleaned = [];
+
+        foreach ($sentData as $fieldId => $value) {
+            if (in_array($fieldId, array_keys($configData)) === false) {
+                continue;
+            }
+
+            $config = $configData[$fieldId];
+
+            if (isset($config['disabled']) && $config['disabled']) {
+                continue;
+            }
+
+            if ($config['type'] === 'radio') {
+                $value = array_key_exists($value, $config['choices']) ? $value : "Off";
+            }
+
+            $cleaned[$fieldId] = $value;
+        }
+
+        return $cleaned;
+    }
+
     public function checkSubmission(Submission $submission)
     {
         if ($submission->getAttachmentsNeeded()) {
@@ -36,6 +61,7 @@ class Validation
             }
 
             foreach (explode('|', $validator) as $func) {
+                continue;
                 $callback = strtok($func, ':');
                 $arg = strtok(':');
 

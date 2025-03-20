@@ -42,10 +42,6 @@ class Email
 
     public function send($template, $args)
     {
-        if(!Config::getInstance()->isSendingMail()) {
-            return;
-        }
-
         if (is_file($this->emailsDir.$template) === false) {
             throw new Exception($template." n'existe pas");
         }
