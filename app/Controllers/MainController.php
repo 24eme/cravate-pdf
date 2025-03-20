@@ -128,11 +128,12 @@ class MainController
 
     public function attachment(Base $f3)
     {
-        $record = new Record($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        $record = Record::getInstance($f3->get('PARAMS.record'));
+        $submission = $record->find($f3->get('PARAMS.submission'));
         if (!$submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
+
         if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
             return $f3->error(403, "Etablissement forbidden");
         }
@@ -161,8 +162,8 @@ class MainController
 
     public function validation(Base $f3)
     {
-        $record = new Record($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        $record = Record::getInstance($f3->get('PARAMS.record'));
+        $submission = $record->find($f3->get('PARAMS.submission'));
         if (!$submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
@@ -179,6 +180,7 @@ class MainController
             }
 
             $submission->setStatus(Submission::STATUS_SUBMITTED);
+            $submission->save();
             return $f3->reroute(['record_submission', [
                         'record' => $record->name,
                         'submission' => $submission->name

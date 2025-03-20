@@ -25,6 +25,7 @@ class Submission
 
     public $filename;
 
+    public $id;
     public $datetime;
     public $status;
     public $path;
@@ -38,6 +39,8 @@ class Submission
     public function __construct(Record $record, $name = null)
     {
         $this->record = $record;
+        $this->status = Submission::STATUS_DRAFT;
+        $this->id = date('YmdHis');
         $this->json = new \stdClass();
         if ($name) {
             $this->load($name);
@@ -61,38 +64,23 @@ class Submission
             }
         }
 
-        $pos = strpos($this->name, "_");
-        if ($pos === false) {
-            /* throw new \Exception("The name < $this->name > does not contain datetime"); */
-        }
-        $this->datetime = \DateTime::createFromFormat('YmdHis', substr($this->name, 0, $pos));
-        if (!$this->datetime) {
-            /* throw new \Exception("< ".substr($this->name, 0, $pos)." > is not a valid datetime"); */
-        }
-        $pos = strrpos($this->name, "_");
-        if ($pos === false) {
-            /* throw new \Exception("The name < $this->name > does not contain status"); */
-        }
-        $this->status = substr($this->name, $pos + 1);
-        if (!in_array($this->status, self::$allStatus)) {
-            /* throw new \Exception("< $this->status > is not a valid status"); */
-        }
-
         $this->filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
                     ? $this->record->config['SUBMISSION']['filename']
                     : null;
     }
 
     public function setDatas($datas) {
-        $this->json->form = json_decode(json_encode($datas));
+        $this->datas = $datas;
+        unset($this->datas['submission']);
+        unset($this->datas['file']);
     }
 
     public function save()
     {
         $oldPath = $this->path;
-        $filename = $this->filename ?: basename($pdf, '.pdf');
+        $filename = $this->filename ?: basename($this->record->pdf, '.pdf');
         $this->pdf =  $this->path.$filename.'.pdf';
-        $files = PDFTk::fillForm($this->pdf, $this->getDatas());
+        $files = PDFTk::fillForm($this->record->pdf, $this->getDatas());
         // fichier de tmp -> dans dossier
         if (!rename($files['pdf'], $this->path.$filename.'.pdf')) {
             throw new \Exception("pdf save failed");
@@ -103,11 +91,10 @@ class Submission
         }
         $this->xfdf = $this->path.$filename.'.xfdf';
 
-        $this->status = self::STATUS_DRAFT;
         $this->updateJSON();
 
         // on renomme le dossier
-        $this->name = date('YmdHis');
+        $this->name = $this->id;
         if (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['format_dir'])) {
             $this->name .= '_'.$this->record->config['SUBMISSION']['format_dir'];
             foreach ($this->getDatas() as $field => $value) {
@@ -115,7 +102,7 @@ class Submission
             }
         }
 
-        $this->name .= '_'.self::STATUS_DRAFT;
+        $this->name .= '_'.$this->status;
         $this->path = $this->record->submissionsPath.$this->name.DIRECTORY_SEPARATOR;
 
         rename($oldPath, $this->path);
@@ -127,29 +114,19 @@ class Submission
             throw new DomainException("{$status} n'est pas un status valide");
         }
 
-        $oldStatus = $this->status;
-        $newName = str_replace($oldStatus, $status, $this->name);
-
-        if ($this->name === $newName) { // Pas de changement de status
-            return true;
+        if ($this->status === $status) {
+            return;
         }
 
+        $this->status = $status;
         $this->addHistory("Mis à jour vers le status $status", $comment);
-
-        $newPath = str_replace($this->name, $newName, $this->path);
-        if (!rename($this->path, $newPath)) {
-            throw new \Exception("Submission folder rename failed");
-        }
-        $this->load($newName);
-
-        $this->updateJSON();
-
-        return true;
     }
 
     public function updateJSON()
     {
         $date = (new \DateTime())->format('c');
+
+        $this->json->form = $this->datas;
 
         if (property_exists($this->json, 'createdAt') === false) {
             $this->json->createdAt = $date;
@@ -157,6 +134,7 @@ class Submission
 
         $this->json->modifiedAt = $date;
         $this->json->status = $this->status;
+        $this->json->id = $this->id;
 
         file_put_contents($this->path.$this->filename.'.json', json_encode($this->json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
     }
@@ -234,15 +212,24 @@ class Submission
 
     public function getLibelle()
     {
-        return trim(str_replace([$this->datetime->format('YmdHis'), $this->status, '_'], ['', '', ' '], $this->name));
+        return trim(str_replace([$this->id, $this->status, '_'], ['', '', ' '], $this->name));
     }
 
     public function loadJSON($file)
     {
         $this->json = json_decode(file_get_contents($this->path.$file));
+        $this->datas = [];
+        if(isset($this->json->form)) {
+            foreach ($this->json->form as $field => $value) {
+                $this->datas[$field] = $value;
+            }
+        }
 
-        foreach ($this->json->form as $field => $value) {
-            $this->datas[$field] = $value;
+        if(isset($this->json->status)) {
+            $this->status = $this->json->status;
+        }
+        if(isset($this->json->id)) {
+            $this->id = $this->json->id;
         }
     }
 

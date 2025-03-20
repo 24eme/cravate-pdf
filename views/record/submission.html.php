@@ -75,7 +75,7 @@
   </div>
 
   <div class="col-4">
-    <p class="mt-4 fs-5 text-end">Dépot : <?php echo $submission->datetime->format('d/m/Y H:i'); ?></p>
+    <p class="mt-4 fs-5 text-end">Dépot : <?php echo $submission->id; ?></p>
     <?php if($_SESSION['is_admin']): ?>
     <h2 class="pb-2 h3"><i class="bi bi-gear"></i> Statut</h2>
     <form action="<?php echo Base::instance()->alias('record_submission_updatestatus') ?>" method="post" class="row mb-4">
