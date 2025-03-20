@@ -172,9 +172,7 @@ class Record
                 Flash::instance()->setKey('form-error', $validator->getErrors());
                 \Helpers\Old::instance()->set($cleanedData);
 
-                return $submission->name
-                    ? $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->name]])
-                    : $f3->reroute(['record_submission_new', ['record' => $this->record->name]]);
+                return $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->name]]);
             }
 
             unset($_SESSION['datetime']);
