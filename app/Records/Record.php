@@ -8,7 +8,7 @@ class Record
 {
     const PDF_FILENAME = 'form.pdf';
     const CONFIG_FILENAME = 'form.php';
-    const METAS_FILENAME = 'form.json';
+    const METAS_FILENAME = '00_metas.json';
     const SUBMISSIONS_PATH = 'submissions/';
 
     public $name;

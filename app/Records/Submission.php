@@ -3,6 +3,7 @@
 namespace Records;
 
 use DomainException;
+use Records\Record;
 
 class Submission
 {
@@ -28,7 +29,6 @@ class Submission
     public $status;
     public $path;
 
-    public $pdf;
     public $xfdf;
     public $json;
 
@@ -47,39 +47,31 @@ class Submission
     {
         $this->name = $name;
         $this->path = $this->record->submissionsPath.$this->name.DIRECTORY_SEPARATOR;
+
         if (!is_dir($this->path)) {
             mkdir($this->path);
         }
-        $files = scandir($this->path);
-        foreach ($files as $file) {
-            if (strpos($file, '.pdf') !== false) {
-                $this->pdf = $file;
-            }
-            if (strpos($file, '.json') !== false) {
-                $this->loadJSON($file);
-            }
+
+        if (file_exists($this->path.Record::METAS_FILENAME)) {
+            $this->loadJSON($this->path.Record::METAS_FILENAME);
         }
 
-        $pos = strpos($this->name, "_");
-        if ($pos === false) {
-            /* throw new \Exception("The name < $this->name > does not contain datetime"); */
-        }
-        $this->datetime = \DateTime::createFromFormat('YmdHis', substr($this->name, 0, $pos));
-        if (!$this->datetime) {
-            /* throw new \Exception("< ".substr($this->name, 0, $pos)." > is not a valid datetime"); */
-        }
-        $pos = strrpos($this->name, "_");
-        if ($pos === false) {
-            /* throw new \Exception("The name < $this->name > does not contain status"); */
-        }
-        $this->status = substr($this->name, $pos + 1);
-        if (!in_array($this->status, self::$allStatus)) {
-            /* throw new \Exception("< $this->status > is not a valid status"); */
+        $submissionConfig = $this->record->getConfigItem('SUBMISSION');
+
+        if ($submissionConfig === null) {
+            throw new \Exception("Missing configuration");
         }
 
-        $this->filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
-                    ? $this->record->config['SUBMISSION']['filename']
-                    : null;
+        $this->filename = $this->record->config['SUBMISSION']['filename'];
+
+        if (file_exists($this->path.$this->filename.".json")) {
+            $this->loadJSON($this->path.$this->filename.".json");
+        }
+
+        $this->status = property_exists($this->json, 'status') ? $this->json->status : substr($this->name, strrpos($this->name, '_') + 1);
+        $this->datetime = property_exists($this->json, 'createdAt')
+            ? \DateTime::createFromFormat(\DateTimeInterface::ISO8601, $this->json->createdAt)
+            : \DateTime::createFromFormat('YmdHis', substr($this->name, 0, strpos($this->name, '_')));
     }
 
     /**
@@ -99,7 +91,6 @@ class Submission
         if (!rename($pdf, $this->path.$filename.'.pdf')) {
             throw new \Exception("pdf save failed");
         }
-        $this->pdf =  $this->path.$filename.'.pdf';
 
         // fichier de tmp -> dans dossier
         if (!rename($xfdf, $this->path.$filename.'.xfdf')) {
