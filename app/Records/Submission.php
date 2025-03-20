@@ -33,13 +33,11 @@ class Submission
 
     public $datas = [];
 
-    public function __construct(Record $record, $name = null)
+    public function __construct(Record $record, $name)
     {
         $this->record = $record;
         $this->json = new \stdClass();
-        if ($name) {
-            $this->load($name);
-        }
+        $this->load($name);
     }
 
     public function load($name)
