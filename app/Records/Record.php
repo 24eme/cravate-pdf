@@ -83,14 +83,27 @@ class Record
             shell_exec($this->getConfigItem('initDossier')." $submission->path");
         }
 
-        $submission->setStatus(Submission::STATUS_DRAFT);
+        $submission->setStatus(Submission::STATUS_DRAFT, null, true);
 
         return $submission;
     }
 
     public function find($id) {
+        if(!preg_match('/^[0-9A-Za-z\-_]+$/', $id)) {
+            throw new \Exception("id invalid");
+        }
+        foreach(glob($this->submissionsPath.$id.'*', GLOB_ONLYDIR) as $path) {
+            break;
+        }
 
-        return new Submission($this, $id);
+        if(!isset($path) || !is_dir($path)) {
+            throw new \Exception("path \"$path\" not exist");
+        }
+
+        $submission = new Submission($this);
+        $submission->load(basename($path));
+
+        return $submission;
     }
 
     public function getSubmissions($statusFilter = Submission::STATUS_TOUS, $identifiant = null)
@@ -104,14 +117,14 @@ class Record
             if (in_array($submission, ['.', '..'])) {
                 continue;
             }
-            $s = new Submission($this, $submission);
+            $s = $this->find(explode("_", $submission)[0]);
             if ($statusFilter !== Submission::STATUS_TOUS && $statusFilter != $s->status) {
                 continue;
             }
             if ($identifiant && !$s->isAuthor($identifiant)) {
                 continue;
             }
-            $items[$s->datetime->format('YmdHis')] = $s;
+            $items[$s->id] = $s;
         }
         krsort($items);
         return $items;

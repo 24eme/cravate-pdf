@@ -26,7 +26,7 @@ class Submission
     public $filename;
 
     public $id;
-    public $datetime;
+    public $createdAd;
     public $status;
     public $path;
 
@@ -36,24 +36,24 @@ class Submission
 
     public $datas = [];
 
-    public function __construct(Record $record, $name = null)
+    public function __construct(Record $record)
     {
         $this->record = $record;
         $this->status = Submission::STATUS_DRAFT;
         $this->id = date('YmdHis');
+        $this->createdAt = new \DateTime();
         $this->json = new \stdClass();
-        if ($name) {
-            $this->load($name);
-        }
+        $this->name = $this->id;
+        $this->path = $this->record->submissionsPath.$this->id.DIRECTORY_SEPARATOR;
+        $this->filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
+                    ? $this->record->config['SUBMISSION']['filename']
+                    : null;
     }
 
     public function load($name)
     {
         $this->name = $name;
         $this->path = $this->record->submissionsPath.$this->name.DIRECTORY_SEPARATOR;
-        if (!is_dir($this->path)) {
-            mkdir($this->path);
-        }
         $files = scandir($this->path);
         foreach ($files as $file) {
             if (strpos($file, '.pdf') !== false) {
@@ -63,10 +63,6 @@ class Submission
                 $this->loadJSON($file);
             }
         }
-
-        $this->filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
-                    ? $this->record->config['SUBMISSION']['filename']
-                    : null;
     }
 
     public function setDatas($datas) {
@@ -77,6 +73,10 @@ class Submission
 
     public function save()
     {
+        if (!is_dir($this->path)) {
+            mkdir($this->path);
+        }
+
         $oldPath = $this->path;
 
         if(count($this->getDatas())) {
@@ -111,13 +111,13 @@ class Submission
         rename($oldPath, $this->path);
     }
 
-    public function setStatus($status, $comment = null)
+    public function setStatus($status, $comment = null, $force = false)
     {
         if (in_array($status, self::$allStatus) === false) {
             throw new DomainException("{$status} n'est pas un status valide");
         }
 
-        if ($this->status === $status) {
+        if (!$force && $this->status === $status) {
             return;
         }
 
@@ -135,6 +135,7 @@ class Submission
             $this->json->createdAt = $date;
         }
 
+        $this->json->createdAt = $this->createdAt->format('Y-m-d H:i:s');
         $this->json->modifiedAt = $date;
         $this->json->status = $this->status;
         $this->json->id = $this->id;
@@ -146,8 +147,6 @@ class Submission
     {
         $data = ['date' => (new \DateTime())->format('c'), 'entry' => $data, 'comment' => $comment];
         $this->json->history[] = json_decode(json_encode($data));
-
-        $this->updateJSON();
     }
 
     public function getAttachmentsNeeded()
@@ -233,6 +232,9 @@ class Submission
         }
         if(isset($this->json->id)) {
             $this->id = $this->json->id;
+        }
+        if(isset($this->json->createdAt)) {
+            $this->createdAt = new \DateTime($this->json->createdAt);
         }
     }
 

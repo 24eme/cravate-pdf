@@ -50,7 +50,7 @@ class RecordsSteps //implements ISteps
     {
         $args = [
             'record' => $this->record->name,
-            'submission' => $this->submission->name
+            'submission' => $this->submission->id
         ];
 
         return $args;

@@ -34,8 +34,9 @@ class MainController
     {
         if ($f3->get('PARAMS.record')) {
             $this->record = new Record($f3->get('PARAMS.record'));
-            $this->submission = new Submission($this->record, $f3->get('PARAMS.submission'));
-
+        }
+        if ($f3->get('PARAMS.submission')) {
+            $this->submission = $this->record->find($f3->get('PARAMS.submission'));
             $f3->set('steps', new Steps(new RecordsSteps($this->record, $this->submission)));
         }
     }
@@ -72,7 +73,7 @@ class MainController
 
         $submission->save();
 
-        $f3->reroute(['record_edit', ['record' => $record->name, 'submission' => $submission->name]]);
+        $f3->reroute(['record_edit', ['record' => $record->name, 'submission' => $submission->id]]);
     }
 
     public function edit(Base $f3)
@@ -116,22 +117,21 @@ class MainController
             Flash::instance()->setKey('form-error', $validator->getErrors());
             \Helpers\Old::instance()->set($cleanedData);
 
-            return $submission->name
-                ? $f3->reroute(['record_edit', ['record' => $record->name, 'submission' => $submission->name]])
-                : $f3->reroute(['record_submission_new', ['record' => $record->name]]);
+            return $f3->reroute(['record_edit', ['record' => $record->name, 'submission' => $submission->id]]);
         }
 
 
         $submission->setDatas($cleanedData);
         $submission->save();
 
-        return $f3->reroute(['record_attachment', ['record' => $record->name, 'submission' => $submission->name]]);
+        return $f3->reroute(['record_attachment', ['record' => $record->name, 'submission' => $submission->id]]);
     }
 
     public function attachment(Base $f3)
     {
         $record = Record::getInstance($f3->get('PARAMS.record'));
         $submission = $record->find($f3->get('PARAMS.submission'));
+
         if (!$submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
@@ -150,7 +150,7 @@ class MainController
 
             return $f3->reroute(['record_validation', [
                'record' => $record->name,
-               'submission' => $submission->name,
+               'submission' => $submission->id,
             ]]);
         }
 
@@ -185,7 +185,7 @@ class MainController
             $submission->save();
             return $f3->reroute(['record_submission', [
                         'record' => $record->name,
-                        'submission' => $submission->name
+                        'submission' => $submission->id
                     ]]);
         }
 
@@ -202,13 +202,14 @@ class MainController
 
     public function submission(Base $f3)
     {
-        $record = new Record($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        $record = Record::getInstance($f3->get('PARAMS.record'));
+        $submission = $record->find($f3->get('PARAMS.submission'));
+
         if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
             return $f3->error(403, "Etablissement forbidden");
         }
         if ($submission->status == Submission::STATUS_DRAFT) {
-            return $f3->reroute(['record_validation', ['record' => $record->name, 'submission' => $submission->name]]);
+            return $f3->reroute(['record_validation', ['record' => $record->name, 'submission' => $submission->id]]);
         }
         $f3->set('submission', $submission);
         $f3->set('content', 'record/submission.html.php');
@@ -219,8 +220,8 @@ class MainController
 
     public function getfile(Base $f3)
     {
-        $record = new Record($f3->get('PARAMS.record'));
-        $submission = new Submission($record, $f3->get('PARAMS.submission'));
+        $record = Record::getInstance($f3->get('PARAMS.record'));
+        $submission = $record->find($f3->get('PARAMS.submission'));
 
         if (!$_SESSION['is_admin'] && !$submission->isAuthor($_SESSION['etablissement_id'])) {
             return $f3->error(403, "Etablissement forbidden");
@@ -276,6 +277,6 @@ class MainController
         /*        ->send('chgtstatus.eml', compact('submission')); */
         /* } catch (Exception $e) { } */
 
-        return $f3->reroute(['record_submission', ['record' => $record->name, 'submission' => $submission->name]]);
+        return $f3->reroute(['record_submission', ['record' => $record->name, 'submission' => $submission->id]]);
     }
 }

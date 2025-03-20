@@ -12,7 +12,7 @@
 
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
 
-<form method="POST" enctype="multipart/form-data" action="<?php echo Base::instance()->alias("record_attachment", ['record' => $submission->record->name, 'submission' => $submission->name]) ?>">
+<form method="POST" enctype="multipart/form-data" action="<?php echo Base::instance()->alias("record_attachment", ['record' => $submission->record->name, 'submission' => $submission->id]) ?>">
   <div class="row justify-content-center">
     <div class="col-6">
     <h3 class="mt-3">Joindre une pièce complémentaire</h3>

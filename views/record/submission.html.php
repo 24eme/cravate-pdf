@@ -19,8 +19,8 @@
 <div class="alert alert-warning" role="alert">
 <i class="bi bi-exclamation-circle"></i> Votre dossier n'est pas complet <?php echo ($entry->comment)? ' : '.$entry->comment : '' ?>
 <ul class="mb-0">
-  <li>Modifiez vos informations en suivant ce lien : <a href="<?php echo Base::instance()->alias('record_edit', ['submission' => $submission->name ]) ?>">Informations</a></li>
-  <li>Complétez vos annexes en suivant ce lien : <a href="<?php echo Base::instance()->alias('record_attachment', ['submission' => $submission->name ]) ?>">Annexes</a></li>
+  <li>Modifiez vos informations en suivant ce lien : <a href="<?php echo Base::instance()->alias('record_edit', ['submission' => $submission->id ]) ?>">Informations</a></li>
+  <li>Complétez vos annexes en suivant ce lien : <a href="<?php echo Base::instance()->alias('record_attachment', ['submission' => $submission->id ]) ?>">Annexes</a></li>
 </ul>
 </div>
 <?php endif; ?>
@@ -75,7 +75,7 @@
   </div>
 
   <div class="col-4">
-    <p class="mt-4 fs-5 text-end">Dépot : <?php echo $submission->id; ?></p>
+    <p class="mt-4 fs-5 text-end">Créé : <?php echo $submission->createdAt->format('d/m/Y H:i'); ?></p>
     <?php if($_SESSION['is_admin']): ?>
     <h2 class="pb-2 h3"><i class="bi bi-gear"></i> Statut</h2>
     <form action="<?php echo Base::instance()->alias('record_submission_updatestatus') ?>" method="post" class="row mb-4">

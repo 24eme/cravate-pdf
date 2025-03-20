@@ -27,10 +27,10 @@
       <?php foreach($submissions as $submission): ?>
       <tr>
         <td><i class="text-<?php echo $submission->getStatusThemeColor() ?> bi bi-circle-fill"></i> <?php echo Records\Submission::printStatus($submission->status) ?></td>
-        <td><?php echo $submission->datetime->format('d/m/Y H:i') ?></td>
+        <td><?php echo $submission->createdAt->format('d/m/Y H:i') ?></td>
         <td><?php echo $submission->getLibelle() ?></td>
         <td class="text-end">
-          <a href="<?php echo Base::instance()->alias('record_submission', ['submission' => $submission->name ]) ?>">
+          <a href="<?php echo Base::instance()->alias('record_submission', ['submission' => $submission->id ]) ?>">
             <i class="bi bi-eye"></i>
           </a>
         </td>

@@ -1,6 +1,6 @@
 Bonjour,
 
-Une nouvelle pièce vient d'être déposée pour le dossier <?php echo $submission->name ?>
+Une nouvelle pièce vient d'être déposée pour le dossier <?php echo $submission->id ?>
 
 <<?php echo $f3->get('URLBASE').$f3->alias('record_submission') ?>>
 
