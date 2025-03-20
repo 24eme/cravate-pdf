@@ -175,6 +175,7 @@ class Record
                 return $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->name]]);
             }
 
+            // si valide et nouveau, alors on clean la date pour pouvoir recréer un nouveau dossier
             unset($_SESSION['datetime']);
 
             $outputFile = PDFTk::fillForm($pdffile, $cleanedData);
