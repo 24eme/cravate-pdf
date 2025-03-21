@@ -98,7 +98,7 @@
     <?php endif; ?>
     <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
     <ul class="list-group">
-      <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_getfile', [], ['disposition' => 'attachment', 'file' => $submission->pdf]) ?>" target="_blank">
+      <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_getfile', [], ['disposition' => 'attachment', 'file' => basename($submission->getPDFFile())]) ?>" target="_blank">
         <i class="bi bi-filetype-pdf"></i> Formulaire complété
       </a>
       <?php foreach ($submission->getAttachments() as $i => $attachment): ?>

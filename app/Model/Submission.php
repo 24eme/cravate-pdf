@@ -73,9 +73,6 @@ class Submission
         $this->json = new \stdClass();
         $this->folderName = $this->id.'_'.$this->userId;
         $this->path = $this->procedure->submissionsPath.$this->folderName.DIRECTORY_SEPARATOR;
-        $this->filename = (isset($this->procedure->config['SUBMISSION']) && isset($this->procedure->config['SUBMISSION']['filename']))
-                    ? $this->procedure->config['SUBMISSION']['filename']
-                    : null;
     }
 
     public function load($folderName)
@@ -150,6 +147,13 @@ class Submission
     {
         $data = ['date' => (new \DateTime())->format('c'), 'entry' => $data, 'comment' => $comment];
         $this->json->history[] = json_decode(json_encode($data));
+    }
+
+    public function getPDFFile() {
+
+        return $this->path.(isset($this->procedure->config['SUBMISSION']) && isset($this->procedure->config['SUBMISSION']['filename']))
+                    ? $this->procedure->config['SUBMISSION']['filename'].'.pdf'
+                    : null;;
     }
 
     public function getAttachmentsNeeded()
@@ -308,15 +312,13 @@ class Submission
         $oldPath = $this->path;
 
         if(count($this->getDatas())) {
-            $filename = $this->filename ?: basename($this->procedure->pdf, '.pdf');
-            $this->pdf =  $this->path.$filename.'.pdf';
             $files = PDFTk::fillForm($this->procedure->pdf, $this->getDatas());
             // fichier de tmp -> dans dossier
-            if (!rename($files['pdf'], $this->path.$filename.'.pdf')) {
+            if (!rename($files['pdf'], $this->getPDFFile())) {
                 throw new \Exception("pdf save failed");
             }
             // fichier de tmp -> dans dossier
-            if (!rename($files['xfdf'], $this->path.$filename.'.xfdf')) {
+            if (!rename($files['xfdf'], $this->getPDFFile())) {
                 throw new \Exception("xfdf save failed");
             }
         }

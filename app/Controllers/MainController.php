@@ -247,11 +247,6 @@ class MainController
         $file = realpath($this->submission->path.$f3->get('GET.file'));
         $path = realpath($this->submission->path);
 
-        // si pas le path dans le chemin, on le rajoute
-        if (strpos($file, $path) !== 0) {
-            $file = $path.$file;
-        }
-
         if (is_file($file) === false) {
             return $f3->error(404, "File not found");
         }
