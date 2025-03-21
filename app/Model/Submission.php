@@ -45,19 +45,18 @@ class Submission
     }
 
     public static function find(Procedure $procedure, $id) {
-        if(!preg_match('/^[0-9A-Za-z\-_]+$/', $id)) {
+        if(!preg_match('/^[0-9A-Za-z\-_]{18,}+$/', $id)) {
             throw new \Exception("id invalid");
         }
-        foreach(glob($procedure->submissionsPath.$id.'*', GLOB_ONLYDIR) as $path) {
-            break;
-        }
 
-        if(!isset($path) || !is_dir($path)) {
+        $paths = glob($procedure->submissionsPath.$id.'*', GLOB_ONLYDIR);
+
+        if(!count($paths) || count($paths) > 1) {
             throw new \Exception("path \"$path\" not exist");
         }
 
         $submission = new Submission($procedure);
-        $submission->load(basename($path));
+        $submission->load(basename($paths[0]));
 
         return $submission;
     }

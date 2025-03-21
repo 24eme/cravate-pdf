@@ -244,7 +244,17 @@ class ProcedureController
         $files = PDFTk::fillForm($this->procedure->pdf, $this->submission->getDatas(), $this->submission->path);
         unlink($files['xfdf']);
 
-        return Web::instance()->send($files['pdf'], null, 0, true, $this->procedure->getConfigItem('SUBMISSION.filename').'.pdf');
+        $disposition = $f3->get('GET.disposition');
+        if(!$disposition) {
+            $disposition = 'attachment';
+        }
+        if (!in_array($disposition, ['attachment', 'inline'])) {
+            return $f3->error(404, "Disposition < $disposition > not allowed");
+        }
+
+        $download = $disposition === 'attachment';
+
+        return Web::instance()->send($files['pdf'], null, 0, $download, $this->procedure->getConfigItem('SUBMISSION.filename').'.pdf');
     }
 
     /**
@@ -253,26 +263,18 @@ class ProcedureController
      */
     public function downloadattachment(Base $f3)
     {
-        $disposition = $f3->get('GET.disposition');
-
         $file = realpath($this->submission->getAttachmentsPath().str_replace('/', '', $f3->get('GET.file')));
 
         if (is_file($file) === false) {
             return $f3->error(404, "File not found");
         }
 
-        if (!in_array($disposition, ['attachment', 'inline'])) {
-            return $f3->error(404, "Disposition < $disposition > not allowed");
-        }
-
-        $download = $disposition === 'attachment';
-
         if(preg_match('/\.url$/', $file)) {
 
             return $f3->reroute(file_get_contents($file));
         }
 
-        return Web::instance()->send($file, null, 0, $download, basename($file));
+        return Web::instance()->send($file, null, 0, true, basename($file));
     }
 
     /**
