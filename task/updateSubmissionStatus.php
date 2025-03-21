@@ -42,6 +42,7 @@ $submission = new Model\Submission($record, $submissionName);
 
 try {
     $submission->setStatus($status, $comment);
+    $submission->save();
 } catch (\Exception $e) {
     echo $e->getMessage();
     exit;
