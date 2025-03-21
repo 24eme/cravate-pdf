@@ -88,7 +88,7 @@
       </a>
       <?php endif; ?>
       <?php foreach ($submission->getAttachments() as $i => $attachment): ?>
-        <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_downloadattachment', [], ['disposition' => 'attachment', 'file' => Model\Submission::ATTACHMENTS_PATH.$attachment]) ?>" target="_blank">
+        <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_downloadattachment', [], ['disposition' => 'attachment', 'file' => $attachment]) ?>" target="_blank">
           <i class="bi bi-file"></i> Annexe <?php echo $i+1 ?> :
             <small>
               <?php echo basename($attachment, '.url') ?>
