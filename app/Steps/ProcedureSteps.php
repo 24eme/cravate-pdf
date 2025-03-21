@@ -37,11 +37,7 @@ class ProcedureSteps //implements ISteps
     {
         $s = [];
         foreach (self::stepsOrder as $step) {
-            if ($this->submission->name !== null) {
-                $s[$step] = new Step($step, self::stepsLinks[$step]);
-            } else {
-                $s[$step] = new Step($step, null);
-            }
+            $s[$step] = new Step($step, self::stepsLinks[$step]);
         }
         return $s;
     }
@@ -50,7 +46,7 @@ class ProcedureSteps //implements ISteps
     {
         $args = [
             'procedure' => $this->procedure->name,
-            'submission' => $this->submission->name
+            'submission' => $this->submission->id
         ];
 
         return $args;
