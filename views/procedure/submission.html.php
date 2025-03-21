@@ -37,7 +37,7 @@
       </li>
     </ul>
     <?php if ($displaypdf): ?>
-      <object type="application/pdf" style="height: 75vh;" class="w-100" data="<?php echo Base::instance()->alias('procedure_submission_getfile', [], ['file' => $submission->pdf, 'disposition' => 'inline']) ?>#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0"></object>
+      <object type="application/pdf" style="height: 75vh;" class="w-100" data="<?php echo Base::instance()->alias('procedure_submission_downloadpdf', [], ['disposition' => 'inline']) ?>#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0"></object>
     <?php else: ?>
       <table class="table table-striped table-hover">
       <?php $formConfig = $submission->procedure->getConfigItem('form'); ?>
@@ -102,7 +102,7 @@
         <i class="bi bi-filetype-pdf"></i> Formulaire complété
       </a>
       <?php foreach ($submission->getAttachments() as $i => $attachment): ?>
-        <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_downloadattachment', [], ['disposition' => 'attachment', 'file' => $attachment]) ?>" target="_blank">
+        <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_downloadattachment', [], ['file' => $attachment]) ?>" target="_blank">
         <i class="bi bi-file"></i> Annexe <?php echo $i+1 ?> : <small><?php echo preg_replace('/\.url$/', '&nbsp;&nbsp;<i class="bi bi-box-arrow-up-right small"></i>', basename($attachment)) ?></small>
       </a>
       <?php endforeach; ?>
