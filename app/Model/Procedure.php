@@ -108,12 +108,24 @@ class Procedure
         return $result;
     }
 
-    public function getConfigItem($item)
-    {
-        if (!isset($this->config[$item])) {
-            return null;
+    public function getConfigItem($key, $default = null) {
+        if (array_key_exists($key, $this->config)) {
+            return $this->config[$key];
         }
-        return $this->config[$item];
+
+        if (strpos($key, '.') !== false) {
+            $segments = explode('.', $key);
+            $root = $this->config;
+
+            foreach ($segments as $segment) {
+                $root = $root[$segment];
+            }
+
+            $this->config[$key] = $root;
+            return $root;
+        }
+
+        return $default;
     }
 
     public function getValidation()

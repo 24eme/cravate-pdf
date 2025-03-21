@@ -13,5 +13,6 @@ $f3->route('POST @procedure_fill: /procedure/@procedure/submission/@submission/f
 $f3->route('GET|POST @procedure_attachment: /procedure/@procedure/submission/@submission/attachment', ProcedureController::class.'->attachment');
 $f3->route('GET|POST @procedure_validation: /procedure/@procedure/submission/@submission/validation', ProcedureController::class.'->validation');
 $f3->route('GET @procedure_submission: /procedure/@procedure/submission/@submission/submission', ProcedureController::class.'->submission');
-$f3->route('GET @procedure_submission_getfile: /procedure/@procedure/submission/@submission/getfile', ProcedureController::class.'->getfile');
+$f3->route('GET @procedure_submission_downloadpdf: /procedure/@procedure/submission/@submission/downloadpdf', ProcedureController::class.'->downloadpdf');
+$f3->route('GET @procedure_submission_downloadattachment: /procedure/@procedure/submission/@submission/downloadattachment', ProcedureController::class.'->downloadattachment');
 $f3->route('POST @procedure_submission_updatestatus: /procedure/@procedure/submission/@submission/status', ProcedureController::class.'->updatestatus');

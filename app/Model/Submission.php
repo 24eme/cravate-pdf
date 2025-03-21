@@ -149,21 +149,10 @@ class Submission
         $this->json->history[] = json_decode(json_encode($data));
     }
 
-    public function getPDFFile() {
-
-        return $this->path.(isset($this->procedure->config['SUBMISSION']) && isset($this->procedure->config['SUBMISSION']['filename']))
-                    ? $this->procedure->config['SUBMISSION']['filename'].'.pdf'
-                    : null;;
-    }
-
     public function getAttachmentsNeeded()
     {
-        $config = $this->procedure->config;
-        if (!isset($config['ATTACHED_FILE'])) {
-            return [];
-        }
         $attachments = [];
-        foreach ($config['ATTACHED_FILE'] as $attachment) {
+        foreach ($this->procedure->getConfigItem('ATTACHED_FILE', []) as $attachment) {
             if($attachment['filter'] && $this->getDatas(explode(":", $attachment['filter'])[0]) != explode(":", $attachment['filter'])[1]) {
                 continue;
             }
@@ -310,18 +299,6 @@ class Submission
         }
 
         $oldPath = $this->path;
-
-        if(count($this->getDatas())) {
-            $files = PDFTk::fillForm($this->procedure->pdf, $this->getDatas());
-            // fichier de tmp -> dans dossier
-            if (!rename($files['pdf'], $this->getPDFFile())) {
-                throw new \Exception("pdf save failed");
-            }
-            // fichier de tmp -> dans dossier
-            if (!rename($files['xfdf'], $this->getPDFFile())) {
-                throw new \Exception("xfdf save failed");
-            }
-        }
 
         $this->updateJSON();
 

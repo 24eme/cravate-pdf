@@ -229,7 +229,7 @@ class ProcedureController
         }
 
         $f3->set('submission', $this->submission);
-        $f3->set('content', 'main/submission.html.php');
+        $f3->set('content', 'procedure/submission.html.php');
         $f3->set('displaypdf', $f3->get('GET.pdf'));
 
         echo View::instance()->render('layout.html.php');
@@ -237,14 +237,25 @@ class ProcedureController
 
     /**
      * Methode: GET
+     * Génére et télécharge le pdf du dossier
+     */
+    public function downloadpdf(Base $f3)
+    {
+        $files = PDFTk::fillForm($this->procedure->pdf, $this->submission->getDatas(), $this->submission->path);
+        unlink($files['xfdf']);
+
+        return Web::instance()->send($files['pdf'], null, 0, true, $this->procedure->getConfigItem('SUBMISSION.filename').'.pdf');
+    }
+
+    /**
+     * Methode: GET
      * Télécharge un fichier d'un dossier
      */
-    public function getfile(Base $f3)
+    public function downloadattachment(Base $f3)
     {
         $disposition = $f3->get('GET.disposition');
 
-        $file = realpath($this->submission->path.$f3->get('GET.file'));
-        $path = realpath($this->submission->path);
+        $file = realpath($this->submission->getAttachmentsPath().str_replace('/', '', $f3->get('GET.file')));
 
         if (is_file($file) === false) {
             return $f3->error(404, "File not found");
