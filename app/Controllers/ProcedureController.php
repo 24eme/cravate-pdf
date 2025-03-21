@@ -18,7 +18,6 @@ use Steps\ProcedureSteps;
 
 use Emails\Email;
 
-use PDF\PDFForm;
 use PDF\PDFtk;
 use Validator\Validation;
 
@@ -45,7 +44,7 @@ class ProcedureController
 
     public function setup(Base $f3)
     {
-        $f3->set('content', 'main/setup.html.php');
+        $f3->set('content', 'procedure/setup.html.php');
 
         echo View::instance()->render('layout.html.php');
     }
@@ -57,7 +56,7 @@ class ProcedureController
     public function index(Base $f3)
     {
         $f3->set('procedures', Procedure::getProcedures());
-        $f3->set('content', 'main/index.html.php');
+        $f3->set('content', 'procedure/index.html.php');
 
         echo View::instance()->render('layout.html.php');
     }
@@ -81,7 +80,7 @@ class ProcedureController
         $f3->set('submissions', $submissions);
         $f3->set('submissionsByStatus', $countByStatus);
         $f3->set('status', $status);
-        $f3->set('content', 'main/submissions.html.php');
+        $f3->set('content', 'procedure/submissions.html.php');
         $f3->set('statusThemeColor', Submission::$statusThemeColor);
 
         echo View::instance()->render('layout.html.php');
@@ -111,7 +110,7 @@ class ProcedureController
         $f3->set('procedure', $this->procedure);
         $f3->set('submission', $this->submission);
 
-        $f3->set('content', 'main/edit.html.php');
+        $f3->set('content', 'procedure/edit.html.php');
 
         echo View::instance()->render('layout.html.php');
     }
@@ -176,7 +175,7 @@ class ProcedureController
 
         $f3->set('procedure', $this->procedure);
         $f3->set('submission', $this->submission);
-        $f3->set('content', 'main/attachment.html.php');
+        $f3->set('content', 'procedure/attachment.html.php');
 
         $f3->get('steps')->activate(ProcedureSteps::STEP_ANNEXES);
         echo View::instance()->render('layout.html.php');
@@ -212,7 +211,7 @@ class ProcedureController
         $f3->set('procedure', $this->procedure);
         $f3->set('submission', $this->submission);
         $f3->set('validator', $validator);
-        $f3->set('content', 'main/validation.html.php');
+        $f3->set('content', 'procedure/validation.html.php');
 
         $f3->set('readonly', true);
 
