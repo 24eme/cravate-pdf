@@ -24,7 +24,7 @@ use Validator\Validation;
 
 use Exception;
 
-class MainController
+class ProcedureController
 {
     private ?Procedure $procedure = null;
     private ?Submission $submission = null;
