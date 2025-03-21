@@ -206,7 +206,7 @@ class Submission
 
     public function getLibelle()
     {
-        return trim(str_replace([$this->id, $this->status, '_'], ['', '', ' '], $this->folderName));
+        return trim(str_replace([$this->id, $this->status, '_'], ['', '', ' '], $this->getFolderName()));
     }
 
     public function getDatas($key = null, $default = null)
@@ -300,7 +300,13 @@ class Submission
 
         $this->updateJSON();
 
-        // on renomme le dossier
+        $this->path = $this->procedure->submissionsPath.$this->getFolderName().DIRECTORY_SEPARATOR;
+
+        rename($oldPath, $this->path);
+    }
+
+    public function getFolderName()
+    {
         $this->folderName = $this->id.'_'.$this->userId;
         if (isset($this->procedure->config['SUBMISSION']) && isset($this->procedure->config['SUBMISSION']['format_dir'])) {
             $this->folderName .= '_'.$this->procedure->config['SUBMISSION']['format_dir'];
@@ -308,10 +314,7 @@ class Submission
                 $this->folderName = str_replace("%$field%", (string) $value, $this->folderName);
             }
         }
-
         $this->folderName .= '_'.$this->status;
-        $this->path = $this->procedure->submissionsPath.$this->folderName.DIRECTORY_SEPARATOR;
-
-        rename($oldPath, $this->path);
+        return $this->folderName;
     }
 }
