@@ -23,7 +23,7 @@
   </div>
 <?php endif ?>
 
-<form method="POST" class="row" action="<?php echo Base::instance()->alias('procedure_fill') ?>">
+<form method="POST" class="row" action="<?php echo Base::instance()->alias('procedure_edit') ?>">
 
 <div class="col-6 offset-3 mt-3 justify-content-center">
   <?php foreach($submission->getFields() as $category => $fields): ?>

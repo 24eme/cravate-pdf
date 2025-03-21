@@ -9,7 +9,6 @@ $f3->route('GET @procedures: /', ProcedureController::class.'->index');
 $f3->route('GET @procedure_submissions: /procedure/@procedure/submissions', ProcedureController::class.'->submissions');
 $f3->route('GET @procedure_submission_new: /procedure/@procedure/submission/new', ProcedureController::class.'->new');
 $f3->route('GET|POST @procedure_edit: /procedure/@procedure/submission/@submission/edit', ProcedureController::class.'->edit');
-$f3->route('POST @procedure_fill: /procedure/@procedure/submission/@submission/fill', ProcedureController::class.'->fill');
 $f3->route('GET|POST @procedure_attachment: /procedure/@procedure/submission/@submission/attachment', ProcedureController::class.'->attachment');
 $f3->route('GET|POST @procedure_validation: /procedure/@procedure/submission/@submission/validation', ProcedureController::class.'->validation');
 $f3->route('GET @procedure_submission: /procedure/@procedure/submission/@submission/submission', ProcedureController::class.'->submission');

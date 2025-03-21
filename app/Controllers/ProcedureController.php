@@ -99,54 +99,46 @@ class ProcedureController
     }
 
     /**
-     * Methode: GET
-     * Edite un dossier
+     * Url: /procedure/@procedure/submission/@submission/edit
+     * Alias: @precedure_edit
+     * Methode: GET, POST
+     * Affiche le formulaire d'edition d'un dossier, valide les valeurs, les transformes au format xfdf
      */
     public function edit(Base $f3)
     {
         if (! $this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
+
+        if ($f3->get('VERB') === 'POST') {
+            $postData = $f3->get('POST');
+
+            $validator = new Validation();
+            $valid = $validator->validate($postData, $this->procedure->getValidation());
+
+            if ($valid === false) {
+                Flash::instance()->setKey('form-error', $validator->getErrors());
+                \Helpers\Old::instance()->set($postData);
+
+                return $f3->reroute(['procedure_edit', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
+            }
+
+            $formFields = $this->procedure->getConfigItem('form');
+            $cleanedData = Validation::cleanData($formFields, $postData);
+            $cleanedData = array_merge($cleanedData, $this->submission->getDisabledFields());
+
+            $this->submission->setDatas($cleanedData);
+            $this->submission->save();
+
+            return $f3->reroute(['procedure_attachment', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
+        }
+
         $f3->set('procedure', $this->procedure);
         $f3->set('submission', $this->submission);
 
         $f3->set('content', 'procedure/edit.html.php');
 
         echo View::instance()->render('layout.html.php');
-    }
-
-    /**
-     * Methode: POST
-     * Prends les informations du form, les enregistrent dans l'objet et rempli le pdf
-     */
-    public function fill(Base $f3)
-    {
- 	    if (! $this->submission->isEditable()) {
-           return $f3->error(403, "Submission not editable");
-        }
-
-        $postData = $f3->get('POST');
-
-        $formFields = $this->procedure->getConfigItem('form');
-
-        $cleanedData = Validation::cleanData($formFields, $postData);
-
-        $cleanedData = array_merge($cleanedData, $this->submission->getDisabledFields());
-
-        $validator = new Validation();
-        $valid = $validator->validate($cleanedData, $this->procedure->getValidation());
-
-        if ($valid === false) {
-            Flash::instance()->setKey('form-error', $validator->getErrors());
-            \Helpers\Old::instance()->set($cleanedData);
-
-            return $f3->reroute(['procedure_edit', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
-        }
-
-        $this->submission->setDatas($cleanedData);
-        $this->submission->save();
-
-        return $f3->reroute(['procedure_attachment', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
     }
 
     /**
