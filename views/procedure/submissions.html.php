@@ -26,11 +26,11 @@
       <?php if (count($submissions)): ?>
         <?php foreach($submissions as $submission): ?>
         <tr>
-          <td><i class="text-<?php echo $submission->getStatusThemeColor() ?> bi bi-circle-fill"></i> <?php echo Submission::printStatus($submission->status) ?></td>
-          <td><?php echo $submission->createdAt->format('d/m/Y H:i') ?></td>
-          <td><?php echo $submission->getLibelle() ?></td>
+          <td><i class="text-<?php echo $submission['themeColor'] ?> bi bi-circle-fill"></i> <?php echo Submission::printStatus($submission['status']) ?></td>
+          <td><?php echo $submission['date']->format('d/m/Y H:i') ?></td>
+          <td><?php echo $submission['libelle'] ?></td>
           <td class="text-end">
-            <a href="<?php echo Base::instance()->alias('procedure_submission', ['submission' => $submission->id ]) ?>">
+            <a href="<?php echo Base::instance()->alias('procedure_submission', ['submission' => $submission['id'] ]) ?>">
               <i class="bi bi-eye"></i>
             </a>
           </td>

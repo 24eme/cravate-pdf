@@ -80,15 +80,18 @@ class Procedure
             if (in_array($submission, ['.', '..'])) {
                 continue;
             }
-            $s = Submission::find($this, explode("_", $submission)[0]);
-            if ($statusFilter !== Submission::STATUS_TOUS && $statusFilter != $s->status) {
+
+            $infos = Submission::parseFolderName($submission);
+
+            if ($statusFilter !== Submission::STATUS_TOUS && $statusFilter !== $infos['status']) {
                 continue;
             }
 
-            if ($identifiant && !$s->isAuthor($identifiant)) {
+            if ($identifiant && $infos['author'] !== $identifiant) {
                 continue;
             }
-            $items[$s->id] = $s;
+
+            $items[$infos['id']] = $infos;
         }
 
         krsort($items);
@@ -103,7 +106,7 @@ class Procedure
         $submissions = $this->getSubmissions(Submission::STATUS_TOUS, $identifiant);
         $result = array_fill_keys(Submission::$allStatus, 0);
         foreach ($submissions as $submission) {
-            $result[$submission->status]++;
+            $result[$submission['status']]++;
         }
         return $result;
     }

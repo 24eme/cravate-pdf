@@ -61,6 +61,24 @@ class Submission
         return $submission;
     }
 
+    /**
+     * @return array{id: string, author: string, rs: string, status: string, themeColor: ?string, date: \DateTime, libelle: string}
+     */
+    public static function parseFolderName(string $folderName)
+    {
+        $id = strtok($folderName, '_');
+        $author = strtok('_');
+        $rs = str_replace("{$id}_{$author}_", '', $folderName);
+        $rs = substr($rs, 0, strrpos($rs, '_'));
+        $status = substr($folderName, strrpos($folderName, '_') + 1);
+
+        $themeColor = isset(self::$statusThemeColor[$status]) ? self::$statusThemeColor[$status] : null;
+        $date = \DateTime::createFromFormat('YmdHis', substr($id, 0, 14));
+        $libelle = "$author $rs";
+
+        return compact('id', 'author', 'rs', 'status', 'themeColor', 'date', 'libelle');
+    }
+
     public function __construct(Procedure $procedure, $userId = null)
     {
         $this->procedure = $procedure;
