@@ -78,9 +78,15 @@
   <div class="col-4">
     <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
     <ul class="list-group">
-        <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_getfile', [], ['disposition' => 'attachment', 'file' => $submission->pdf]) ?>" target="_blank">
+      <?php if ($submission->getDatas()): ?>
+        <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_downloadpdf') ?>" target="_blank">
         <i class="bi bi-filetype-pdf"></i> Formulaire complété
       </a>
+      <?php else: ?>
+        <a class="list-group-item disabled" aria-disabled="true" href="#">
+          <i class="bi bi-filetype-pdf"></i> Formulaire complété
+      </a>
+      <?php endif; ?>
       <?php foreach ($submission->getAttachments() as $i => $attachment): ?>
         <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_getfile', [], ['disposition' => 'attachment', 'file' => Model\Submission::ATTACHMENTS_PATH.$attachment]) ?>" target="_blank">
           <i class="bi bi-file"></i> Annexe <?php echo $i+1 ?> :
