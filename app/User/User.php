@@ -27,7 +27,18 @@ class User
             return true;
         }
 
-        return $_SESSION[Config::getInstance()->get('session.credentials_key')];
+        if(!array_key_exists(Config::getInstance()->get('session.admin_key'), $_SESSION)) {
+            return false;
+        }
+
+        $adminValue = $_SESSION[Config::getInstance()->get('session.admin_key')];
+
+        if(is_array($adminValue)) {
+
+            return in_array(Config::getInstance()->get('session.admin_value'), $adminValue);
+        }
+
+        return $adminValue == Config::getInstance()->get('session.admin_value');
     }
 
     public function getUserId() {
