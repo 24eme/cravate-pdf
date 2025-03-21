@@ -9,7 +9,7 @@ class Validation
     public $errors = [];
     public $warnings = [];
 
-    public static function cleanData(array $configData, array $sentData)
+    public function formatData(array $configData, array $sentData)
     {
         $cleaned = [];
 

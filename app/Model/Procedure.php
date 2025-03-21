@@ -128,7 +128,7 @@ class Procedure
         return $default;
     }
 
-    public function getValidation()
+    public function getValidators()
     {
         return array_combine(
             array_keys($this->getConfigItem('form')),
