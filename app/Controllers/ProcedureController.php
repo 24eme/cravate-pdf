@@ -244,7 +244,10 @@ class ProcedureController
         $files = PDFTk::fillForm($this->procedure->pdf, $this->submission->getDatas(), $this->submission->path);
         unlink($files['xfdf']);
 
-        $disposition = $f3->get('GET.disposition', 'attachment');
+        $disposition = $f3->get('GET.disposition');
+        if(!$disposition) {
+            $disposition = 'attachment';
+        }
         if (!in_array($disposition, ['attachment', 'inline'])) {
             return $f3->error(404, "Disposition < $disposition > not allowed");
         }
