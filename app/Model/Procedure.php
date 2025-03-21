@@ -9,7 +9,7 @@ class Procedure
     const PDF_FILENAME = 'form.pdf';
     const CONFIG_FILENAME = 'form.php';
     const SUBMISSIONS_PATH = 'submissions/';
-    const FOLDER = __DIR__.'/../../records/';
+    const FOLDER = __DIR__.'/../../procedures/';
 
     public $name;
     public $path;
