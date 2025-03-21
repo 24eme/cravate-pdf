@@ -63,19 +63,36 @@ class ProcedureController
     }
 
     /**
+     * Url: /procedure/@procedure/submissions
+     * Url: /procedure/@procedure/submissions/@user
+     * Alias: @procedure_submissions
+     * Alias: @procedure_usersubmissions
      * Methode: GET
+     *
      * Liste les dossiers soumis pour un type donné
      */
     public function submissions(Base $f3)
     {
+        if (User::getInstance()->isAdmin() === false) {
+            if ($f3->exists('PARAMS.user') === false) {
+                $f3->reroute(['procedure_usersubmissions', ['procedure' => $this->procedure->name, 'user' => User::getInstance()->getUserId()], ['status' => $f3->get('GET.status')] ]);
+            }
+
+            if ($f3->get('PARAMS.user') !== User::getInstance()->getUserId()) {
+                $f3->error(403, "Établissement forbidden");
+            }
+        }
+
+        $forUser = $f3->exists('PARAMS.user') ? $f3->get('PARAMS.user') : null;
+
         $status = $f3->get('GET.status') ?? Submission::STATUS_SUBMITTED;
 
         if (in_array($status, array_merge([Submission::STATUS_TOUS], Submission::$allStatus)) === false) {
             return $f3->error(404, "Status not found");
         }
 
-        $submissions = $this->procedure->getSubmissions($status, User::getInstance()->getUserId());
-        $countByStatus = $this->procedure->countByStatus(User::getInstance()->getUserId());
+        $submissions = $this->procedure->getSubmissions($status, $forUser);
+        $countByStatus = $this->procedure->countByStatus($forUser);
 
         $f3->set('procedure', $this->procedure);
         $f3->set('submissions', $submissions);

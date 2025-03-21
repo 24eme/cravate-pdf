@@ -45,12 +45,12 @@
   <div class="col-3 mt-5 pt-2">
     <ul class="list-group">
       <a class="list-group-item list-group-item-action<?php if ($status === Submission::STATUS_TOUS): ?> active<?php endif; ?>" aria-current="page"
-         href="<?php echo Base::instance()->alias('procedure_submissions', [], ['status' => Submission::STATUS_TOUS]) ?>">
+         href="<?php echo Base::instance()->alias('procedure_usersubmissions', ['user' => Base::instance()->get('PARAMS.user')], ['status' => Submission::STATUS_TOUS]) ?>">
           <span class="badge rounded-pill text-bg-primary"><?php echo array_sum($submissionsByStatus) ?></span> Tous
       </a>
       <?php foreach($statusThemeColor as $statusKey => $themeColor): ?>
         <a class="list-group-item list-group-item-action<?php if($status == $statusKey): ?> active<?php endif; ?>"
-          href="<?php echo Base::instance()->alias('procedure_submissions', [], ['status' => $statusKey]) ?>">
+          href="<?php echo Base::instance()->alias('procedure_usersubmissions', ['user' => Base::instance()->get('PARAMS.user')], ['status' => $statusKey]) ?>">
             <span class="badge rounded-pill text-bg-<?php echo $themeColor ?>"><?php echo $submissionsByStatus[$statusKey] ?></span> <?php echo Submission::printStatus($statusKey) ?>
         </a>
       <?php endforeach; ?>
