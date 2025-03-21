@@ -30,7 +30,7 @@ class Submission
     public $userId;
     public $createdAt;
     public $submittedAt;
-    public $modifieAt;
+    public $modifiedAt;
     public $status;
     public $path;
     public $json;
@@ -68,7 +68,7 @@ class Submission
         $this->id = date('YmdHis').rand(1000,9999);
         $this->userId = $userId;
         $this->createdAt = new \DateTime();
-	    $this->updatedAt = new \DateTime();
+        $this->modifiedAt = new \DateTime();
         $this->json = new \stdClass();
         $this->folderName = $this->id.'_'.$this->userId;
         $this->path = $this->procedure->submissionsPath.$this->folderName.DIRECTORY_SEPARATOR;
