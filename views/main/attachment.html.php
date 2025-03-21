@@ -1,18 +1,18 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('records') ?>">Dossiers</a></li>
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('record_submissions') ?>"><?php echo $submission->record->getConfigItem('subtitle') ?></a></li>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedure_submissions') ?>"><?php echo $submission->procedure->getConfigItem('subtitle') ?></a></li>
       <li class="breadcrumb-item">Saisie</li>
     </ol>
   </div>
 </nav>
 
-<h1>Dossier <?php echo isset($record) ? $record->getConfigItem('title') : '' ?></h1>
+<h1>Dossier <?php echo isset($procedure) ? $procedure->getConfigItem('title') : '' ?></h1>
 
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
 
-<form method="POST" enctype="multipart/form-data" action="<?php echo Base::instance()->alias("record_attachment", ['record' => $submission->record->name, 'submission' => $submission->id]) ?>">
+<form method="POST" enctype="multipart/form-data" action="<?php echo Base::instance()->alias("procedure_attachment", ['procedure' => $submission->procedure->name, 'submission' => $submission->id]) ?>">
   <div class="row justify-content-center">
     <div class="col-6">
     <h3 class="mt-3">Joindre une pièce complémentaire</h3>

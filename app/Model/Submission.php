@@ -1,9 +1,9 @@
 <?php
 
-namespace Records;
+namespace Model;
 
 use DomainException;
-use Records\Record;
+use Model\Procedure;
 use PDF\PDFtk;
 
 class Submission
@@ -23,7 +23,7 @@ class Submission
     public static $allStatus = [self::STATUS_DRAFT, self::STATUS_SUBMITTED, self::STATUS_VALIDATED, self::STATUS_UNCOMPLETED, self::STATUS_CANCELED, self::STATUS_CLOSED];
     public static $statusThemeColor = [self::STATUS_DRAFT => 'light', self::STATUS_SUBMITTED => 'secondary', self::STATUS_VALIDATED => 'success', self::STATUS_UNCOMPLETED => 'warning', self::STATUS_CANCELED => 'danger', self::STATUS_CLOSED => 'dark'];
 
-    public $record;
+    public $procedure;
     public $folderName;
 
     public $id;
@@ -37,18 +37,18 @@ class Submission
 
     public $datas = [];
 
-    public static function create(Record $record, $userId) {
-        $submission = new Submission($record, $userId);
+    public static function create(Procedure $procedure, $userId) {
+        $submission = new Submission($procedure, $userId);
         $submission->setStatus(Submission::STATUS_DRAFT, null, true);
 
         return $submission;
     }
 
-    public static function find(Record $record, $id) {
+    public static function find(Procedure $procedure, $id) {
         if(!preg_match('/^[0-9A-Za-z\-_]+$/', $id)) {
             throw new \Exception("id invalid");
         }
-        foreach(glob($record->submissionsPath.$id.'*', GLOB_ONLYDIR) as $path) {
+        foreach(glob($procedure->submissionsPath.$id.'*', GLOB_ONLYDIR) as $path) {
             break;
         }
 
@@ -56,15 +56,15 @@ class Submission
             throw new \Exception("path \"$path\" not exist");
         }
 
-        $submission = new Submission($record);
+        $submission = new Submission($procedure);
         $submission->load(basename($path));
 
         return $submission;
     }
 
-    public function __construct(Record $record, $userId = null)
+    public function __construct(Procedure $procedure, $userId = null)
     {
-        $this->record = $record;
+        $this->procedure = $procedure;
         $this->status = Submission::STATUS_DRAFT;
         $this->id = date('YmdHis').rand(1000,9999);
         $this->userId = $userId;
@@ -72,16 +72,16 @@ class Submission
 	    $this->updatedAt = new \DateTime();
         $this->json = new \stdClass();
         $this->folderName = $this->id.'_'.$this->userId;
-        $this->path = $this->record->submissionsPath.$this->folderName.DIRECTORY_SEPARATOR;
-        $this->filename = (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['filename']))
-                    ? $this->record->config['SUBMISSION']['filename']
+        $this->path = $this->procedure->submissionsPath.$this->folderName.DIRECTORY_SEPARATOR;
+        $this->filename = (isset($this->procedure->config['SUBMISSION']) && isset($this->procedure->config['SUBMISSION']['filename']))
+                    ? $this->procedure->config['SUBMISSION']['filename']
                     : null;
     }
 
     public function load($folderName)
     {
         $this->folderName = $folderName;
-        $this->path = $this->record->submissionsPath.$this->folderName.DIRECTORY_SEPARATOR;
+        $this->path = $this->procedure->submissionsPath.$this->folderName.DIRECTORY_SEPARATOR;
         if (file_exists($this->path.self::METAS_FILENAME)) {
             $this->loadJSON($this->path.self::METAS_FILENAME);
         }
@@ -154,7 +154,7 @@ class Submission
 
     public function getAttachmentsNeeded()
     {
-        $config = $this->record->config;
+        $config = $this->procedure->config;
         if (!isset($config['ATTACHED_FILE'])) {
             return [];
         }
@@ -242,7 +242,7 @@ class Submission
 
     public function getForm() {
 
-        return $this->record->config['form'];
+        return $this->procedure->config['form'];
     }
 
     public function getFields() {
@@ -259,7 +259,7 @@ class Submission
     {
         $fields = [];
 
-        foreach ($this->record->getConfigItem('form') as $fieldKey => $conf) {
+        foreach ($this->procedure->getConfigItem('form') as $fieldKey => $conf) {
             if (isset($conf['disabled'])) {
                 $fields[$fieldKey] = $this->getDatas($fieldKey);
             }
@@ -300,17 +300,17 @@ class Submission
     {
         if (!is_dir($this->path)) {
             mkdir($this->path);
-            if($this->record->getConfigItem('initDossier')) {
-                shell_exec($this->record->getConfigItem('initDossier')." ".$this->path);
+            if($this->procedure->getConfigItem('initDossier')) {
+                shell_exec($this->procedure->getConfigItem('initDossier')." ".$this->path);
             }
         }
 
         $oldPath = $this->path;
 
         if(count($this->getDatas())) {
-            $filename = $this->filename ?: basename($this->record->pdf, '.pdf');
+            $filename = $this->filename ?: basename($this->procedure->pdf, '.pdf');
             $this->pdf =  $this->path.$filename.'.pdf';
-            $files = PDFTk::fillForm($this->record->pdf, $this->getDatas());
+            $files = PDFTk::fillForm($this->procedure->pdf, $this->getDatas());
             // fichier de tmp -> dans dossier
             if (!rename($files['pdf'], $this->path.$filename.'.pdf')) {
                 throw new \Exception("pdf save failed");
@@ -325,15 +325,15 @@ class Submission
 
         // on renomme le dossier
         $this->folderName = $this->id.'_'.$this->userId;
-        if (isset($this->record->config['SUBMISSION']) && isset($this->record->config['SUBMISSION']['format_dir'])) {
-            $this->folderName .= '_'.$this->record->config['SUBMISSION']['format_dir'];
+        if (isset($this->procedure->config['SUBMISSION']) && isset($this->procedure->config['SUBMISSION']['format_dir'])) {
+            $this->folderName .= '_'.$this->procedure->config['SUBMISSION']['format_dir'];
             foreach ($this->getDatas() as $field => $value) {
                 $this->folderName = str_replace("%$field%", (string) $value, $this->folderName);
             }
         }
 
         $this->folderName .= '_'.$this->status;
-        $this->path = $this->record->submissionsPath.$this->folderName.DIRECTORY_SEPARATOR;
+        $this->path = $this->procedure->submissionsPath.$this->folderName.DIRECTORY_SEPARATOR;
 
         rename($oldPath, $this->path);
     }

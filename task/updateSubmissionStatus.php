@@ -17,7 +17,7 @@ if (!is_dir($folder)) {
     exit;
 }
 
-if (!in_array($status, Records\Submission::$allStatus)) {
+if (!in_array($status, Model\Submission::$allStatus)) {
     echo "ERREUR le statut $status n'est pas connu\n";
     exit;
 }
@@ -32,13 +32,13 @@ if (preg_match($pattern, $folder, $matches)) {
 }
 
 try {
-    $record = new Records\Record($recordName);
+    $record = new Model\Record($recordName);
 } catch (\Exception $e) {
     echo $e->getMessage();
     exit;
 }
 
-$submission = new Records\Submission($record, $submissionName);
+$submission = new Model\Submission($record, $submissionName);
 
 try {
     $submission->setStatus($status, $comment);

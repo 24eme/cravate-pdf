@@ -10,12 +10,11 @@ use Web;
 use Config;
 use User\User;
 
-use Records\Records;
-use Records\Submission;
-use Records\Record;
+use Model\Submission;
+use Model\Procedure;
 
 use Steps\Steps;
-use Steps\RecordsSteps;
+use Steps\ProcedureSteps;
 
 use Emails\Email;
 
@@ -27,17 +26,17 @@ use Exception;
 
 class MainController
 {
-    private ?Record $record = null;
+    private ?Procedure $procedure = null;
     private ?Submission $submission = null;
 
     public function beforeroute(Base $f3)
     {
-        if ($f3->get('PARAMS.record')) {
-            $this->record = new Record($f3->get('PARAMS.record'));
+        if ($f3->get('PARAMS.procedure')) {
+            $this->procedure = new Procedure($f3->get('PARAMS.procedure'));
         }
         if ($f3->get('PARAMS.submission')) {
-            $this->submission = Submission::find($this->record, $f3->get('PARAMS.submission'));
-            $f3->set('steps', new Steps(new RecordsSteps($this->record, $this->submission)));
+            $this->submission = Submission::find($this->procedure, $f3->get('PARAMS.submission'));
+            $f3->set('steps', new Steps(new ProcedureSteps($this->procedure, $this->submission)));
         }
         if(isset($this->submission) && ! User::getInstance()->isAdmin() && ! $this->submission->isAuthor(User::getInstance()->getUserId())) {
             return $f3->error(403, "Etablissement forbidden");
@@ -57,7 +56,7 @@ class MainController
      */
     public function index(Base $f3)
     {
-        $f3->set('records', Records::getRecords());
+        $f3->set('procedures', Procedure::getProcedures());
         $f3->set('content', 'main/index.html.php');
 
         echo View::instance()->render('layout.html.php');
@@ -75,10 +74,10 @@ class MainController
             return $f3->error(404, "Status not found");
         }
 
-        $submissions = $this->record->getSubmissions($status, User::getInstance()->getUserId());
-        $countByStatus = $this->record->countByStatus(User::getInstance()->getUserId());
+        $submissions = $this->procedure->getSubmissions($status, User::getInstance()->getUserId());
+        $countByStatus = $this->procedure->countByStatus(User::getInstance()->getUserId());
 
-        $f3->set('record', $this->record);
+        $f3->set('procedure', $this->procedure);
         $f3->set('submissions', $submissions);
         $f3->set('submissionsByStatus', $countByStatus);
         $f3->set('status', $status);
@@ -94,10 +93,10 @@ class MainController
      */
     public function new(Base $f3)
     {
-        $submission = Submission::create($this->record, User::getInstance()->getUserId());
+        $submission = Submission::create($this->procedure, User::getInstance()->getUserId());
         $submission->save();
 
-        $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $submission->id]]);
+        $f3->reroute(['procedure_edit', ['procedure' => $this->procedure->name, 'submission' => $submission->id]]);
     }
 
     /**
@@ -109,7 +108,7 @@ class MainController
         if (! $this->submission->isEditable()) {
             return $f3->error(403, "Submission not editable");
         }
-        $f3->set('record', $this->record);
+        $f3->set('procedure', $this->procedure);
         $f3->set('submission', $this->submission);
 
         $f3->set('content', 'main/edit.html.php');
@@ -129,26 +128,26 @@ class MainController
 
         $postData = $f3->get('POST');
 
-        $formFields = $this->record->getConfigItem('form');
+        $formFields = $this->procedure->getConfigItem('form');
 
         $cleanedData = Validation::cleanData($formFields, $postData);
 
         $cleanedData = array_merge($cleanedData, $this->submission->getDisabledFields());
 
         $validator = new Validation();
-        $valid = $validator->validate($cleanedData, $this->record->getValidation());
+        $valid = $validator->validate($cleanedData, $this->procedure->getValidation());
 
         if ($valid === false) {
             Flash::instance()->setKey('form-error', $validator->getErrors());
             \Helpers\Old::instance()->set($cleanedData);
 
-            return $f3->reroute(['record_edit', ['record' => $this->record->name, 'submission' => $this->submission->id]]);
+            return $f3->reroute(['procedure_edit', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
         }
 
         $this->submission->setDatas($cleanedData);
         $this->submission->save();
 
-        return $f3->reroute(['record_attachment', ['record' => $this->record->name, 'submission' => $this->submission->id]]);
+        return $f3->reroute(['procedure_attachment', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
     }
 
     /**
@@ -169,17 +168,17 @@ class MainController
                 move_uploaded_file($file['tmp_name'], $this->submission->getAttachmentsPath() . $name.".".pathinfo($file['name'])['extension']);
             }
 
-            return $f3->reroute(['record_validation', [
-               'record' => $this->record->name,
+            return $f3->reroute(['procedure_validation', [
+               'procedure' => $this->procedure->name,
                'submission' => $this->submission->id,
             ]]);
         }
 
-        $f3->set('record', $this->record);
+        $f3->set('procedure', $this->procedure);
         $f3->set('submission', $this->submission);
         $f3->set('content', 'main/attachment.html.php');
 
-        $f3->get('steps')->activate(RecordsSteps::STEP_ANNEXES);
+        $f3->get('steps')->activate(ProcedureSteps::STEP_ANNEXES);
         echo View::instance()->render('layout.html.php');
     }
 
@@ -198,19 +197,19 @@ class MainController
 
         if ($f3->get('VERB') === 'POST') {
             if ($validator->hasErrors()) {
-                return $f3->reroute('@record_validation');
+            return $f3->reroute(['procedure_validation']);
             }
 
             $this->submission->setStatus(Submission::STATUS_SUBMITTED);
             $this->submission->save();
-            return $f3->reroute(['record_submission', [
-                        'record' => $this->record->name,
+            return $f3->reroute(['procedure_submission', [
+                        'procedure' => $this->procedure->name,
                         'submission' => $this->submission->id
                     ]]);
         }
 
-        $f3->get('steps')->activate(RecordsSteps::STEP_VALIDATION);
-        $f3->set('record', $this->record);
+        $f3->get('steps')->activate(ProcedureSteps::STEP_VALIDATION);
+        $f3->set('procedure', $this->procedure);
         $f3->set('submission', $this->submission);
         $f3->set('validator', $validator);
         $f3->set('content', 'main/validation.html.php');
@@ -227,7 +226,7 @@ class MainController
     public function submission(Base $f3)
     {
         if ($this->submission->status === Submission::STATUS_DRAFT) {
-            return $f3->reroute(['record_validation', ['record' => $this->record->name, 'submission' => $this->submission->id]]);
+            return $f3->reroute(['procedure_validation', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
         }
 
         $f3->set('submission', $this->submission);
@@ -301,6 +300,6 @@ class MainController
             }
         }
 
-        return $f3->reroute(['record_submission', ['record' => $this->record->name, 'submission' => $this->submission->id]]);
+        return $f3->reroute(['procedure_submission', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
     }
 }

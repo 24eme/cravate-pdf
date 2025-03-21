@@ -1,14 +1,15 @@
 <?php
 
-namespace Records;
+namespace Model;
 
-use Records\Submission;
+use Model\Submission;
 
-class Record
+class Procedure
 {
     const PDF_FILENAME = 'form.pdf';
     const CONFIG_FILENAME = 'form.php';
     const SUBMISSIONS_PATH = 'submissions/';
+    const FOLDER = __DIR__.'/../../records/';
 
     public $name;
     public $path;
@@ -17,23 +18,33 @@ class Record
     public $metas;
     public $submissionsPath;
 
-    public static function getRecordPath($name)
-    {
-        return Records::FOLDER.$name.DIRECTORY_SEPARATOR;
+    public static function getProcedures() {
+        $procedures = scandir(self::FOLDER);
+        if (!$procedures) {
+            return [];
+        }
+        $items = [];
+        foreach($procedures as $procedure) {
+            if (in_array($procedure, ['.', '..'])) {
+                continue;
+            }
+            $items[] = new Procedure($procedure);
+        }
+        return $items;
     }
 
     public function __construct($name)
     {
-        $path = self::getRecordPath($name);
+        $path = self::FOLDER.$name.DIRECTORY_SEPARATOR;
 
         if (!file_exists($path)) {
-            throw new \Exception("The < $name > record folder doesn't exist");
+            throw new \Exception("The < $name > procedure folder doesn't exist");
         }
 
         $this->path = $path;
 
         if (!file_exists($this->path.self::PDF_FILENAME)) {
-            throw new \Exception("No PDF file for < $name > record folder");
+            throw new \Exception("No PDF file for < $name > procedure folder");
         }
 
         $this->name = $name;
@@ -50,7 +61,7 @@ class Record
     private function loadConfig()
     {
         if (file_exists($this->path.self::CONFIG_FILENAME) === false) {
-            throw new \RuntimeException("Missing config file for record");
+            throw new \RuntimeException("Missing config file for procedure");
         }
 
         $this->config = include($this->path.self::CONFIG_FILENAME);

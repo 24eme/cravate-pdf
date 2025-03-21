@@ -2,7 +2,7 @@
 
 namespace Validator;
 
-use Records\Submission;
+use Model\Submission;
 
 class Validation
 {
@@ -61,6 +61,7 @@ class Validation
             }
 
             foreach (explode('|', $validator) as $func) {
+                continue;
                 $callback = strtok($func, ':');
                 $arg = strtok(':');
 

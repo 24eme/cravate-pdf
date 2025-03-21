@@ -2,11 +2,11 @@
 
 namespace Steps;
 
-use Records\Record;
-use Records\Submission;
+use Model\Procedure;
+use Model\Submission;
 use Steps\Step;
 
-class RecordsSteps //implements ISteps
+class ProcedureSteps //implements ISteps
 {
     const STEP_FORM = 'Formulaire';
     const STEP_ANNEXES = 'Annexes';
@@ -19,17 +19,17 @@ class RecordsSteps //implements ISteps
     ];
 
     const stepsLinks = [
-        self::STEP_FORM => 'record_edit',
-        self::STEP_ANNEXES => 'record_attachment',
-        self::STEP_VALIDATION => 'record_validation'
+        self::STEP_FORM => 'procedure_edit',
+        self::STEP_ANNEXES => 'procedure_attachment',
+        self::STEP_VALIDATION => 'procedure_validation'
     ];
 
-    private Record $record;
+    private Procedure $procedure;
     private Submission $submission;
 
-    public function __construct(Record $record, Submission $submission = null)
+    public function __construct(Procedure $procedure, Submission $submission = null)
     {
-        $this->record = $record;
+        $this->procedure = $procedure;
         $this->submission = $submission;
     }
 
@@ -49,7 +49,7 @@ class RecordsSteps //implements ISteps
     public function getArgs()
     {
         $args = [
-            'record' => $this->record->name,
+            'procedure' => $this->procedure->name,
             'submission' => $this->submission->name
         ];
 
