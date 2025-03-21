@@ -20,6 +20,7 @@ use Emails\Email;
 
 use PDF\PDFtk;
 use Validator\Validation;
+use Validator\SubmissionValidation;
 
 use Exception;
 
@@ -113,21 +114,19 @@ class ProcedureController
         if ($f3->get('VERB') === 'POST') {
             $postData = $f3->get('POST');
 
-            $validator = new Validation();
-            $valid = $validator->validate($postData, $this->procedure->getValidation());
+            $submissionValidator = new SubmissionValidation($this->submission, new Validation());
+            $isValid = $submissionValidator->validate($postData);
 
-            if ($valid === false) {
-                Flash::instance()->setKey('form-error', $validator->getErrors());
+            if ($isValid === false) {
+                Flash::instance()->setKey('form-error', $submissionValidator->getValidation()->getErrors());
                 \Helpers\Old::instance()->set($postData);
 
                 return $f3->reroute(['procedure_edit', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
             }
 
-            $formFields = $this->procedure->getConfigItem('form');
-            $cleanedData = Validation::cleanData($formFields, $postData);
-            $cleanedData = array_merge($cleanedData, $this->submission->getDisabledFields());
+            $formattedData = $submissionValidator->formatData($postData);
 
-            $this->submission->setDatas($cleanedData);
+            $this->submission->setDatas($formattedData);
             $this->submission->save();
 
             return $f3->reroute(['procedure_attachment', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
