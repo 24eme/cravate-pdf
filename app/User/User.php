@@ -19,8 +19,8 @@ class User
         if(Config::getInstance()->get('session.name')) {
             session_name(Config::getInstance()->get('session.name'));
             session_start();
-            if (!$this->getUserId() && Config::getInstance()->get('session.user_id_defaut')) {
-                $_SESSION[Config::getInstance()->get('session.user_id')] = Config::getInstance()->get('session.user_id_defaut');
+            if (!$this->getUserId() && Config::getInstance()->get('session.user_id_autologin')) {
+                $_SESSION[Config::getInstance()->get('session.user_id')] = Config::getInstance()->get('session.user_id_autologin');
             }
         }
     }
