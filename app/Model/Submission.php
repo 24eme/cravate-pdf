@@ -52,7 +52,7 @@ class Submission
         $paths = glob($procedure->submissionsPath.$id.'*', GLOB_ONLYDIR);
 
         if(!count($paths) || count($paths) > 1) {
-            throw new \Exception("path \"$path\" not exist");
+            return null;
         }
 
         $submission = new Submission($procedure);

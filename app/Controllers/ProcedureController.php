@@ -35,7 +35,7 @@ class ProcedureController
             $this->procedure = new Procedure($f3->get('PARAMS.procedure'));
         }
         if ($f3->get('PARAMS.submission')) {
-            $this->submission = Submission::find($this->procedure, $f3->get('PARAMS.submission'));
+            $this->submission = Submission::find($this->procedure, $f3->get('PARAMS.submission')) ?: $f3->error(404, "Numéro de dépôt inconnu");
             $f3->set('steps', new Steps(new ProcedureSteps($this->procedure, $this->submission)));
         }
         if(isset($this->submission) && ! User::getInstance()->isAdmin() && ! $this->submission->isAuthor(User::getInstance()->getUserId())) {
