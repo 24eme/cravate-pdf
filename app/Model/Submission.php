@@ -89,7 +89,6 @@ class Submission
     protected function loadJSON($file)
     {
         $this->json = json_decode(file_get_contents($file));
-        $this->datas = [];
         if(isset($this->json->form)) {
             foreach ($this->json->form as $field => $value) {
                 $this->datas[$field] = $value;
