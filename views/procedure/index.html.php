@@ -17,7 +17,7 @@
         <?php echo $procedure->getConfigItem('title') ?>
       </div>
       <div class="card-body">
-        <h5 class="card-title"><?php echo $procedure->getConfigItem('subtitle') ?></h5>
+        <h5 class="card-title"><?php echo $procedure->getConfigItem('title') ?></h5>
         <p class="card-text"><?php echo $procedure->getConfigItem('text') ?></p>
         <p class="text-center">
           <a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name]) ?>" class="btn btn-primary mt-2 d-block"><i class="bi bi-file-earmark-plus"></i> Saisir le dossier</a>

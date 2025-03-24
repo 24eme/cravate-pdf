@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
       <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedure_submissions') ?>"><?php echo $procedure->getConfigItem('subtitle') ?></a></li>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedure_submissions') ?>"><?php echo $procedure->getConfigItem('title') ?></a></li>
       <li class="breadcrumb-item">Saisie</li>
     </ol>
   </div>

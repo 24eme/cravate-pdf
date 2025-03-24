@@ -4,7 +4,7 @@
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
       <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
-      <li class="breadcrumb-item"><?php echo $procedure->getConfigItem('subtitle') ?></li>
+      <li class="breadcrumb-item"><?php echo $procedure->getConfigItem('title') ?></li>
     </ol>
   </div>
 </nav>
