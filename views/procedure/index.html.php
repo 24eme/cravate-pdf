@@ -9,7 +9,7 @@
 <h1 class="border-bottom fs-2 pb-2 mb-4 mt-3"><i class="bi bi-folder2-open"></i> Dossiers</h1>
 
 <?php if ($procedures): ?>
-<div class="row row-cols-1 row-cols-md-3 g-2">
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-4 g-2">
   <?php foreach($procedures as $i => $procedure): ?>
   <div class="col">
     <div class="card h-100">
