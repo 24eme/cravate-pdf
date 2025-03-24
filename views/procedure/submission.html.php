@@ -47,9 +47,9 @@ N°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1 \2 \3', $submissi
       <tbody>
           <?php foreach ($history as $item): ?>
           <tr>
-            <td><?php echo date('d/m/Y H:i', strtotime($item->date)) ?></td>
+            <td style="white-space: nowrap; width: 0;"><?php echo date('d/m/Y H:i', strtotime($item->date)) ?></td>
             <td><?php echo $item->entry ?></td>
-            <td class="w-50"><?php echo $item->comment ?></td>
+            <td><?php echo $item->comment ?></td>
           </tr>
           <?php endforeach; ?>
       </tbody>
