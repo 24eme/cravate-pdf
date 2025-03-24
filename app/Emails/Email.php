@@ -43,7 +43,7 @@ class Email
     public function send($template, $args)
     {
         if (is_file($this->emailsDir.$template) === false) {
-            throw new Exception($template." n'existe pas");
+            throw new Exception("Le template d'email <".$template."> n'existe pas");
         }
 
         if ($diff = array_diff(self::requiredHeaders, array_keys($this->headers))) {
