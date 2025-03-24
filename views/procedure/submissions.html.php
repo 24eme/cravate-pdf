@@ -9,10 +9,12 @@
   </div>
 </nav>
 
-<h1 class="border-bottom fs-2 pb-2 mt-3 clearfix">Dépôts des <?php echo strtolower($procedure->getConfigItem('title')) ?><a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name]) ?>" class="btn btn-light float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i> Saisir un dossier</a></h1>
+<h1 class="border-bottom fs-2 pb-2 mt-3 clearfix">Liste des dépôts <a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name]) ?>" class="btn btn-light float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i> Saisir un dossier</a></h1>
 
 <div class="row">
   <div class="col-9">
+    <div class="card mt-3">
+    <div class="card-header"><i class="bi bi-folder2-open"></i> <?php echo $procedure->getConfigItem('title') ?></div>
     <table class="table table-hover table-striped">
       <thead>
         <tr>
@@ -41,9 +43,12 @@
       <?php endif; ?>
       </tbody>
     </table>
+    </div>
   </div>
-  <div class="col-3 pt-2">
-    <ul class="list-group">
+  <div class="col-3">
+    <div class="card mt-3">
+    <div class="card-header">Filtrer par statut</div>
+    <ul class="list-group list-group-flush">
       <a class="list-group-item list-group-item-action<?php if ($status === Submission::STATUS_TOUS): ?> active<?php endif; ?>" aria-current="page"
          href="<?php echo Base::instance()->alias('procedure_usersubmissions', ['user' => Base::instance()->get('PARAMS.user')], ['status' => Submission::STATUS_TOUS]) ?>">
           <span class="badge rounded-pill text-bg-primary"><?php echo array_sum($submissionsByStatus) ?></span> Tous
@@ -51,10 +56,10 @@
       <?php foreach($statusThemeColor as $statusKey => $themeColor): ?>
         <a class="list-group-item list-group-item-action<?php if($status == $statusKey): ?> active<?php endif; ?>"
           href="<?php echo Base::instance()->alias('procedure_usersubmissions', ['user' => Base::instance()->get('PARAMS.user')], ['status' => $statusKey]) ?>">
-            <span class="badge rounded-pill text-bg-<?php echo $themeColor ?>"><?php echo $submissionsByStatus[$statusKey] ?></span> <?php echo Submission::printStatus($statusKey) ?>
+            <span class="<?php if($submissionsByStatus[$statusKey] == 0): ?> opacity-50<?php endif; ?>"><span class="badge rounded-pill text-bg-<?php echo $themeColor ?>"><?php echo $submissionsByStatus[$statusKey] ?></span> <?php echo Submission::printStatus($statusKey) ?></span>
         </a>
       <?php endforeach; ?>
     </ul>
+    </div>
   </div>
-
 </div>
