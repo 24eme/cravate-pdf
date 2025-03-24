@@ -17,6 +17,7 @@ use Steps\Steps;
 use Steps\ProcedureSteps;
 
 use Emails\Email;
+use Emails\SubmissionEmails;
 
 use PDF\PDFtk;
 use Validator\Validation;
@@ -305,15 +306,9 @@ class ProcedureController
         $this->submission->setStatus($newStatus, $comment);
 	    $this->submission->save();
 
-        if ($f3->exists('mail')) {
-            try {
-                $f3->get('mail')
-                   ->headers(['From' => Config::getInstance()->get('mail.host'), 'To' => $this->submission->getDatas('EMAIL'), 'Subject' => 'Changement de Status de votre dossier'])
-                   ->send('chgtstatus.eml', ['submission' => $this->submission]);
-            } catch (Exception $e) {
-                // log message
-            }
-        }
+        try {
+            (new SubmissionEmails($this->submission))->chgtstatus();
+        } catch (Exception $e) { }
 
         return $f3->reroute(['procedure_submission', ['procedure' => $this->procedure->name, 'submission' => $this->submission->id]]);
     }
