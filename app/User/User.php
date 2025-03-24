@@ -2,19 +2,11 @@
 
 namespace User;
 
+use Prefab;
 use Config\Config;
 
-class User
+class User extends Prefab
 {
-    private static $_instance = null;
-
-    public static function getInstance() {
-        if (is_null(self::$_instance)) {
-            self::$_instance = new User();
-        }
-        return self::$_instance;
-    }
-
     public function __construct() {
         if(Config::getInstance()->get('session.name')) {
             session_name(Config::getInstance()->get('session.name'));

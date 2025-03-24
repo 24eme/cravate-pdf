@@ -76,7 +76,7 @@
 
   <div class="col-4">
     <p class="mt-4 fs-5 text-end">Créé : <?php echo $submission->createdAt->format('d/m/Y H:i'); ?></p>
-    <?php if(User\User::getInstance()->isAdmin()): ?>
+    <?php if(User\User::instance()->isAdmin()): ?>
     <h2 class="pb-2 h3"><i class="bi bi-gear"></i> Statut</h2>
     <form action="<?php echo Base::instance()->alias('procedure_submission_updatestatus') ?>" method="post" class="row mb-4">
       <div class="col-12">
