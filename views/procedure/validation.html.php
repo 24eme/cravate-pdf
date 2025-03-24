@@ -1,25 +1,12 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-  <div class="container-fluid">
-    <ol class="my-1 breadcrumb">
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedure_submissions') ?>"><?php echo $submission->procedure->getConfigItem('title') ?></a></li>
-      <li class="breadcrumb-item"><?php echo $submission->getLibelle() ?></li>
-    </ol>
-  </div>
-</nav>
-
-<h1>Dossier <?php echo $procedure->getConfigItem('title') ?></h1>
-
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
 
-<div class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap fs-3 mt-3"><?php echo Model\Submission::printStatus($submission->status) ?></div>
-
-<h1 class="pb-2 my-4">
+<h2 class="mb-3 mt-4">
   <?php echo $submission->getLibelle() ?>
-</h1>
+</h2>
 
 <?php if ($validator->hasErrors()): ?>
   <div class="alert alert-danger" role="alert">
+    <h5>Points de bloquant</h5>
     <ul class="list-unstyled mb-0">
     <?php foreach ($validator->getErrors() as $error): ?>
       <li><?php echo $error['message'] ?></li>
@@ -30,6 +17,7 @@
 
 <?php if ($validator->hasWarnings()): ?>
   <div class="alert alert-warning" role="alert">
+    <h5>Points de vigilance</h5>
     <ul class="list-unstyled mb-0">
     <?php foreach ($validator->getWarnings() as $warn): ?>
       <li><?php echo $warn['message'] ?></li>
@@ -39,46 +27,13 @@
 <?php endif ?>
 
 <div class="row">
-
   <div class="col-8">
-      <table class="table table-striped table-hover">
-      <?php $formConfig = $submission->procedure->getConfigItem('form'); ?>
-      <?php foreach($submission->getDatas() as $field => $value): ?>
-        <tr>
-          <th><?php echo $field ?> :</th>
-          <?php if (array_key_exists('format', $formConfig[$field])): ?>
-            <td><?php echo preg_replace(
-                             strtok($formConfig[$field]['format'], '#'),
-                             strtok('#'),
-                             $value
-                           ) ?>
-            </td>
-            <?php else: ?>
-              <td>
-                <?php if (isset($formConfig[$field]['choices']) && isset($formConfig[$field]['choices'][$value])): ?>
-                  <?php echo $formConfig[$field]['choices'][$value]; ?>
-                <?php else: ?>
-                  <?php echo $value; ?>
-                <?php endif; ?>
-              </td>
-          <?php endif ?>
-        </tr>
-      <?php endforeach; ?>
-      </table>
-      <?php if (property_exists($submission->json, "history")): ?>
-      <h2 class="pb-2 h3 pt-2"><i class="bi bi-clock-history"></i> Historique</h2>
-      <table class="table table-striped">
-        <tbody>
-            <?php foreach (array_reverse($submission->json->history) as $history): ?>
-            <tr>
-              <td><?php echo date('d/m/Y H:i', strtotime($history->date)) ?></td>
-              <td><?php echo $history->entry ?></td>
-              <td class="w-50"><?php echo $history->comment ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-      </table>
-      <?php endif; ?>
+    <ul class="nav nav-tabs mb-4">
+      <li class="nav-item">
+        <a class="nav-link<?php if (!$displaypdf): ?> active<?php endif; ?>" aria-current="page" href="<?php echo Base::instance()->alias('procedure_submission') ?>">Données</a>
+      </li>
+    </ul>
+    <?php echo View::instance()->render('procedure/_datas.html.php'); ?>
   </div>
 
   <div class="col-4">

@@ -1,15 +1,3 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-  <div class="container-fluid">
-    <ol class="my-1 breadcrumb">
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedure_submissions') ?>"><?php echo $submission->procedure->getConfigItem('title') ?></a></li>
-      <li class="breadcrumb-item">Saisie</li>
-    </ol>
-  </div>
-</nav>
-
-<h1>Dossier <?php echo isset($procedure) ? $procedure->getConfigItem('title') : '' ?></h1>
-
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
 
 <form method="POST" enctype="multipart/form-data" action="<?php echo Base::instance()->alias("procedure_attachment", ['procedure' => $submission->procedure->name, 'submission' => $submission->id]) ?>">

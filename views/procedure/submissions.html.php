@@ -4,16 +4,16 @@
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
       <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
-      <li class="breadcrumb-item"><?php echo $procedure->getConfigItem('title') ?></li>
+      <li class="breadcrumb-item"><i class="bi bi-folder2-open"></i> <?php echo $procedure->getConfigItem('title') ?></li>
     </ol>
   </div>
 </nav>
 
-<h1 class="border-bottom pb-2 mt-4 clearfix"><span class="float-start pt-2">Dépôts</span><a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name]) ?>" class="btn btn-light float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i> Saisir un dossier</a></h1>
+<h1 class="border-bottom fs-2 pb-2 mt-3 clearfix">Dépôts des <?php echo strtolower($procedure->getConfigItem('title')) ?><a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name]) ?>" class="btn btn-light float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i> Saisir un dossier</a></h1>
 
 <div class="row">
   <div class="col-9">
-    <table class="table table-hover table-striped mt-3">
+    <table class="table table-hover table-striped">
       <thead>
         <tr>
           <th scope="col" class="col-2">Statut</th>
@@ -42,7 +42,7 @@
       </tbody>
     </table>
   </div>
-  <div class="col-3 mt-5 pt-2">
+  <div class="col-3 pt-2">
     <ul class="list-group">
       <a class="list-group-item list-group-item-action<?php if ($status === Submission::STATUS_TOUS): ?> active<?php endif; ?>" aria-current="page"
          href="<?php echo Base::instance()->alias('procedure_usersubmissions', ['user' => Base::instance()->get('PARAMS.user')], ['status' => Submission::STATUS_TOUS]) ?>">
