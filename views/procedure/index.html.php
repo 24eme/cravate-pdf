@@ -13,16 +13,12 @@
   <?php foreach($procedures as $i => $procedure): ?>
   <div class="col">
     <div class="card h-100">
-      <div class="card-header">
-        <?php echo $procedure->getConfigItem('title') ?>
-      </div>
       <div class="card-body">
-        <h5 class="card-title"><?php echo $procedure->getConfigItem('subtitle') ?></h5>
-        <p class="card-text"><?php echo $procedure->getConfigItem('text') ?></p>
-        <p class="text-center">
+        <h6 class="card-title mb-4"><?php echo $procedure->getConfigItem('title') ?></h6>
+        <div class="text-center">
           <a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name]) ?>" class="btn btn-primary mt-2 d-block"><i class="bi bi-file-earmark-plus"></i> Saisir le dossier</a>
           <a href="<?php echo Base::instance()->alias('procedure_submissions', ['procedure' => $procedure->name]) ?>" class="mt-2 d-block">Liste des dépôts</a>
-        </p>
+        </div>
       </div>
     </div>
   </div>
