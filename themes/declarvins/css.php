@@ -296,12 +296,6 @@ a.highlight_link:hover {
   margin: 0 0 0 15px;
 }
 
-h1 {
-  color: #86005b;
-  font-size: 22px;
-  font-weight: normal;
-  margin: 0 0 20px;
-}
 .step-item {
     background: none;
     border: 1px solid #86005b;
