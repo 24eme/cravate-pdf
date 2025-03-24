@@ -1,10 +1,11 @@
 <style>
+html {
+    font-size: 14px;
+}
 body {
   background: #989898;
   color: #494949 !important;
   font-family: Arial, Calibri, Verdana, Geneva, sans-serif !important;
-  font-size: 12px !important;
-  line-height: 1.2 !important;
 }
 body.preprod,
 body.preprod .themeHeaderContainer {
