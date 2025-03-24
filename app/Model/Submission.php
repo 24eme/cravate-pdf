@@ -36,6 +36,7 @@ class Submission
     public $json;
 
     public $datas = [];
+    public $annexes = [];
 
     public static function create(Procedure $procedure, $userId) {
         $submission = new Submission($procedure, $userId);
@@ -113,6 +114,12 @@ class Submission
             }
         }
 
+        if(isset($this->json->annexes)) {
+            foreach($this->json->annexes as $key => $annexe) {
+                $this->annexes[$key] = get_object_vars($annexe);
+            }
+        }
+
         $fieldsToLoad = ["status", "id", "userId"];
         foreach($fieldsToLoad as $field) {
             if(property_exists($this->json, $field)) {
@@ -163,6 +170,12 @@ class Submission
     {
         $data = ['date' => (new \DateTime())->format('c'), 'entry' => $data, 'comment' => $comment];
         $this->json->history[] = json_decode(json_encode($data));
+    }
+
+    public function getAnnexes()
+    {
+
+        return $this->annexes;
     }
 
     public function getAttachmentsNeeded()

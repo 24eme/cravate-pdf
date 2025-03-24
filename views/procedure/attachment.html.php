@@ -37,15 +37,15 @@
             <button id="<?php echo $attachment['filename'] ?>_close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <?php if(isset($submission->json->annexes->{$attachment['filename']})): ?>
+            <?php if(isset($submission->getAnnexes()[$attachment['filename']]) && count($submission->getAnnexes()[$attachment['filename']])): ?>
             <p>Choisissez parmi cette liste :</p>
             <div class="card">
               <div class="card-header">
                 Liste des pièces existantes
               </div>
               <div id="<?php echo $attachment['filename'] ?>_list" class="list-group list-group-flush liste-existing">
-              <?php foreach($submission->json->annexes->{$attachment['filename']} as $label => $url): ?>
-                  <a href="<?php echo $url ?>" class="list-group-item list-group-item-action small" target="_blank"><i class="bi bi-file-earmark"></i> <?php echo $label ?></a>
+              <?php foreach($submission->getAnnexes()[$attachment['filename']] as $label => $url): ?>
+                  <a href="<?php echo $url ?>" class="list-group-item list-group-item-action small" target="_blank"> <input type="radio" /> <?php echo $label ?></a>
               <?php endforeach; ?>
               </div>
               </div>
