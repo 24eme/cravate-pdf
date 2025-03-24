@@ -3,15 +3,15 @@
     <ol class="my-1 breadcrumb">
       <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
       <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedure_submissions') ?>"><i class="bi bi-folder2-open"></i>  <?php echo $submission->procedure->getConfigItem('title') ?></a></li>
-      <li class="breadcrumb-item"><?php echo $submission->getLibelle() ?></li>
+      <li class="breadcrumb-item"><a href=""><?php echo $submission->getLibelle() ?></a></li>
     </ol>
   </div>
 </nav>
 
-<h1 class="fs-3 mb-1 mt-3"><i class="bi bi-folder2-open"></i> <?php echo $submission->procedure->getConfigItem('title'); ?><span class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap fs-5"><?php echo Model\Submission::printStatus($submission->status) ?></span></h1>
+<h3 class="mb-1 mt-3"><i class="bi bi-folder2-open"></i> <?php echo $submission->procedure->getConfigItem('title'); ?><span class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap fs-5"><?php echo Model\Submission::printStatus($submission->status) ?></span></h3>
 
-<h4 class="mt-1 mb-3 h5">
-n°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1 \2 \3', $submission->id) ?><?php if($submission->userId): ?> - <?php echo $submission->userId ?><?php endif; ?>
+<h4 class="mt-1 mb-3 h6">
+N°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1 \2 \3', $submission->id) ?><?php if($submission->userId): ?> - <?php echo $submission->userId ?><?php endif; ?>
 <?php if($submittedDate = $submission->getDateHistory(Model\Submission::STATUS_SUBMITTED)): ?><span class="float-end">Déposé le <?php echo $submittedDate->format('d/m/Y H:i'); ?></span><?php endif; ?>
 </h4>
 

@@ -3,7 +3,7 @@
     <ol class="my-1 breadcrumb">
       <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
       <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedure_submissions') ?>"><i class="bi bi-folder2-open"></i>  <?php echo $procedure->getConfigItem('title') ?></a></li>
-      <li class="breadcrumb-item">Saisie</li>
+      <li class="breadcrumb-item"><a href="">Saisie</a></li>
     </ol>
   </div>
 </nav>
