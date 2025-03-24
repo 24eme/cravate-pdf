@@ -52,7 +52,13 @@
                            ) ?>
             </td>
           <?php else: ?>
-            <td><?php echo $value ?></td>
+            <td>
+              <?php if (isset($formConfig[$field]['choices']) && isset($formConfig[$field]['choices'][$value])): ?>
+                <?php echo $formConfig[$field]['choices'][$value]; ?>
+              <?php else: ?>
+                <?php echo $value; ?>
+              <?php endif; ?>
+            </td>
           <?php endif ?>
         </tr>
       <?php endforeach; ?>
