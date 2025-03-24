@@ -38,7 +38,7 @@ class ProcedureController
             $this->submission = Submission::find($this->procedure, $f3->get('PARAMS.submission')) ?: $f3->error(404, "Numéro de dépôt inconnu");
             $f3->set('steps', new Steps(new ProcedureSteps($this->procedure, $this->submission)));
         }
-        if(isset($this->submission) && ! User::getInstance()->isAdmin() && ! $this->submission->isAuthor(User::getInstance()->getUserId())) {
+        if(isset($this->submission) && ! User::instance()->isAdmin() && ! $this->submission->isAuthor(User::instance()->getUserId())) {
             return $f3->error(403, "Etablissement forbidden");
         }
     }
@@ -73,12 +73,12 @@ class ProcedureController
      */
     public function submissions(Base $f3)
     {
-        if (User::getInstance()->isAdmin() === false) {
+        if (User::instance()->isAdmin() === false) {
             if ($f3->exists('PARAMS.user') === false) {
-                $f3->reroute(['procedure_usersubmissions', ['procedure' => $this->procedure->name, 'user' => User::getInstance()->getUserId()], ['status' => $f3->get('GET.status')] ]);
+                $f3->reroute(['procedure_usersubmissions', ['procedure' => $this->procedure->name, 'user' => User::instance()->getUserId()], ['status' => $f3->get('GET.status')] ]);
             }
 
-            if ($f3->get('PARAMS.user') !== User::getInstance()->getUserId()) {
+            if ($f3->get('PARAMS.user') !== User::instance()->getUserId()) {
                 $f3->error(403, "Établissement forbidden");
             }
         }
@@ -110,7 +110,7 @@ class ProcedureController
      */
     public function new(Base $f3)
     {
-        $submission = Submission::create($this->procedure, User::getInstance()->getUserId());
+        $submission = Submission::create($this->procedure, User::instance()->getUserId());
         $submission->save();
 
         $f3->reroute(['procedure_edit', ['procedure' => $this->procedure->name, 'submission' => $submission->id]]);
@@ -291,7 +291,7 @@ class ProcedureController
      */
     public function updatestatus(Base $f3)
     {
-        if (!User::getInstance()->isAdmin()) {
+        if (!User::instance()->isAdmin()) {
             return $f3->error(403, "Only admin");
         }
 
