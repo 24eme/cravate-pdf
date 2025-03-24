@@ -49,8 +49,8 @@ class SubmissionValidation
         $formConfig = $this->submission->procedure->getConfigItem('form');
         $disabledFields = $this->submission->getDisabledFields();
 
-        $data = array_merge($data, $disabledFields);
         $data = $this->validation->formatData($formConfig, $data);
+        $data = array_merge($data, $disabledFields);
 
         return $data;
     }
