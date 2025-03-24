@@ -282,18 +282,18 @@ class Submission
         return in_array($this->status, [self::STATUS_DRAFT, self::STATUS_UNCOMPLETED]);
     }
 
-    public function getHistory()
+    public function getHistory($reverse = true)
     {
         if (property_exists($this->json, 'history')) {
-            return array_reverse($this->json->history);
+            return ($reverse)? array_reverse($this->json->history) : $this->json->history;
         }
         return [];
     }
 
-    public function getHistoryForStatus($status)
+    public function getHistoryForStatus($status, $reverse = true)
     {
-        foreach ($this->getHistory() as $item) {
-            if (strpos($item->entry, self::STATUS_UNCOMPLETED)) {
+        foreach ($this->getHistory($reverse) as $item) {
+            if (strpos($item->entry, $status)) {
                 return $item;
             }
         }
@@ -334,5 +334,13 @@ class Submission
         }
         $this->folderName .= '_'.$this->status;
         return $this->folderName;
+    }
+
+    public function getDateHistory($status)
+    {
+        if ($history = $this->getHistoryForStatus($status, false)) {
+            return \DateTime::createFromFormat(\DateTimeInterface::ISO8601, $history->date);
+        }
+        return null;
     }
 }
