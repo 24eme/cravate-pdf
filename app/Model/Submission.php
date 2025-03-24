@@ -368,6 +368,7 @@ class Submission
             foreach ($this->getDatas() as $field => $value) {
                 $this->folderName = str_replace("%$field%", (string) $value, $this->folderName);
             }
+            $this->folderName = preg_replace("/%.*%/", '', $this->folderName);
         }
         $this->folderName .= '_'.$this->status;
         return $this->folderName;
