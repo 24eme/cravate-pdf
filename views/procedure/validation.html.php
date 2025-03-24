@@ -1,13 +1,16 @@
 <?php echo View::instance()->render('global/etapes.html.php'); ?>
 
-<h2 class="mb-3 mt-4">
-  <?php echo $submission->getLibelle() ?>
-</h2>
+<h3 class="mt-3 mb-0">
+  Validation du dossier
+</h3>
+<h4 class="mt-1 mb-3 h5">
+n°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1 \2 \3', $submission->id) ?><?php if($submission->userId): ?> - <?php echo $submission->userId ?><?php endif; ?>
+</h4>
 
 <?php if ($validator->hasErrors()): ?>
   <div class="alert alert-danger" role="alert">
     <h5>Points de bloquant</h5>
-    <ul class="list-unstyled mb-0">
+    <ul class="mb-0">
     <?php foreach ($validator->getErrors() as $error): ?>
       <li><?php echo $error['message'] ?></li>
     <?php endforeach ?>
@@ -18,7 +21,7 @@
 <?php if ($validator->hasWarnings()): ?>
   <div class="alert alert-warning" role="alert">
     <h5>Points de vigilance</h5>
-    <ul class="list-unstyled mb-0">
+    <ul class="mb-0">
     <?php foreach ($validator->getWarnings() as $warn): ?>
       <li><?php echo $warn['message'] ?></li>
     <?php endforeach ?>

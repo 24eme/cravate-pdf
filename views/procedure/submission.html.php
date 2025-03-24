@@ -8,12 +8,12 @@
   </div>
 </nav>
 
-<h2 class="mt-3 mb-0">
-  <?php echo $submission->getLibelle() ?>
-  <span class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap fs-5"><?php echo Model\Submission::printStatus($submission->status) ?></span>
-</h2>
+<h1 class="fs-3 mb-1 mt-3"><i class="bi bi-folder2-open"></i> <?php echo $submission->procedure->getConfigItem('title'); ?><span class="float-end badge text-bg-<?php echo $submission->getStatusThemeColor() ?> text-wrap fs-5"><?php echo Model\Submission::printStatus($submission->status) ?></span></h1>
 
-<h5 class="text-secondary mt-0 mb-3 opacity-75"><i class="bi bi-folder2-open"></i> <?php echo $submission->procedure->getConfigItem('title'); ?> <?php if($submittedDate = $submission->getDateHistory(Model\Submission::STATUS_SUBMITTED)): ?><span class="fs-5 float-end">Dépôt : <?php echo $submittedDate->format('d/m/Y H:i'); ?></span><?php endif; ?></h5>
+<h4 class="mt-1 mb-3 h5">
+n°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1 \2 \3', $submission->id) ?><?php if($submission->userId): ?> - <?php echo $submission->userId ?><?php endif; ?>
+<?php if($submittedDate = $submission->getDateHistory(Model\Submission::STATUS_SUBMITTED)): ?><span class="float-end">Déposé le <?php echo $submittedDate->format('d/m/Y H:i'); ?></span><?php endif; ?>
+</h4>
 
 <?php if ($submission->status == Model\Submission::STATUS_UNCOMPLETED): ?>
 <?php $entry = $submission->getHistoryForStatus(Model\Submission::STATUS_UNCOMPLETED); ?>

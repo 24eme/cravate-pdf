@@ -8,7 +8,7 @@
   </div>
 </nav>
 
-<h1 class="fs-2 mb-1 mt-3 text-center"><i class="bi bi-folder2-open"></i> <?php echo isset($procedure) ? $procedure->getConfigItem('title') : '' ?></h1>
+<h1 class="fs-2 mb-1 mt-3"><i class="bi bi-folder2-open"></i> <?php echo isset($procedure) ? $procedure->getConfigItem('title') : '' ?></h1>
 
 <ul class="step list-unstyled">
   <?php foreach ($steps->getSteps() as $step): ?>
