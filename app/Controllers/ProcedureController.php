@@ -172,9 +172,8 @@ class ProcedureController
                 if ($file['error'] != UPLOAD_ERR_OK) {
                     continue;
                 }
-                move_uploaded_file($file['tmp_name'], $this->submission->getAttachmentsPath() . $name.".".pathinfo($file['name'])['extension']);
+                $this->submission->storeAttachment($name, $file);
             }
-
             return $f3->reroute(['procedure_validation', [
                'procedure' => $this->procedure->name,
                'submission' => $this->submission->id,

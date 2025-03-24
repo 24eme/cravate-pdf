@@ -89,29 +89,20 @@
         <select name="status" class="form-select">
           <?php foreach(Model\Submission::$statusThemeColor as $status => $themeColor): ?>
             <option value="<?php echo $status ?>"<?php if ($status == $submission->status): ?> selected<?php endif ?>>
-              <?php echo Model\Submission::printStatus($status) ?>
+              <?php echo Model\Submission::printStatus($status) ?> <?php if ($status == $submission->status): ?>(actuel)<?php endif ?>
             </option>
           <?php endforeach; ?>
         </select>
       </div>
       <div class="col-12 mb-2 mt-2">
-        <textarea class="form-control" rows="4" name="comment" placeholder="Commentaires lié au statut"></textarea>
+        <textarea class="form-control" rows="2" name="comment" placeholder="Commentaires lié au statut"></textarea>
       </div>
       <div class="col-12 text-end">
-        <button class="btn btn-warning w-75" type="submit">Changer le statut</button>
+        <button class="btn btn-warning w-100" type="submit">Changer le statut</button>
       </div>
     </form>
     <?php endif; ?>
-    <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
-    <ul class="list-group">
-      <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_downloadpdf') ?>" target="_blank">
-        <i class="bi bi-filetype-pdf"></i> Formulaire complété
-      </a>
-      <?php foreach ($submission->getAttachments() as $i => $attachment): ?>
-        <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_downloadattachment', [], ['file' => $attachment]) ?>" target="_blank">
-        <i class="bi bi-file"></i> Annexe <?php echo $i+1 ?> : <small><?php echo preg_replace('/\.url$/', '&nbsp;&nbsp;<i class="bi bi-box-arrow-up-right small"></i>', basename($attachment)) ?></small>
-      </a>
-      <?php endforeach; ?>
-    </ul>
+
+    <?php echo View::instance()->render('procedure/_attachments.html.php'); ?>
   </div>
 </div>

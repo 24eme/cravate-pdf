@@ -178,7 +178,7 @@ class Submission
         return $this->annexes;
     }
 
-    public function getAttachmentsNeeded()
+    public function getAttachmentsConfig()
     {
         $attachments = [];
         foreach ($this->procedure->getConfigItem('ATTACHED_FILE', []) as $attachment) {
@@ -190,6 +190,16 @@ class Submission
         return $attachments;
     }
 
+    public function getAttachmentsCategoryConfig()
+    {
+        $attachments = $this->getAttachmentsConfig();
+        $categories = [];
+        foreach($attachments as $attachment) {
+            $categories[$attachment['filename']] = $attachment['label'];
+        }
+        return $categories;
+    }
+
     public function getAttachmentsPath()
     {
         $attachmentsPath = $this->path.self::ATTACHMENTS_PATH;
@@ -199,35 +209,49 @@ class Submission
         return $attachmentsPath;
     }
 
-    public function getAttachmentByName($name) {
+    public function getAttachmentsByCategory($category) {
         $attachments = $this->getAttachments();
 
-        foreach($attachments as $attachment) {
-            if(pathinfo(basename($attachment))['filename'] == $name) {
-
-                return $attachment;
-            }
+        if(!isset($attachments[$category])) {
+            return [];
         }
-
-        return null;
+        return $attachments[$category];
     }
 
     public function getAttachments()
     {
-        $attachments = scandir($this->getAttachmentsPath());
-        if ($attachments === false) {
+        $categories = scandir($this->getAttachmentsPath());
+        if ($categories === false) {
             return [];
         }
 
         $items = [];
-        foreach($attachments as $attachment) {
-            if (in_array($attachment, ['.', '..'])) {
+        foreach($categories as $category) {
+            if (in_array($category, ['.', '..'])) {
                 continue;
             }
-
-            $items[] = $attachment;
+            if(!is_dir($this->getAttachmentsPath().$category)) {
+                continue;
+            }
+            $attachments = scandir($this->getAttachmentsPath().$category);
+            foreach($attachments as $attachment) {
+                if (in_array($attachment, ['.', '..'])) {
+                    continue;
+                }
+                $items[$category][] = $attachment;
+            }
         }
+        $categories = array_keys($this->getAttachmentsCategoryConfig());
+        uksort($items, function($a, $b) use ($categories) { $indexA = array_search($a, $categories); ($indexA !== false) ?:-1; ($indexB !== false) ?:-1; return $indexA > $indexB; });
         return $items;
+    }
+
+    public function storeAttachment($category, $file)
+    {
+        if (!is_dir($this->getAttachmentsPath().$category)) {
+            mkdir($this->getAttachmentsPath().$category);
+        }
+        move_uploaded_file($file['tmp_name'], $this->getAttachmentsPath().$category.DIRECTORY_SEPARATOR.$file['name']);
     }
 
     public function getStatusThemeColor()
