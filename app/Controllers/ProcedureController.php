@@ -271,7 +271,7 @@ class ProcedureController
      */
     public function downloadattachment(Base $f3)
     {
-        $file = realpath($this->submission->getAttachmentsPath().str_replace('/', '', $f3->get('GET.file')));
+        $file = realpath($this->submission->getAttachmentsPath().str_replace('/', '', $f3->get('GET.category')).DIRECTORY_SEPARATOR.str_replace('/', '', $f3->get('GET.file')));
 
         if (is_file($file) === false) {
             return $f3->error(404, "File not found");
