@@ -29,10 +29,10 @@ a.highlight_link:hover {
 }
 .themeHeaderContainer {
     background: #989898;
+    padding: 0;
 }
 #header {
   zoom: 1;
-  margin: 0 -12px 10px;
 }
 #header:before,
 #header:after {
@@ -115,7 +115,6 @@ a.highlight_link:hover {
   background: #f1f1f1;
   border-bottom: 1px solid #e1e1e0;
   padding: 4px 4px 0;
-  margin: 0 -12px;
   zoom: 1;
 }
 #barre_navigation:before,
@@ -195,7 +194,6 @@ a.highlight_link:hover {
 #sous_barre_navigation {
   background: #fff;
   padding: 4px 4px 0;
-  margin: 0px -12px;
   zoom: 1;
 }
 #sous_barre_navigation:before,
@@ -258,11 +256,12 @@ a.highlight_link:hover {
 #sous_barre_navigation #actions_etablissement .popup_form input {
   margin-top: 2px;
 }
-
+.themeFooterContainer {
+    padding: 0;
+}
 #footer {
   background: #f1f1f1 url('https://declaration.declarvins.net/images/fonds/bg_footer.png') 0 0 repeat-x;
   padding: 12px 20px;
-  margin: 0 -12px;
   zoom: 1;
 }
 #footer:before,
