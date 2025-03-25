@@ -4,7 +4,7 @@
   Validation du dossier
 </h3>
 <h4 class="mt-1 mb-3 h5">
-n°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1 \2 \3', $submission->id) ?><?php if($submission->userId): ?> - <?php echo $submission->userId ?><?php endif; ?>
+n°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1-\2-\3', $submission->id) ?><?php if($submission->userId): ?> / <?php echo $submission->userId ?><?php endif; ?>
 </h4>
 
 <?php if ($validator->hasErrors()): ?>

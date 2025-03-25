@@ -40,7 +40,7 @@ class Validation
            if (empty($submission->getAttachments())) {
                $this->errors[] = ['field' => 'ATTACHED_FILE', 'message' => "Vous n'avez pas soumis de pièce jointe"];
            } elseif (count($submission->getAttachmentsConfig()) !== count($submission->getAttachments())) {
-               $this->warnings[] = ['field' => 'ATTACHED_FILE', 'message' => "Toutes les pièces jointes n'ont pas été soumise"];
+               $this->warnings[] = ['field' => 'ATTACHED_FILE', 'message' => "Toutes les pièces jointes n'ont pas été soumises"];
            }
         }
     }
