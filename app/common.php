@@ -27,5 +27,3 @@ if ($mailConf) {
     );
     $f3->set('mail', new Email($smtp, $f3->get('UI').'emails/'));
 }
-
-$f3->set('user', User::instance());
