@@ -55,12 +55,12 @@
     <div class="card-header">Filtrer par statut</div>
     <ul class="list-group list-group-flush">
       <a class="list-group-item list-group-item-action<?php if ($status === Submission::STATUS_TOUS): ?> active<?php endif; ?>" aria-current="page"
-         href="<?php echo Base::instance()->alias('procedure_usersubmissions', ['user' => Base::instance()->get('PARAMS.user')], ['status' => Submission::STATUS_TOUS]) ?>">
+         href="<?php echo Base::instance()->alias(isset($user) ? 'procedure_usersubmissions' : 'procedure_submissions', ['user' => isset($user) ? $user : null], ['status' => Submission::STATUS_TOUS]) ?>">
           <span class="badge rounded-pill text-bg-primary"><?php echo array_sum($submissionsByStatus) ?></span> Tous
       </a>
       <?php foreach($statusThemeColor as $statusKey => $themeColor): ?>
         <a class="list-group-item list-group-item-action<?php if($status == $statusKey): ?> active<?php endif; ?>"
-          href="<?php echo Base::instance()->alias('procedure_usersubmissions', ['user' => Base::instance()->get('PARAMS.user')], ['status' => $statusKey]) ?>">
+          href="<?php echo Base::instance()->alias(isset($user) ? 'procedure_usersubmissions' : 'procedure_submissions', ['user' => isset($user) ? $user : null], ['status' => $statusKey]) ?>">
             <span class="<?php if($submissionsByStatus[$statusKey] == 0): ?> opacity-50<?php endif; ?>"><span class="badge rounded-pill text-bg-<?php echo $themeColor ?>"><?php echo $submissionsByStatus[$statusKey] ?></span> <?php echo Submission::printStatus($statusKey) ?></span>
         </a>
       <?php endforeach; ?>
