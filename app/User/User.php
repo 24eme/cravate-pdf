@@ -34,9 +34,7 @@ class User extends Prefab
     }
 
     public function getUserId() {
-        if(!Config::getInstance()->get('session.name')) {
-            return Config::getInstance()->get('session.user_id_test');
-        }
+
         return $_SESSION[Config::getInstance()->get('session.user_id')];
     }
 }

@@ -57,6 +57,18 @@ class ProcedureController
      */
     public function index(Base $f3)
     {
+        if(User::instance()->getUserId() && !$f3->exists('PARAMS.user')) {
+
+            return $f3->reroute(['procedures_user', ['user' => User::instance()->getUserId()]]);
+        }
+
+        if ($f3->exists('PARAMS.user') && !User::instance()->isAdmin() && $f3->get('PARAMS.user') !== User::instance()->getUserId()) {
+            $f3->error(403, "Établissement forbidden");
+        }
+        if ($f3->exists('PARAMS.user')) {
+            $f3->set('user', $f3->get('PARAMS.user'));
+        }
+
         $f3->set('procedures', Procedure::getProcedures());
         $f3->set('content', 'procedure/index.html.php');
 
@@ -111,7 +123,11 @@ class ProcedureController
      */
     public function new(Base $f3)
     {
-        $submission = Submission::create($this->procedure, User::instance()->getUserId());
+        if (!User::instance()->isAdmin() && $f3->get('GET.user') && $f3->get('GET.user') !== User::instance()->getUserId()) {
+            $f3->error(403, "Établissement forbidden");
+        }
+
+        $submission = Submission::create($this->procedure, $f3->get('GET.user'));
         $submission->save();
 
         $f3->reroute(['procedure_edit', ['procedure' => $this->procedure->name, 'submission' => $submission->id]]);

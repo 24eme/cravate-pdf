@@ -16,8 +16,8 @@
       <div class="card-body">
         <h5 class="card-title mb-5"><?php echo $procedure->getConfigItem('title') ?></h5>
         <div class="text-center">
-          <a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name]) ?>" class="btn btn-primary mt-2 d-block"><i class="bi bi-file-earmark-plus"></i> Saisir le dossier</a>
-          <a href="<?php echo Base::instance()->alias('procedure_submissions', ['procedure' => $procedure->name]) ?>" class="mt-2 d-block">Liste des dépôts</a>
+          <a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name], isset($user) ? ['user' => $user] : null) ?>" class="btn btn-primary mt-2 d-block"><i class="bi bi-file-earmark-plus"></i> Saisir le dossier</a>
+          <a href="<?php echo Base::instance()->alias('procedure_submissions', ['procedure' => $procedure->name], isset($user) ? ['user' => $user] : null) ?>" class="mt-2 d-block">Liste des dépôts</a>
         </div>
       </div>
     </div>

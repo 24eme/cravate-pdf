@@ -5,7 +5,10 @@ use Controllers\ProcedureController;
 $f3 = Base::instance();
 
 $f3->route('GET @setup: /setup', ProcedureController::class.'->setup');
-$f3->route('GET @procedures: /', ProcedureController::class.'->index');
+$f3->route([
+    'GET @procedures: /',
+    'GET @procedures_user: /procedures/@user',
+], ProcedureController::class.'->index');
 $f3->route([
     'GET @procedure_submissions: /procedure/@procedure/submissions',
     'GET @procedure_usersubmissions: /procedure/@procedure/submissions/@user',
