@@ -343,5 +343,7 @@ a:hover, a:active {
 a.btn-primary, a.btn-primary:link, a.btn-primary:visited {
     color: #fff;
 }
-
+.nav-link:focus, .nav-link:hover {
+  color: #86005b;
+}
 </style>

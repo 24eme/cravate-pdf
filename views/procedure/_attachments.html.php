@@ -1,18 +1,14 @@
 <h2 class="pb-2 h3"><i class="bi bi-download"></i> Fichiers</h2>
 
 <div class="card">
+  <?php if (!isset($hidepdf)||(isset($hidepdf) && !$hidepdf)): ?>
   <ul class="list-group list-group-flush">
   <div class="card-header fw-bold">Dossier</div>
-  <?php if ($submission->getDatas()): ?>
     <a class="list-group-item list-group-item-action" href="<?php echo Base::instance()->alias('procedure_submission_downloadpdf') ?>" target="_blank">
     <i class="bi bi-filetype-pdf"></i> Formulaire complété
   </a>
-  <?php else: ?>
-    <a class="list-group-item disabled" aria-disabled="true" href="#">
-      <i class="bi bi-filetype-pdf"></i> Formulaire complété
-  </a>
-  <?php endif; ?>
   </ul>
+  <?php endif; ?>
   <?php foreach ($submission->getAttachments() as $category => $attachments): ?>
     <div class="card-header fw-bold">Annexe : <?php echo isset($submission->getAttachmentsCategoryConfig()[$category]) ? $submission->getAttachmentsCategoryConfig()[$category] : $category; ?></div>
     <ul class="list-group list-group-flush">

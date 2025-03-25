@@ -33,14 +33,14 @@ n°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1-\2-\3', $submissi
   <div class="col-8">
     <ul class="nav nav-tabs mb-4">
       <li class="nav-item">
-        <a class="nav-link<?php if (!$displaypdf): ?> active<?php endif; ?>" aria-current="page" href="<?php echo Base::instance()->alias('procedure_submission') ?>">Données</a>
+        <a class="nav-link active" aria-current="page" href="<?php echo Base::instance()->alias('procedure_submission') ?>">Données</a>
       </li>
     </ul>
     <?php echo View::instance()->render('procedure/_datas.html.php'); ?>
   </div>
 
   <div class="col-4">
-    <?php echo View::instance()->render('procedure/_attachments.html.php'); ?>
+    <?php echo View::instance()->render('procedure/_attachments.html.php','text/html',array('submission' => $submission, 'hidepdf' => true)); ?>
   </div>
 </div>
 
