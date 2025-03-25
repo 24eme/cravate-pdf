@@ -280,7 +280,8 @@ class ProcedureController
     public function downloadpdf(Base $f3)
     {
         $files = PDFTk::fillForm($this->procedure->pdf, $this->submission->getDatas());
-        rename($files['pdf'], $this->submission->path.basename($files['pdf']));
+        $storePath = $this->submission->path.basename($files['pdf']);
+        rename($files['pdf'], $storePath);
         unlink($files['xfdf']);
 
         $disposition = $f3->get('GET.disposition');
@@ -293,7 +294,7 @@ class ProcedureController
 
         $download = $disposition === 'attachment';
 
-        return Web::instance()->send($files['pdf'], null, 0, $download, $this->procedure->getConfigItem('SUBMISSION.filename').'.pdf');
+        return Web::instance()->send($storePath, null, 0, $download, $this->procedure->getConfigItem('SUBMISSION.filename').'.pdf');
     }
 
     /**
