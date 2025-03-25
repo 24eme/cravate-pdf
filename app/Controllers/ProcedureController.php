@@ -39,8 +39,19 @@ class ProcedureController
             $this->submission = Submission::find($this->procedure, $f3->get('PARAMS.submission')) ?: $f3->error(404, "Numéro de dépôt inconnu");
             $f3->set('steps', new Steps(new ProcedureSteps($this->procedure, $this->submission)));
         }
+        if ($f3->get('PARAMS.user')) {
+            $this->user = $f3->get('PARAMS.user');
+        } elseif ($this->submission && $this->submission->userId) {
+            $this->user = $this->submission->userId;
+        }
         if(isset($this->submission) && ! User::instance()->isAdmin() && ! $this->submission->isAuthor(User::instance()->getUserId())) {
             return $f3->error(403, "Etablissement forbidden");
+        }
+        if (isset($this->user) && !User::instance()->isAdmin() && $this->user !== User::instance()->getUserId()) {
+            $f3->error(403, "Établissement forbidden");
+        }
+        if(isset($this->user)) {
+            $f3->set('user', $this->user);
         }
     }
 
@@ -57,20 +68,19 @@ class ProcedureController
      */
     public function index(Base $f3)
     {
-        if(User::instance()->getUserId() && !$f3->exists('PARAMS.user')) {
-
-            return $f3->reroute(['procedures_user', ['user' => User::instance()->getUserId()]]);
+        if(isset($this->user)) {
+            return $f3->reroute(['procedures', ['user' => $this->user]]);
         }
 
-        if ($f3->exists('PARAMS.user') && !User::instance()->isAdmin() && $f3->get('PARAMS.user') !== User::instance()->getUserId()) {
-            $f3->error(403, "Établissement forbidden");
+        foreach(Procedure::getProcedures() as $procedure) {
+            return $f3->reroute(['procedure_submissions', ['procedure' => $procedure->name]]);
         }
-        if ($f3->exists('PARAMS.user')) {
-            $f3->set('user', $f3->get('PARAMS.user'));
-        }
+    }
 
+    public function procedures(Base $f3)
+    {
         $f3->set('procedures', Procedure::getProcedures());
-        $f3->set('content', 'procedure/index.html.php');
+        $f3->set('content', 'procedure/procedures.html.php');
 
         echo View::instance()->render('layout.html.php');
     }
@@ -106,6 +116,10 @@ class ProcedureController
 
         $submissions = $this->procedure->getSubmissions($status, $forUser);
         $countByStatus = $this->procedure->countByStatus($forUser);
+
+        if(isset($this->user)) {
+            $f3->set('user', $this->user);
+        }
 
         $f3->set('procedure', $this->procedure);
         $f3->set('submissions', $submissions);

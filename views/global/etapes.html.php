@@ -1,9 +1,14 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedure_submissions') ?>"><i class="bi bi-folder2-open"></i>  <?php echo $procedure->getConfigItem('title') ?></a></li>
-      <li class="breadcrumb-item"><a href="">Saisie</a></li>
+      <?php if(\User\User::instance()->isAdmin()): ?>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('index') ?>">Administrateur</a></li>
+      <?php endif; ?>
+      <?php if(isset($user) && $user): ?>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures', ['user' => $user]) ?>">Dossiers <?php echo $user ?></a></li>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedure_usersubmissions', ['user' => $user]) ?>"><i class="bi bi-folder2-open"></i>  <?php echo $procedure->getConfigItem('title') ?></a></li>
+      <?php endif; ?>
+      <li class="breadcrumb-item">Saisie</li>
     </ol>
   </div>
 </nav>

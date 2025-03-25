@@ -3,13 +3,18 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
   <div class="container-fluid">
     <ol class="my-1 breadcrumb">
-      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures') ?>">Dossiers</a></li>
-      <li class="breadcrumb-item"><a href=""><i class="bi bi-folder2-open"></i> <?php echo $procedure->getConfigItem('title') ?></a></li>
+      <?php if(\User\User::instance()->isAdmin()): ?>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('index') ?>">Administrateur</a></li>
+      <?php endif; ?>
+      <?php if(isset($user) && $user): ?>
+      <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures', ['user' => $user]) ?>">Dossiers <?php echo $user ?></a></li>
+      <?php endif; ?>
+      <li class="breadcrumb-item"><i class="bi bi-folder2-open"></i> <?php echo $procedure->getConfigItem('title') ?></li>
     </ol>
   </div>
 </nav>
 
-<h1 class="border-bottom fs-2 pb-2 mb-0 mt-3 clearfix">Liste des dépôts <a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name]) ?>" class="btn btn-light float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i> Saisir un dossier</a></h1>
+<h1 class="border-bottom fs-2 pb-2 mb-0 mt-3 clearfix">Liste des dépôts <?php if(isset($user)): ?><small class="fs-6"><?php echo $user ?></small><a href="<?php echo Base::instance()->alias('procedure_submission_new', ['procedure' => $procedure->name]) ?>" class="btn btn-light float-end" title="Saisir le dossier"><i class="bi bi-file-earmark-plus"></i> Saisir un dossier</a><?php elseif(\User\User::instance()->isAdmin()): ?><small class="fs-6">Admin</small><?php endif; ?></h1>
 
 <div class="row">
   <div class="col-9">
