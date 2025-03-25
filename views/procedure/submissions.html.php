@@ -9,7 +9,7 @@
       <?php if(isset($user) && $user): ?>
       <li class="breadcrumb-item"><a href="<?php echo Base::instance()->alias('procedures', ['user' => $user]) ?>">Dossiers <?php echo $user ?></a></li>
       <?php endif; ?>
-      <li class="breadcrumb-item"><i class="bi bi-folder2-open"></i> <?php echo $procedure->getConfigItem('title') ?></li>
+      <li class="breadcrumb-item"><i class="bi bi-folder2-open"></i> Liste des dépôts de <?php echo strtolower($procedure->getConfigItem('title')) ?></li>
     </ol>
   </div>
 </nav>
