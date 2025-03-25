@@ -137,11 +137,11 @@ class ProcedureController
      */
     public function new(Base $f3)
     {
-        if (!User::instance()->isAdmin() && $f3->get('GET.user') && $f3->get('GET.user') !== User::instance()->getUserId()) {
+        if (!User::instance()->isAdmin() && isset($this->user) && $this->user !== User::instance()->getUserId()) {
             $f3->error(403, "Établissement forbidden");
         }
 
-        $submission = Submission::create($this->procedure, $f3->get('GET.user'));
+        $submission = Submission::create($this->procedure, $this->user);
         $submission->save();
 
         $f3->reroute(['procedure_edit', ['procedure' => $this->procedure->name, 'submission' => $submission->id]]);

@@ -381,4 +381,9 @@ class Submission
         }
         return null;
     }
+
+    public function getIdFormated()
+    {
+        return preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1-\2-\3', $this->id);
+    }
 }
