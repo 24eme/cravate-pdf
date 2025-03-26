@@ -242,7 +242,7 @@ class Submission
             }
         }
         $categories = array_keys($this->getAttachmentsCategoryConfig());
-        uksort($items, function($a, $b) use ($categories) { $indexA = array_search($a, $categories); ($indexA !== false) ?:-1; ($indexB !== false) ?:-1; return $indexA > $indexB; });
+        uksort($items, function($a, $b) use ($categories) { $indexA = array_search($a, $categories); $indexB = array_search($b, $categories); ($indexA !== false) ?:-1; ($indexB !== false) ?:-1; return $indexA - $indexB; });
         return $items;
     }
 
