@@ -281,6 +281,13 @@ class Submission
         return $this->datas;
     }
 
+    public function getDatasPDF() {
+        $datas = $this->getDatas();
+        $datas['DATE_SUBMITTED'] = $this->getDateSubmitted()->format('d/m/Y');
+
+        return $datas;
+    }
+
     public static function printStatus($status)
     {
         return ucfirst(mb_strtolower($status));
@@ -312,6 +319,11 @@ class Submission
         }
 
         return $fields;
+    }
+
+    public function getDateSubmitted()
+    {
+        return $this->getDateHistory(self::STATUS_SUBMITTED);
     }
 
     public function isEditable()
