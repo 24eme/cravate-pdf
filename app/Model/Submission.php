@@ -116,7 +116,7 @@ class Submission
 
         if(isset($this->json->annexes)) {
             foreach($this->json->annexes as $key => $annexe) {
-                $this->annexes[$key] = !is_array(get_object_vars($annexe)) ? get_object_vars($annexe) : $annexe;
+                $this->annexes[$key] = !is_array($annexe) ? get_object_vars($annexe) : $annexe;
             }
         }
 
