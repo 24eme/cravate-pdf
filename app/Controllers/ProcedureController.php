@@ -27,6 +27,7 @@ use Exception;
 
 class ProcedureController
 {
+    private ?string $user = null;
     private ?Procedure $procedure = null;
     private ?Submission $submission = null;
 
