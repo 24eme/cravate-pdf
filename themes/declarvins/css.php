@@ -33,7 +33,7 @@ a.highlight_link:hover {
 }
 #header {
   zoom: 1;
-  margin: 0 0 10px;
+  margin: 0 0 4px;
 }
 #header:before,
 #header:after {
@@ -48,10 +48,10 @@ a.highlight_link:hover {
 }
 #header #logo {
   margin: 0;
-  padding: 25px 0 0;
+  padding: 16px 0 0;
 }
 #header #logo h1 {
-  margin: 0 0 12px;
+  margin: 0 0 9px;
 }
 #header #logo p {
   color: #fff;
