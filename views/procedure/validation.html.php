@@ -9,7 +9,7 @@ n°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1-\2-\3', $submissi
 
 <?php if ($validator->hasErrors()): ?>
   <div class="alert alert-danger" role="alert">
-    <h5>Points de bloquant</h5>
+    <h5>Points bloquants</h5>
     <ul class="mb-0">
     <?php foreach ($validator->getErrors() as $error): ?>
       <li><?php echo $error['message'] ?></li>
