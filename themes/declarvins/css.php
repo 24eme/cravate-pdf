@@ -33,7 +33,7 @@ a.highlight_link:hover {
 }
 #header {
   zoom: 1;
-  margin: 0 0 4px;
+  margin: 0 0 8px;
 }
 #header:before,
 #header:after {
@@ -100,6 +100,7 @@ a.highlight_link:hover {
   font-size: 13px;
   font-style: italic;
   text-align: right;
+  margin-top: -4px;
 }
 #header p.deconnexion a {
   color: #fff;
