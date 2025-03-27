@@ -182,9 +182,13 @@ class Submission
     {
         $attachments = [];
         foreach ($this->procedure->getConfigItem('ATTACHED_FILE', []) as $attachment) {
-            if($attachment['filter'] && $this->getDatas(explode(":", $attachment['filter'])[0]) != explode(":", $attachment['filter'])[1]) {
+            $field = strtok($attachment['filter'], ':');
+            $value = strtok(':');
+
+            if($attachment['filter'] && $this->getDatas($field) != $value) {
                 continue;
             }
+
             $attachments[] = $attachment;
         }
         return $attachments;
