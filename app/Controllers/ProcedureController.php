@@ -280,7 +280,7 @@ class ProcedureController
      */
     public function downloadpdf(Base $f3)
     {
-        $files = PDFTk::fillForm($this->procedure->pdf, $this->submission->getDatas());
+        $files = PDFTk::fillForm($this->procedure->pdf, $this->submission->getDatasPDF());
         $storePath = $this->submission->path.basename($files['pdf']);
         rename($files['pdf'], $storePath);
         unlink($files['xfdf']);

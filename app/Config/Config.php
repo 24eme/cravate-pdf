@@ -56,8 +56,10 @@ class Config
         if (strpos($key, '.') !== false) {
             $segments = explode('.', $key);
             $root = $this->config;
-
             foreach ($segments as $segment) {
+                if(!isset($root[$segment])) {
+                    return $default;
+                }
                 $root = $root[$segment];
             }
 

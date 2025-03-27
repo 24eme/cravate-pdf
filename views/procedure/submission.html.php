@@ -16,7 +16,7 @@
 
 <h4 class="mt-1 mb-3 h6">
 N°<?php echo $submission->getIdFormated() ?><?php if($submission->userId): ?> / <?php echo $submission->userId ?><?php endif; ?>
-<?php if($submittedDate = $submission->getDateHistory(Model\Submission::STATUS_SUBMITTED)): ?><span class="float-end">Déposé le <?php echo $submittedDate->format('d/m/Y H:i'); ?></span><?php endif; ?>
+<span class="float-end">Déposé le <?php echo $submission->getDateSubmitted()->format('d/m/Y'); ?></span>
 </h4>
 
 <?php if ($submission->status == Model\Submission::STATUS_UNCOMPLETED): ?>

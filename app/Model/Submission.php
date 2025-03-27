@@ -116,7 +116,7 @@ class Submission
 
         if(isset($this->json->annexes)) {
             foreach($this->json->annexes as $key => $annexe) {
-                $this->annexes[$key] = get_object_vars($annexe);
+                $this->annexes[$key] = !is_array($annexe) ? get_object_vars($annexe) : $annexe;
             }
         }
 
@@ -246,7 +246,7 @@ class Submission
             }
         }
         $categories = array_keys($this->getAttachmentsCategoryConfig());
-        uksort($items, function($a, $b) use ($categories) { $indexA = array_search($a, $categories); ($indexA !== false) ?:-1; ($indexB !== false) ?:-1; return $indexA > $indexB; });
+        uksort($items, function($a, $b) use ($categories) { $indexA = array_search($a, $categories); $indexB = array_search($b, $categories); ($indexA !== false) ?:-1; ($indexB !== false) ?:-1; return $indexA - $indexB; });
         return $items;
     }
 
@@ -285,6 +285,13 @@ class Submission
         return $this->datas;
     }
 
+    public function getDatasPDF() {
+        $datas = $this->getDatas();
+        $datas['DATE_SUBMITTED'] = $this->getDateSubmitted()->format('d/m/Y');
+
+        return $datas;
+    }
+
     public static function printStatus($status)
     {
         return ucfirst(mb_strtolower($status));
@@ -316,6 +323,11 @@ class Submission
         }
 
         return $fields;
+    }
+
+    public function getDateSubmitted()
+    {
+        return $this->getDateHistory(self::STATUS_SUBMITTED);
     }
 
     public function isEditable()
