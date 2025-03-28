@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>CravatePDF - Dématérialisation de dossier</title>
     <meta name="description" content="" />
     <base href="<?php echo $BASE ?>/" />
     <link rel="icon" type="image/png" sizes="16x16" target="_blank" href="images/favicons/favicon-16x16.png">
