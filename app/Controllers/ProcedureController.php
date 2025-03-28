@@ -240,6 +240,11 @@ class ProcedureController
 
             $this->submission->setStatus(Submission::STATUS_SUBMITTED);
             $this->submission->save();
+
+            try {
+                (new SubmissionEmails($this->submission))->newSubmission();
+            } catch (Exception $e) { }
+
             return $f3->reroute(['procedure_submission', [
                         'procedure' => $this->procedure->name,
                         'submission' => $this->submission->id

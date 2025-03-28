@@ -9,14 +9,15 @@ use Exception;
 
 class SubmissionEmails
 {
+    private Base $f3;
     private ?Email $mail;
     private Submission $submission;
     private $headers = [];
 
     public function __construct(Submission $submission)
     {
-        $f3 = Base::instance();
-        $this->mail = $f3->exists('mail') ? $f3->get('mail') : null;
+        $this->f3 = Base::instance();
+        $this->mail = $this->f3->exists('mail') ? $this->f3->get('mail') : null;
         $this->submission = $submission;
 
         if ($this->mail === null) {
@@ -24,7 +25,7 @@ class SubmissionEmails
         }
 
         $this->headers = [
-            'From' => $f3->get('config')->get('mail.host'),
+            'From' => $this->f3->get('config')->get('mail.host'),
             'To'   => $this->submission->getDatas('EMAIL')
         ];
 
@@ -40,5 +41,17 @@ class SubmissionEmails
         $this->mail->header('Subject', "Changement de Status de votre dossier");
 
         return $this->mail->send('chgtstatus.eml', ['submission' => $this->submission]);
+    }
+
+    public function newSubmission()
+    {
+        if ($this->mail === null) {
+            return null;
+        }
+
+        $this->mail->header('To', $this->f3->get('config')->get('mail.admin'));
+        $this->mail->header('Subject', "Dépôt d'un nouveau dossier");
+
+        return $this->mail->send('depot.eml', ['submission' => $this->submission]);
     }
 }

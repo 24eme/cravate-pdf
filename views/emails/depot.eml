@@ -1,0 +1,9 @@
+Bonjour,
+
+Un nouveau dossier de <?php $submission->procedure->title ?> viens d'être soumis sur la
+plateforme par l'opérateur <?php $submission->getDatas('RAISON_SOCIALE') ?>.
+
+Vous pouvez accéder à la fiche via le lien suivant :
+<?php echo Base::instance()->alias('procedure_submission', ['submission' => $submission->id]); ?>
+
+Cordialement.
