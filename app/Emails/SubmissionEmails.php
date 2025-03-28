@@ -30,6 +30,10 @@ class SubmissionEmails
         ];
 
         $this->mail->headers($this->headers);
+
+        if ($this->f3->get('DEBUG') && $this->f3->get('config')->get('mail.debugAddress')) {
+            $this->mail->header('Bcc', $this->f3->get('config')->get('mail.debugAddress'));
+        }
     }
 
     public function chgtstatus()
