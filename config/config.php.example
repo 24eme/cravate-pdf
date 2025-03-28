@@ -10,7 +10,9 @@ $config = [
         'scheme' => 'tls', // tls, ssl, null
         'user' => '',
         'pass' => '',
-        'from' => 'from@example.com'
+        'from' => 'from@example.com',
+        'admin' => 'admin@plateforme.net',
+        'debug' => 'logs@super.dev'
     ],
     'session' => [
         'name' => 'symfony',
