@@ -12,7 +12,7 @@ $config = [
         'pass' => '',
         'from' => 'from@example.com',
         'admin' => 'admin@plateforme.net',
-        'debug' => 'logs@super.dev'
+        'debugAddress' => 'logs@super.dev'
     ],
     'session' => [
         'name' => 'symfony',
