@@ -42,7 +42,7 @@ class SubmissionEmails
             return null;
         }
 
-        $this->mail->header('Subject', "Changement de Status de votre dossier");
+        $this->mail->header('Subject', "Changement de Statut de votre dossier");
 
         return $this->mail->send('chgtstatus.eml', ['submission' => $this->submission]);
     }
