@@ -25,7 +25,7 @@ class SubmissionEmails
         }
 
         $this->headers = [
-            'From' => $this->f3->get('config')->get('mail.host'),
+            'From' => $this->f3->get('config')->get('mail.from'),
             'To'   => $this->submission->getDatas('EMAIL')
         ];
 
