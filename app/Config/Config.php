@@ -87,6 +87,15 @@ class Config
         return $this->config['urlbase'];
     }
 
+    public function getHostname()
+    {
+        if (!isset($this->config['hostname'])) {
+            $port = $this->f3->get('PORT');
+            $this->config['hostname'] = $this->f3->get('SCHEME').'://'.$_SERVER['SERVER_NAME'].(!in_array($port,[80,443])?(':'.$port):'');
+        }
+        return $this->config['hostname'];
+    }
+
     private function setDefaults() {
 
     }
