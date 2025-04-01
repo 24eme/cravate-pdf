@@ -9,7 +9,7 @@ n°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1-\2-\3', $submissi
 
 <?php if ($validator->hasErrors()): ?>
   <div class="alert alert-danger" role="alert">
-    <h5>Points de bloquant</h5>
+    <h5>Points bloquants</h5>
     <ul class="mb-0">
     <?php foreach ($validator->getErrors() as $error): ?>
       <li><?php echo $error['message'] ?></li>
@@ -44,10 +44,8 @@ n°<?php echo preg_replace('/^([0-9]{8})([0-9]{6})(.+)$/', '\1-\2-\3', $submissi
   </div>
 </div>
 
-<?php if ($validator->hasErrors() === false): ?>
   <div class="text-center">
     <form method="post">
-      <button type=submit class="btn btn-primary"><i class="bi bi-upload"></i> Soumettre le dossier</button>
+      <button type=submit class="btn btn-primary"<?php if ($validator->hasErrors() === true): ?> disabled="disabled" <?php endif ?>><i class="bi bi-upload"></i> Soumettre le dossier</button>
     </form>
   </div>
-<?php endif ?>

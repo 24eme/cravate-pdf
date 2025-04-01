@@ -142,7 +142,7 @@ class Submission
     public function setStatus($status, $comment = null, $force = false)
     {
         if (in_array($status, self::$allStatus) === false) {
-            throw new DomainException("{$status} n'est pas un status valide");
+            throw new DomainException("{$status} n'est pas un statut valide");
         }
 
         if (!$force && $this->status === $status) {
@@ -150,7 +150,7 @@ class Submission
         }
 
         $this->status = $status;
-        $this->addHistory("Mis à jour vers le status $status", $comment);
+        $this->addHistory("Mis à jour vers le statut $status", $comment);
     }
 
     public function updateJSON()
@@ -182,9 +182,13 @@ class Submission
     {
         $attachments = [];
         foreach ($this->procedure->getConfigItem('ATTACHED_FILE', []) as $attachment) {
-            if($attachment['filter'] && $this->getDatas(explode(":", $attachment['filter'])[0]) != explode(":", $attachment['filter'])[1]) {
+            $field = strtok($attachment['filter'], ':');
+            $value = strtok(':');
+
+            if($attachment['filter'] && $this->getDatas($field) != $value) {
                 continue;
             }
+
             $attachments[] = $attachment;
         }
         return $attachments;

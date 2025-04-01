@@ -34,17 +34,6 @@ class Validation
         return $cleaned;
     }
 
-    public function checkSubmission(Submission $submission)
-    {
-        if ($submission->getAttachmentsConfig()) {
-           if (empty($submission->getAttachments())) {
-               $this->errors[] = ['field' => 'ATTACHED_FILE', 'message' => "Vous n'avez pas soumis de pièce jointe"];
-           } elseif (count($submission->getAttachmentsConfig()) !== count($submission->getAttachments())) {
-               $this->warnings[] = ['field' => 'ATTACHED_FILE', 'message' => "Toutes les pièces jointes n'ont pas été soumises"];
-           }
-        }
-    }
-
     public function validate($submittedData, $validators)
     {
         $valid = true;

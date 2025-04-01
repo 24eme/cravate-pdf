@@ -233,16 +233,21 @@ class ProcedureController
             return $f3->error(403, "Submission not editable");
         }
 
-        $validator = new Validation();
-        $validator->checkSubmission($this->submission);
+        $submissionValidator = new SubmissionValidation($this->submission, new Validation());
+        $submissionValidator->check();
 
         if ($f3->get('VERB') === 'POST') {
-            if ($validator->hasErrors()) {
-            return $f3->reroute(['procedure_validation']);
+            if ($submissionValidator->getValidation()->hasErrors()) {
+                return $f3->reroute(['procedure_validation']);
             }
 
             $this->submission->setStatus(Submission::STATUS_SUBMITTED);
             $this->submission->save();
+
+            try {
+                (new SubmissionEmails($this->submission))->newSubmission();
+            } catch (Exception $e) { }
+
             return $f3->reroute(['procedure_submission', [
                         'procedure' => $this->procedure->name,
                         'submission' => $this->submission->id
@@ -252,7 +257,7 @@ class ProcedureController
         $f3->get('steps')->activate(ProcedureSteps::STEP_VALIDATION);
         $f3->set('procedure', $this->procedure);
         $f3->set('submission', $this->submission);
-        $f3->set('validator', $validator);
+        $f3->set('validator', $submissionValidator->getValidation());
         $f3->set('content', 'procedure/validation.html.php');
 
         $f3->set('readonly', true);

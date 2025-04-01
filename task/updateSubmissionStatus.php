@@ -22,23 +22,23 @@ if (!in_array($status, Model\Submission::$allStatus)) {
     exit;
 }
 
-$pattern = '#records/([^/]+)/submissions/([^/]+)/#';
+$pattern = '#procedures/([^/]+)/submissions/([^/]+)/#';
 if (preg_match($pattern, $folder, $matches)) {
-    $recordName = $matches[1];
+    $procedureName = $matches[1];
     $submissionName = $matches[2];
 } else {
-    echo "ERREUR le dossier ne valide pas l'expression $pattern\n";
+    echo "ERREUR le dossier $folder ne valide pas l'expression $pattern\n";
     exit;
 }
 
 try {
-    $record = new Model\Record($recordName);
+    $procedure = new Model\Procedure($procedureName);
 } catch (\Exception $e) {
     echo $e->getMessage();
     exit;
 }
 
-$submission = new Model\Submission($record, $submissionName);
+$submission = new Model\Submission($procedure, $submissionName);
 
 try {
     $submission->setStatus($status, $comment);

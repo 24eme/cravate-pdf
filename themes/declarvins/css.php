@@ -33,6 +33,7 @@ a.highlight_link:hover {
 }
 #header {
   zoom: 1;
+  margin: 0 0 8px;
 }
 #header:before,
 #header:after {
@@ -47,10 +48,10 @@ a.highlight_link:hover {
 }
 #header #logo {
   margin: 0;
-  padding: 25px 0 0;
+  padding: 16px 0 0;
 }
 #header #logo h1 {
-  margin: 0 0 12px;
+  margin: 0 0 9px;
 }
 #header #logo p {
   color: #fff;
@@ -99,6 +100,7 @@ a.highlight_link:hover {
   font-size: 13px;
   font-style: italic;
   text-align: right;
+  margin-top: -4px;
 }
 #header p.deconnexion a {
   color: #fff;
@@ -345,5 +347,45 @@ a.btn-primary, a.btn-primary:link, a.btn-primary:visited {
 }
 .nav-link:focus, .nav-link:hover {
   color: #86005b;
+}
+#sous_barre_navigation::after {
+  clear: both;
+}
+#sous_barre_navigation::before, #sous_barre_navigation::after {
+  content: "\0020";
+  display: block;
+  font-size: 0;
+  height: 0;
+  visibility: hidden;
+}
+#sous_barre_navigation {
+  background: #fff;
+  padding: 4px 4px 0;
+  zoom: 1;
+}
+#sous_barre_navigation #actions_etablissement {
+  float: right;
+  line-height: 27px;
+}
+#sous_barre_navigation #actions_etablissement li {
+  display: inline;
+  float: left;
+}
+#sous_barre_navigation #actions_etablissement li a {
+  color: #fff;
+  float: left;
+}
+.etablissement_courant_admin a {
+  background: url('https://declaration.declarvins.net/images/boutons/btn_etablissement_courant_admin.png') right 0 no-repeat;
+  color: #86005b;
+  padding: 0 20px 0 0;
+}
+.etablissement_courant_admin a span {
+  background: url('https://declaration.declarvins.net/images/boutons/btn_etablissement_courant_admin.png') 0 0 no-repeat;
+  float: left;
+  padding: 0 0 0 27px;
+}
+#sub_nav {
+    margin:0;
 }
 </style>

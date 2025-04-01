@@ -54,4 +54,25 @@ class SubmissionValidation
 
         return $data;
     }
+
+    public function check()
+    {
+        foreach ($this->submission->getForm() as $key => $field) {
+            if (isset($field['required']) === false || $field['required'] === false) {
+                continue;
+            }
+
+            if ($this->submission->getDatas($key) === null) {
+                $this->validation->errors[] = ['field' => $key, 'message' => "Vous n'avez pas rempli le champs requis $key"];
+            }
+        }
+
+        if ($this->submission->getAttachmentsConfig()) {
+           if (empty($this->submission->getAttachments())) {
+               $this->validation->errors[] = ['field' => 'ATTACHED_FILE', 'message' => "Vous n'avez pas soumis de pièce jointe"];
+           } elseif (count($this->submission->getAttachmentsConfig()) !== count($this->submission->getAttachments())) {
+               $this->validation->warnings[] = ['field' => 'ATTACHED_FILE', 'message' => "Toutes les pièces jointes n'ont pas été soumises"];
+           }
+        }
+    }
 }
