@@ -25,7 +25,7 @@ if (!in_array($status, Model\Submission::$allStatus)) {
 $pattern = '#procedures/([^/]+)/submissions/([^/]+)/#';
 if (preg_match($pattern, $folder, $matches)) {
     $procedureName = $matches[1];
-    $submissionName = $matches[2];
+    $submissionName = explode('_', $matches[2])[0];
 } else {
     echo "ERREUR le dossier $folder ne valide pas l'expression $pattern\n";
     exit;
@@ -38,7 +38,7 @@ try {
     exit;
 }
 
-$submission = new Model\Submission($procedure, $submissionName);
+$submission = Model\Submission::find($procedure, $submissionName);
 
 try {
     $submission->setStatus($status, $comment);
@@ -49,3 +49,7 @@ try {
 }
 
 echo "SUCCES de la mise à jour du dossier $submission->path\n";
+
+try {
+    (new Emails\SubmissionEmails($submission))->chgtstatus();
+} catch (Exception $e) { }
