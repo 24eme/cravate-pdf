@@ -33,7 +33,7 @@ class ProcedureController
 
     public function beforeroute(Base $f3)
     {
-        if(Config::getInstance()->get('login_link') && ! User::isSessionExist()) {
+        if(Config::getInstance()->get('login_link') && (! User::isSessionExist() || (! User::instance()->isAdmin() && ! User::instance()->getUserId()))) {
             return $f3->reroute(str_replace("%service%", urlencode($f3->get('REALM')),Config::getInstance()->get('login_link')));
         }
         if ($f3->get('PARAMS.procedure')) {
