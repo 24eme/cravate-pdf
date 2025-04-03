@@ -7,8 +7,13 @@ use Config\Config;
 
 class User extends Prefab
 {
+    public static function isSessionExist() {
+
+        return array_key_exists(Config::getInstance()->get('session.name'), $_COOKIE);
+    }
+
     public function __construct() {
-        if(Config::getInstance()->get('session.name')) {
+        if(Config::getInstance()->get('session.name') && self::isSessionExist()) {
             session_name(Config::getInstance()->get('session.name'));
             session_start();
         }
@@ -17,6 +22,10 @@ class User extends Prefab
     public function isAdmin() {
         if(!Config::getInstance()->get('session.name')) {
             return true;
+        }
+
+        if(session_status() != PHP_SESSION_ACTIVE) {
+            return false;
         }
 
         if(!array_key_exists(Config::getInstance()->get('session.admin_key'), $_SESSION)) {
@@ -34,6 +43,9 @@ class User extends Prefab
     }
 
     public function getUserId() {
+        if(session_status() != PHP_SESSION_ACTIVE) {
+            return false;
+        }
 
         return $_SESSION[Config::getInstance()->get('session.user_id')];
     }

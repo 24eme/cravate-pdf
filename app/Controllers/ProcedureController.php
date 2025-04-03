@@ -33,7 +33,7 @@ class ProcedureController
 
     public function beforeroute(Base $f3)
     {
-        if(Config::getInstance()->get('login_link') && !User::instance()->isAdmin() && !User::instance()->getUserId()) {
+        if(Config::getInstance()->get('login_link') && ! User::isSessionExist()) {
             return $f3->reroute(str_replace("%service%", urlencode($f3->get('REALM')),Config::getInstance()->get('login_link')));
         }
         if ($f3->get('PARAMS.procedure')) {
@@ -51,7 +51,7 @@ class ProcedureController
         if(isset($this->submission) && ! User::instance()->isAdmin() && ! $this->submission->isAuthor(User::instance()->getUserId())) {
             return $f3->error(403, "Etablissement forbidden");
         }
-        if (isset($this->user) && !User::instance()->isAdmin() && $this->user !== User::instance()->getUserId()) {
+        if (isset($this->user) && ! User::instance()->isAdmin() && $this->user !== User::instance()->getUserId()) {
             $f3->error(403, "Établissement forbidden");
         }
         if(isset($this->user)) {
