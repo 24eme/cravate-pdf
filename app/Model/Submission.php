@@ -164,6 +164,7 @@ class Submission
         $this->json->userId = $this->userId;
 
         file_put_contents($this->path.self::DATAS_FILENAME, json_encode($this->json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+        chmod($this->path.self::DATAS_FILENAME, 0664);
     }
 
     public function addHistory($data, $comment = null)
