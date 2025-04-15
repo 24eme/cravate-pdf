@@ -162,7 +162,7 @@ class Submission
         $this->json->status = $this->status;
         $this->json->id = $this->id;
         $this->json->userId = $this->userId;
-        $isCreation = file_exists($this->path.self::DATAS_FILENAME);
+        $isCreation = !file_exists($this->path.self::DATAS_FILENAME);
         file_put_contents($this->path.self::DATAS_FILENAME, json_encode($this->json, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
         if ($isCreation) {
             chmod($this->path.self::DATAS_FILENAME, 0664);
