@@ -33,7 +33,7 @@ class ProcedureController
 
     public function beforeroute(Base $f3)
     {
-        if(Config::getInstance()->get('login_link') && !User::instance()->isAdmin() && !User::instance()->getUserId()) {
+        if(Config::getInstance()->get('login_link') && (! User::isSessionExist() || (! User::instance()->isAdmin() && ! User::instance()->getUserId()))) {
             return $f3->reroute(str_replace("%service%", urlencode($f3->get('REALM')),Config::getInstance()->get('login_link')));
         }
         if ($f3->get('PARAMS.procedure')) {
@@ -51,7 +51,7 @@ class ProcedureController
         if(isset($this->submission) && ! User::instance()->isAdmin() && ! $this->submission->isAuthor(User::instance()->getUserId())) {
             return $f3->error(403, "Etablissement forbidden");
         }
-        if (isset($this->user) && !User::instance()->isAdmin() && $this->user !== User::instance()->getUserId()) {
+        if (isset($this->user) && ! User::instance()->isAdmin() && $this->user !== User::instance()->getUserId()) {
             $f3->error(403, "Établissement forbidden");
         }
         if(isset($this->user)) {
@@ -100,26 +100,14 @@ class ProcedureController
      */
     public function submissions(Base $f3)
     {
-        if (User::instance()->isAdmin() === false) {
-            if ($f3->exists('PARAMS.user') === false) {
-                $f3->reroute(['procedure_usersubmissions', ['procedure' => $this->procedure->name, 'user' => User::instance()->getUserId()], ['status' => $f3->get('GET.status')] ]);
-            }
-
-            if ($f3->get('PARAMS.user') !== User::instance()->getUserId()) {
-                $f3->error(403, "Établissement forbidden");
-            }
-        }
-
-        $forUser = $f3->exists('PARAMS.user') ? $f3->get('PARAMS.user') : null;
-
         $status = $f3->get('GET.status') ?? Submission::STATUS_SUBMITTED;
 
         if (in_array($status, array_merge([Submission::STATUS_TOUS], Submission::$allStatus)) === false) {
             return $f3->error(404, "Status not found");
         }
 
-        $submissions = $this->procedure->getSubmissions($status, $forUser);
-        $countByStatus = $this->procedure->countByStatus($forUser);
+        $submissions = $this->procedure->getSubmissions($status, $this->user);
+        $countByStatus = $this->procedure->countByStatus($this->user);
 
         if(isset($this->user)) {
             $f3->set('user', $this->user);
