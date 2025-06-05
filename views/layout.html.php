@@ -20,6 +20,9 @@
     ?>
   </head>
   <body<?php if($config->get('instance') == 'preprod' ): ?> class="preprod"<?php endif; ?>>
+    <!--[if lte IE 9]>
+      <div style="display:block;width:100%">Vous utilisez un navigateur qui a plus de 15 ans. Ce site ne s'affichera pas correctement.</div>
+    <![endif]-->
     <?php
       if ($theme = $config->get('theme')) {
         include("$ROOT/themes/$theme/header.php");
