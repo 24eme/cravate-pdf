@@ -26,30 +26,50 @@
           </div>
           <div class="modal-body">
             <?php if(isset($submission->getAnnexes()[$attachment['filename']]) && count($submission->getAnnexes()[$attachment['filename']])): ?>
-            <p>Choisissez parmi cette liste :</p>
             <div class="card">
               <div class="card-header">
                 Liste des pièces existantes
               </div>
               <div id="<?php echo $attachment['filename'] ?>_list" class="list-group list-group-flush liste-existing">
               <?php foreach($submission->getAnnexes()[$attachment['filename']] as $label => $url): ?>
-                  <a href="<?php echo $url ?>" class="list-group-item list-group-item-action" target="_blank"> <input type="radio" value="<?php echo $label ?>" /> <?php echo $label ?></a>
+                  <label class="list-group-item list-group-item-action" style="cursor: pointer;"><input type="checkbox" value="<?php echo $label ?>" data-url="<?php echo $url ?>" /> <?php echo $label ?></label>
               <?php endforeach; ?>
+                  <button type="button" class="list-group-item text-start"><i class="bi bi-upload"></i> Ajouter un document depuis votre ordinateur</button>
               </div>
-              </div>
-              <p class="mt-3"><strong>Ou</strong></p>
-              <?php endif; ?>
+            </div>
+            <?php endif; ?>
+            <div class="<?php if(isset($submission->getAnnexes()[$attachment['filename']]) && count($submission->getAnnexes()[$attachment['filename']])): ?>d-none<?php endif; ?>">
               <p>Choisissez un fichier sur votre ordinateur :</p>
-              <input id="<?php echo $attachment['filename'] ?>_file" type="file" class="form-control" name="<?php echo $attachment['filename'] ?>" />
+              <input id="<?php echo $attachment['filename'] ?>_file" type="file" class="form-control" name="<?php echo $attachment['filename'] ?>" multipl="true" />
+            </div>
+          </div>
+          <div class="modal-footer text-end">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Valider</button>
           </div>
         </div>
       </div>
     </div>
+    <script>
+      <?php if(isset($submission->getAnnexes()[$attachment['filename']]) && count($submission->getAnnexes()[$attachment['filename']])): ?>
+      document.getElementById("<?php echo $attachment['filename'] ?>_modal").addEventListener('hidden.bs.modal', event => {
+        if(event.target.querySelectorAll('input[type="checkbox"]:checked').length) {
+          let dataTransfer = new DataTransfer();
+          event.target.querySelectorAll('input[type="checkbox"]:checked').forEach(function(item) {
+              dataTransfer.items.add(new File([item.dataset.url], item.value +'.url', {type: "text/plain"}));
+          });
+          event.target.querySelector('input[type="file"]').files = dataTransfer.files;
+        }
+      })
+      document.querySelector('#<?php echo $attachment['filename'] ?>_list button').addEventListener('click', function(e) {
+        document.querySelector('#<?php echo $attachment['filename'] ?>_modal input[type="file"]').click();
+      });
+      <?php endif; ?>
+    </script>
   <?php endforeach; ?>
   <script>
     document.querySelectorAll('.btn-add').forEach(function (item) {
       item.addEventListener('click', function (e) {
-        if(!document.querySelectorAll('#'+item.id+'_list a').length) {
+        if(!document.querySelectorAll('#'+item.id+'_list label').length) {
           document.querySelector('#'+item.id+'_file').click();
         }
       })
@@ -59,18 +79,6 @@
       item.addEventListener('change', function (e) {
         document.querySelector('#'+item.id.replace('_file', '_close')).click();
         stateListe();
-      })
-    });
-
-    document.querySelectorAll('.liste-existing a').forEach(function (item) {
-      item.addEventListener('click', function (e) {
-        let dataTransfer = new DataTransfer();
-        dataTransfer.items.add(new File([item.href], item.querySelector('input').value +'.url', {type: "text/plain"}));
-        document.querySelector('#'+item.parentNode.id.replace('_list', '_file')).files = dataTransfer.files;
-        e.preventDefault();
-        document.querySelector('#'+item.parentNode.id.replace('_list', '_close')).click();
-        stateListe();
-        return false;
       })
     });
 
