@@ -253,12 +253,12 @@ class Submission
         return $items;
     }
 
-    public function storeAttachment($category, $file)
+    public function storeAttachment($category, $file, $filename)
     {
         if (!is_dir($this->getAttachmentsPath().$category)) {
             mkdir($this->getAttachmentsPath().$category);
         }
-        move_uploaded_file($file['tmp_name'], $this->getAttachmentsPath().$category.DIRECTORY_SEPARATOR.$file['name']);
+        move_uploaded_file($file, $this->getAttachmentsPath().$category.DIRECTORY_SEPARATOR.$filename);
     }
 
     public function getStatusThemeColor()

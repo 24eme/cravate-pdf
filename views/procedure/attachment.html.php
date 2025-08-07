@@ -38,9 +38,9 @@
               </div>
             </div>
             <?php endif; ?>
-            <div class="<?php if(isset($submission->getAnnexes()[$attachment['filename']]) && count($submission->getAnnexes()[$attachment['filename']])): ?>d-none<?php endif; ?>">
+            <div class="<?php if(isset($submission->getAnnexes()[$attachment['filename']]) && count($submission->getAnnexes()[$attachment['filename']])): ?><?php endif; ?>">
               <p>Choisissez un fichier sur votre ordinateur :</p>
-              <input id="<?php echo $attachment['filename'] ?>_file" type="file" class="form-control" name="<?php echo $attachment['filename'] ?>" multipl="true" />
+              <input id="<?php echo $attachment['filename'] ?>_file" type="file" class="form-control" name="<?php echo $attachment['filename'] ?>[]" multiple />
             </div>
           </div>
           <div class="modal-footer text-end">
@@ -59,6 +59,7 @@
           });
           event.target.querySelector('input[type="file"]').files = dataTransfer.files;
         }
+        stateListe();
       })
       document.querySelector('#<?php echo $attachment['filename'] ?>_list button').addEventListener('click', function(e) {
         document.querySelector('#<?php echo $attachment['filename'] ?>_modal input[type="file"]').click();

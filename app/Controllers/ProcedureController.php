@@ -191,11 +191,13 @@ class ProcedureController
         }
 
         if ($f3->get('VERB') === 'POST') {
-            foreach($_FILES as $name => $file) {
-                if ($file['error'] != UPLOAD_ERR_OK) {
-                    continue;
+            foreach($_FILES as $category => $files) {
+                foreach($files['name'] as $fileIndex => $name) {
+                    if ($files['error'][$fileIndex] != UPLOAD_ERR_OK) {
+                        continue;
+                    }
+                    $this->submission->storeAttachment($category, $files['tmp_name'][$fileIndex], $files['name'][$fileIndex]);
                 }
-                $this->submission->storeAttachment($name, $file);
             }
             return $f3->reroute(['procedure_validation', [
                'procedure' => $this->procedure->name,
