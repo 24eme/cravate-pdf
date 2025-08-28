@@ -26,7 +26,7 @@ for dir in ./procedures/LiberationReserveInterpro/submissions/*_CLOTURÉ; do
         .[0].form.TELEPHONE,
         .[0].form.NUMCIVP,
         "%VOLUME_BLOQUE%",
-        .[0].form.VOLUME,
+        (.[0].form.VOLUME | gsub(","; ".")),
         "%VOLUME_RESTANT%",
         .[0].createdAt,
         .[0].form.CONDITION,
