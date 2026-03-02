@@ -2,7 +2,7 @@
 <?php $formConfig = $submission->procedure->getConfigItem('form'); ?>
 <?php foreach($submission->getDatas() as $field => $value): ?>
 <tr>
-<th class="col-3"><?php echo isset($formConfig[$field]) ? $formConfig[$field]['label'] : $formConfig[$field] ?></th>
+<th class="col-4"><?php echo isset($formConfig[$field]) ? $formConfig[$field]['label'] : $formConfig[$field] ?></th>
 <?php if (array_key_exists('format', $formConfig[$field])): ?>
 <td><?php echo preg_replace(
                  strtok($formConfig[$field]['format'], '#'),
