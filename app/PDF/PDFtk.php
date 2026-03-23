@@ -40,6 +40,8 @@ class PDFtk
 
         $xfdfFilename = tempnam($outputDir, "XFDF");
 
+        $tmpPdf = $outputDir.basename($pdfPath, '.pdf').'_tmp.pdf';
+
         $outputFile = [
             'pdf' => $outputDir.basename($pdfPath, '.pdf').'_filled.pdf',
             'xfdf' => $xfdfFilename
@@ -47,20 +49,64 @@ class PDFtk
 
         $xfdfFile = fopen($xfdfFilename, "w");
         fwrite($xfdfFile, self::generateXFDF($pdfPath, $data));
+        fclose($xfdfFile);
 
-        $proc = proc_open([self::command, $pdfPath, 'fill_form', $xfdfFilename, 'output', $outputFile['pdf'], 'flatten'], [
-            0 => ['pipe', 'r'],
-            1 => ['pipe', 'w'],
-            2 => ['pipe', 'w']
-        ], $pipes);
+        $proc = proc_open(
+            [self::command, $pdfPath, 'fill_form', $xfdfFilename, 'output', $tmpPdf],
+            [
+                0 => ['pipe', 'r'],
+                1 => ['pipe', 'w'],
+                2 => ['pipe', 'w']
+            ],
+            $pipes
+        );
 
         if ($proc === false) {
-            throw new \Exception('Execution failed : '.stream_get_contents($pipes[2]));
+            throw new \Exception('pdftk execution failed');
         }
 
+        $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
+        fclose($pipes[2]);
         proc_close($proc);
-        fclose($xfdfFile);
+
+        if ($error) {
+            throw new \Exception('pdftk error: '.$error);
+        }
+
+        $proc = proc_open(
+            [
+                'gs',
+                '-o', $outputFile['pdf'],
+                '-sDEVICE=pdfwrite',
+                '-dCompatibilityLevel=1.4',
+                '-dNOPAUSE',
+                '-dQUIET',
+                '-dBATCH',
+                $tmpPdf
+            ],
+            [
+                0 => ['pipe', 'r'],
+                1 => ['pipe', 'w'],
+                2 => ['pipe', 'w']
+            ],
+            $pipes
+        );
+
+        if ($proc === false) {
+            throw new \Exception('Gs execution failed');
+        }
+
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        proc_close($proc);
+
+        if ($error) {
+            throw new \Exception('Gs error: '.$error);
+        }
+
+        unlink($tmpPdf);
 
         return $outputFile;
     }
