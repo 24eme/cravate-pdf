@@ -46,7 +46,10 @@ class User extends Prefab
         if(session_status() != PHP_SESSION_ACTIVE) {
             return false;
         }
-
-        return $_SESSION[Config::getInstance()->get('session.user_id')];
+        $user_field = Config::getInstance()->get('session.user_id');
+        if (!$user_field || !isset($_SESSION[$user_field])) {
+            return false;
+        }
+        return $_SESSION[$user_field];
     }
 }
