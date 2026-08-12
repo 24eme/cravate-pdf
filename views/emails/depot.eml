@@ -1,6 +1,6 @@
 Bonjour,
 
-Un nouveau dossier de <?php $submission->procedure->title ?> viens d'être soumis sur la
+Un nouveau dossier de <?php $submission->procedure->getConfigItem('title') ?> viens d'être soumis sur la
 plateforme par l'opérateur <?php echo $submission->getDatas('RAISON_SOCIALE') ?>.
 
 Vous pouvez accéder à la fiche via le lien suivant :
