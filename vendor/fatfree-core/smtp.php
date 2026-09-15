@@ -158,8 +158,9 @@ class SMTP extends Magic {
 				$this->log.=$cmd."\n";
 			$this->log.=str_replace("\r",'',$reply);
 		}
-		if (preg_match('/^(4|5)\d{2}\s.*$/', $reply))
-			user_error(sprintf(self::E_DIALOG,$reply),E_USER_ERROR);
+		if (preg_match('/^(4|5)\d{2}\s.*$/', $reply)) {
+			throw new \Exception(sprintf(self::E_DIALOG,$reply));
+		}
 		return $reply;
 	}
 
