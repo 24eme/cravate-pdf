@@ -5,7 +5,6 @@ namespace Emails;
 use SMTP;
 use Exception;
 use View;
-use Config\Config;
 
 class Email
 {

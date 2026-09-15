@@ -8,7 +8,7 @@ use Model\SubmissionError;
 use View;
 use Web;
 
-use Config;
+use Config\Config;
 use User\User;
 
 use Model\Submission;
@@ -17,10 +17,8 @@ use Model\Procedure;
 use Steps\Steps;
 use Steps\ProcedureSteps;
 
-use Emails\Email;
 use Emails\SubmissionEmails;
 
-use PDF\PDFtk;
 use Validator\Validation;
 use Validator\SubmissionValidation;
 
@@ -309,7 +307,7 @@ class ProcedureController
     {
         $file = realpath($this->submission->getAttachmentsPath().str_replace('/', '', $f3->get('GET.category')).DIRECTORY_SEPARATOR.str_replace('/', '', $f3->get('GET.file')));
 
-        if (is_file($file) === false) {
+        if ($file === false || is_file($file) === false) {
             return $f3->error(404, "File not found");
         }
 
