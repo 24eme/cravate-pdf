@@ -3,8 +3,21 @@
 namespace Model;
 
 use DomainException;
+use Exception;
 use Model\Procedure;
 use PDF\PDFtk;
+
+enum SubmissionError {
+    case ERROR_NOT_FOUND;
+    case ERROR_DOUBLES;
+
+    public function errorMessage($id, $path = null) {
+        return match ($this) {
+            self::ERROR_NOT_FOUND => "Pas de dépôt trouvé pour l'id $id",
+            self::ERROR_DOUBLES => "Plusieurs dépôts trouvés pour l'id $id" . ($path ? ", dans le dossier $path" : ''),
+        };
+    }
+}
 
 class Submission
 {
@@ -52,8 +65,12 @@ class Submission
 
         $paths = glob($procedure->submissionsPath.$id.'*', GLOB_ONLYDIR);
 
-        if(!count($paths) || count($paths) > 1) {
-            return null;
+        if ($paths === false) {
+            return SubmissionError::ERROR_NOT_FOUND;
+        }
+
+        if (count($paths) > 1) {
+            return SubmissionError::ERROR_DOUBLES;
         }
 
         $submission = new Submission($procedure);

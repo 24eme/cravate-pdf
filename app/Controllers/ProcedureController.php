@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Base;
 use Flash;
+use Model\SubmissionError;
 use View;
 use Web;
 
@@ -40,7 +41,11 @@ class ProcedureController
             $this->procedure = new Procedure($f3->get('PARAMS.procedure'));
         }
         if ($f3->get('PARAMS.submission')) {
-            $this->submission = Submission::find($this->procedure, $f3->get('PARAMS.submission')) ?: $f3->error(404, "Numéro de dépôt inconnu");
+            $sub = Submission::find($this->procedure, $f3->get('PARAMS.submission')); //?:
+            if ($sub instanceof SubmissionError) {
+                $f3->error(404, $sub->errorMessage($f3->get('PARAMS.submission')));
+            }
+            $this->submission = $sub;
             $f3->set('steps', new Steps(new ProcedureSteps($this->procedure, $this->submission)));
         }
         if ($f3->get('PARAMS.user')) {

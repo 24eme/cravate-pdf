@@ -38,9 +38,14 @@ try {
     exit;
 }
 
-$submission = Model\Submission::find($procedure, $submissionName);
-
 try {
+    $submission = Model\Submission::find($procedure, $submissionName);
+
+    if ($submission instanceof Model\SubmissionError) {
+        echo $submission->errorMessage($submissionName, $procedure->submissionsPath).PHP_EOL;
+        exit();
+    }
+
     $submission->setStatus($status, $comment);
     $submission->save();
 } catch (\Exception $e) {
