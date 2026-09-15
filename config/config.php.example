@@ -19,7 +19,7 @@ $config = [
         'name' => 'symfony',
         "admin_key" => "symfony/user/sfUser/credentials",
         "admin_value" => "admin",
-        "user_id" => 'etablissement_id'
+        "user_id" => 'etablissement_id',
         "user_id_test" => ''
     ]
 ];
