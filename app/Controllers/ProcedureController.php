@@ -19,6 +19,7 @@ use Steps\ProcedureSteps;
 
 use Emails\SubmissionEmails;
 
+use PDF\PDFtk;
 use Validator\Validation;
 use Validator\SubmissionValidation;
 
@@ -281,7 +282,7 @@ class ProcedureController
      */
     public function downloadpdf(Base $f3)
     {
-        $files = PDFTk::fillForm($this->procedure->pdf, $this->submission->getDatasPDF());
+        $files = PDFtk::fillForm($this->procedure->pdf, $this->submission->getDatasPDF());
         $storePath = $this->submission->path.basename($files['pdf']);
         rename($files['pdf'], $storePath);
         unlink($files['xfdf']);
