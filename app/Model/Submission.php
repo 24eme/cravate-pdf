@@ -62,14 +62,44 @@ class Submission
             throw new \Exception("id invalid");
         }
 
-        $paths = glob($procedure->submissionsPath.$id.'*', GLOB_ONLYDIR);
+        $paths = glob($procedure->submissionsPath.$id.'_*', GLOB_ONLYDIR);
 
         if ($paths === false) {
             return SubmissionError::ERROR_NOT_FOUND;
         }
 
         if (count($paths) > 1) {
-            return SubmissionError::ERROR_DOUBLES;
+            //cas des chemins dupliqué et gestion des désactivations de ces doublons
+            //TODO: supprimer les répertoire -todelete à la main
+            $selected_path = null;
+            $nb_history = 0;
+            foreach($paths as $path) {
+                $submission = new Submission($procedure);
+                $submission->load(basename($path));
+                $h = $submission->getHistory();
+                if ($nb_history < count($h)) {
+                    $nb_history = count($h);
+                    $selected_path = $path;
+                }
+            }
+            $submission_reference = new Submission($procedure);
+            $submission_reference->load(basename($selected_path));
+            $history_reference = $submission_reference->getHistory(false);
+            foreach($paths as $path) {
+                if ($path == $selected_path) {
+                    continue;
+                }
+                $submission = new Submission($procedure);
+                $submission->load(basename($path));
+                $h = $submission->getHistory(false);
+                for ($i = 0 ; $i < count($h) ; $i++) {
+                    if ($h[$i] != $history_reference[$i]) {
+                        return SubmissionError::ERROR_DOUBLES;
+                    }
+                }
+                rename($path, str_replace('/'.$id.'_', '/'.$id.'-todelete_', $path));
+            }
+            $paths = array($selected_path);
         }
 
         $submission = new Submission($procedure);
