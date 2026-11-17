@@ -32,6 +32,8 @@ class Submission
     const DATAS_FILENAME = 'datas.json';
     const ATTACHMENTS_PATH = 'attachments/';
 
+    const TODELETE_DIRNAME_STRING = '-todelete';
+
     public static $allStatus = [self::STATUS_DRAFT, self::STATUS_SUBMITTED, self::STATUS_VALIDATED, self::STATUS_UNCOMPLETED, self::STATUS_CANCELED, self::STATUS_CLOSED];
     public static $statusThemeColor = [self::STATUS_DRAFT => 'light', self::STATUS_SUBMITTED => 'secondary', self::STATUS_VALIDATED => 'success', self::STATUS_UNCOMPLETED => 'warning', self::STATUS_CANCELED => 'danger', self::STATUS_CLOSED => 'dark'];
 
@@ -97,7 +99,7 @@ class Submission
                         return SubmissionError::ERROR_DOUBLES;
                     }
                 }
-                rename($path, str_replace('/'.$id.'_', '/'.$id.'-todelete_', $path));
+                rename($path, str_replace('/'.$id.'_', '/'.$id.self::TODELETE_DIRNAME_STRING.'_', $path));
             }
             $paths = array($selected_path);
         }

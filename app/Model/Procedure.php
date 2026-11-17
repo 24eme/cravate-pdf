@@ -77,6 +77,9 @@ class Procedure
 
         $items = [];
         foreach($submissions as $submission) {
+            if (strpos($submission, Submission::TODELETE_DIRNAME_STRING.'_') !== false) {
+                continue;
+            }
             if (in_array($submission, ['.', '..'])) {
                 continue;
             }
